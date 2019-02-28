@@ -18,24 +18,32 @@ namespace ParserNII.DataStructures
                 long time = BitConverter.ToInt64(dataChunks[i], 0);
                 int uid = BitConverter.ToInt32(dataChunks[i], 8);
                 double value = BitConverter.ToDouble(dataChunks[i], 12);
-
-                if (time > (timeNowEpoch * 1000))
-                    continue;
-
-                if ((uid == 2 || uid == 6 || uid == 9 || uid == 19
-                    || uid == 20 || uid == 50 || uid == 101
-                    || uid == 3101 || uid == 3102 || uid == 3104)
-                    && (value > 127))
+                
+                if ((time > (timeNowEpoch - 31556926000)) && (time < (timeNowEpoch + 86400000))) // Запас -1год +1 сутки
                 {
-                    value -= 256;
+                    if ((time % 1000 == 0) && (time % 3 == 0)) // Отсекаем кривые метки путем выявления времени кратной 3 секундам
+                    {
+                        if (Math.Abs(value) > 0.001 || value == 0) // Отсекаем кривые метки путем выявления чисел в степени овермного/овермало
+                        {
+                            //Console.Write(time + " - "); Console.Write(uid + " - "); Console.WriteLine(value);
+
+                            if ((uid == 2 || uid == 6 || uid == 9 || uid == 19
+                           || uid == 20 || uid == 50 || uid == 101
+                           || uid == 3101 || uid == 3102 || uid == 3104)
+                           && (value > 127))
+                            {
+                                value -= 256;
+                            }
+
+                            result.Add(new BinFile
+                            {
+                                Date = time,
+                                Uid = uid,
+                                Value = value
+                            });
+                        }
+                    }
                 }
-
-                result.Add(new BinFile
-                {
-                    Date = time,
-                    Uid = uid,
-                    Value = value
-                });
             }
 
             return ToDataFile(result);
