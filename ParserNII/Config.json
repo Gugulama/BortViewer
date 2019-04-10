@@ -827,6 +827,102 @@
       "display": false,
       "round": 0.01,
       "group": 0
+    },
+    {
+      "number": 3200,
+      "name": "Объем экипировки по ТРК",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
+    },
+    {
+      "number": 3201,
+      "name": "Количество спутников GPS",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
+    },
+    {
+      "number": 3202,
+      "name": "Температура топлива Т1",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
+    },
+    {
+      "number": 3203,
+      "name": "Температура топлива Т2",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
+    },
+    {
+      "number": 3204,
+      "name": "Температура топлива Т3",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
+    },
+    {
+      "number": 3205,
+      "name": "Температура топлива Т4",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
+    },
+    {
+      "number": 3206,
+      "name": "Температура топлива Т5",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
+    },
+    {
+      "number": 3207,
+      "name": "Плотность топлива левая ДПТТ",
+      "shortname": "",
+      "measure": "",
+      "min": 0,
+      "max": 0,
+      "type": "byte",
+      "display": false,
+      "round": 0.01,
+      "group": 0
     }
   ],
   "trainNames": {
