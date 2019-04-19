@@ -52,20 +52,26 @@ namespace ParserNII
 
             GraphPane pane = control.GraphPane;
             pane.XAxis.Type = AxisType.Date;
-            pane.XAxis.Scale.Format = "dd.MM HH:mm:ss";
-            pane.XAxis.Scale.FontSpec.Size = 12;
+            pane.XAxis.Scale.Format = "dd/MM HH:mm:ss";
+            pane.XAxis.Scale.FontSpec.Size = 11;
             pane.XAxis.Scale.MinGrace = 0;
             pane.XAxis.Scale.MaxGrace = 1;
 
-            pane.XAxis.Title.Text = "Дата";
-            pane.XAxis.Title.FontSpec.Size = 12;
+            //pane.XAxis.Title.Text = "Дата";
+            //pane.XAxis.Title.FontSpec.Size = 12;
+            pane.XAxis.Title.IsVisible = false;
             pane.IsFontsScaled = false;
-
             pane.XAxis.MajorGrid.IsVisible = true;
             pane.XAxis.MajorGrid.DashOn = 10;
             pane.XAxis.MajorGrid.DashOff = 5;
             pane.XAxis.MajorGrid.Color = Color.LightGray;
-            pane.XAxis.MajorGrid.IsZeroLine = true;            
+            pane.XAxis.MajorGrid.IsZeroLine = true;
+
+            pane.Margin.Left = 0;
+            pane.Margin.Top = 0;
+            pane.Margin.Bottom = 2;
+            pane.Margin.Right = 0;
+
             control.IsEnableVZoom = false;
             control.IsEnableVPan = false;
             control.IsEnableHPan = false;
@@ -101,12 +107,13 @@ namespace ParserNII
             this.xScaleMax = pane.XAxis.Scale.Max;
             this.xScaleMin = pane.XAxis.Scale.Min;
             pane.YAxisList[yAxis].Scale.Min = 0;
-            pane.YAxisList[yAxis].MajorGrid.IsVisible = true;
-            pane.YAxisList[yAxis].MajorGrid.DashOn = 10;
-            pane.YAxisList[yAxis].MajorGrid.DashOff = 5;
-            pane.YAxisList[yAxis].MajorGrid.Color = Color.LightGray;
-            pane.YAxisList[yAxis].MajorGrid.IsZeroLine = false;
+            //pane.YAxisList[yAxis].MajorGrid.IsVisible = true;
+            //pane.YAxisList[yAxis].MajorGrid.DashOn = 10;
+            //pane.YAxisList[yAxis].MajorGrid.DashOff = 5;
+            //pane.YAxisList[yAxis].MajorGrid.Color = Color.LightGray;
+            //pane.YAxisList[yAxis].MajorGrid.IsZeroLine = false;
             pane.YAxisList[yAxis].IsVisible = false;
+            pane.YAxisList[yAxis].Title.IsVisible = false;
             control.GraphPane.Title.IsVisible = false;
             control.GraphPane.Legend.IsVisible = false;
         }

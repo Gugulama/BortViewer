@@ -26,6 +26,7 @@ namespace ParserNII
         {
             InitializeComponent();
             button1.Visible = false;
+            zedGraphControl1.Visible = false;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -187,6 +188,7 @@ namespace ParserNII
             }
 
             button1.Visible = true;
+            zedGraphControl1.Visible = true;
         }        
 
         private void button1_Click(object sender, EventArgs e)
@@ -204,10 +206,20 @@ namespace ParserNII
             double origialXScale = drawer.xScaleMax - drawer.xScaleMin;
             double newXScale = pane.XAxis.Scale.Max - pane.XAxis.Scale.Min;
 
-            bool isXLess = (bool)((origialXScale / newXScale) > 1500);
-            bool isXBigger = (bool)((origialXScale / newXScale) < 0.75);
+            double diff = origialXScale / newXScale;
+            bool isXLess = (bool)((diff) > 1500);
+            bool isXBigger = (bool)((diff) < 1);
 
             if (isXLess || isXBigger) sender.ZoomOut(sender.GraphPane);
+        }
+
+        private void zedGraphControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+            GraphPane pane = zedGraphControl1.GraphPane;
+            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
+            verticalLine.Location.X = x;  
+            zedGraphControl1.Refresh();
+            drawer.Refresh();
         }
     }
 }

@@ -156,7 +156,7 @@
       "round": 0.01,
       "group": 0
     },
-	{
+    {
       "number": 21,
       "name": "Широта",
       "shortname": "",
@@ -922,6 +922,18 @@
       "type": "byte",
       "display": false,
       "round": 0.01,
+      "group": 0
+    },
+    {     
+      "number": 3208,      
+      "name": "Температура топлива левая ДПТТ",     
+      "shortname": "",      
+      "measure": "",      
+      "min": 0,      
+      "max": 0,      
+      "type": "byte",      
+      "display": false,      
+      "round": 0.01,      
       "group": 0
     }
   ],
