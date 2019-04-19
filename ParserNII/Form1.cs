@@ -20,7 +20,7 @@ namespace ParserNII
         private Dictionary<string, int> DisplayedParamNames;
         private List<ZedGraphControl.PointValueHandler> pointEventHandlers = new List<ZedGraphControl.PointValueHandler>();
         private LineObj verticalLine;
-
+        private Drawer drawer;
 
         public Form1()
         {
@@ -76,7 +76,7 @@ namespace ParserNII
                 var arrayResult = parser.ToArray(result);
 
                 DisplayPanelElements(result[0]);
-                Drawer drawer = new Drawer(zedGraphControl1);
+                drawer = new Drawer(zedGraphControl1);
 
                 var keys = result[0].Data.Keys.Where(k => result[0].Data[k].Display).ToArray();
 
@@ -187,12 +187,7 @@ namespace ParserNII
             }
 
             button1.Visible = true;
-        }
-
-        private void zedGraphControl1_Load(object sender, EventArgs e)
-        {
-
-        }
+        }        
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -201,6 +196,18 @@ namespace ParserNII
             zedGraphControl1.Refresh();
 
             checkBoxes.ForEach(cb => cb.Checked = false);
+        }
+
+        private void zedGraphControl1_ZoomEvent(ZedGraphControl sender, ZoomState oldState, ZoomState newState)
+        {
+            GraphPane pane = sender.GraphPane;
+            double origialXScale = drawer.xScaleMax - drawer.xScaleMin;
+            double newXScale = pane.XAxis.Scale.Max - pane.XAxis.Scale.Min;
+
+            bool isXLess = (bool)((origialXScale / newXScale) > 1500);
+            bool isXBigger = (bool)((origialXScale / newXScale) < 0.75);
+
+            if (isXLess || isXBigger) sender.ZoomOut(sender.GraphPane);
         }
     }
 }

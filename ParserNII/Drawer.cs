@@ -9,6 +9,9 @@ namespace ParserNII
     public class Drawer
     {
         private readonly ZedGraphControl control;
+        public double xScaleMax;
+        public double xScaleMin;
+
 
         public static Color GetColor(int i)
         {
@@ -49,15 +52,20 @@ namespace ParserNII
 
             GraphPane pane = control.GraphPane;
             pane.XAxis.Type = AxisType.Date;
-            pane.XAxis.Scale.Format = "dd.MM.yyyy HH:mm:ss";
+            pane.XAxis.Scale.Format = "dd.MM HH:mm:ss";
+            pane.XAxis.Scale.FontSpec.Size = 12;
+            pane.XAxis.Scale.MinGrace = 0;
+            pane.XAxis.Scale.MaxGrace = 1;
 
             pane.XAxis.Title.Text = "Дата";
+            pane.XAxis.Title.FontSpec.Size = 12;
+            pane.IsFontsScaled = false;
 
             pane.XAxis.MajorGrid.IsVisible = true;
             pane.XAxis.MajorGrid.DashOn = 10;
             pane.XAxis.MajorGrid.DashOff = 5;
             pane.XAxis.MajorGrid.Color = Color.LightGray;
-            pane.XAxis.MajorGrid.IsZeroLine = true;
+            pane.XAxis.MajorGrid.IsZeroLine = true;            
             control.IsEnableVZoom = false;
             control.IsEnableVPan = false;
             control.IsEnableHPan = false;
@@ -87,10 +95,11 @@ namespace ParserNII
             LineItem myCurve = pane.AddCurve(name, list1, color, SymbolType.None);
             myCurve.YAxisIndex = yAxis;
             myCurve.Line.Width = 1.0F;
-            myCurve.Line.StepType = StepType.ForwardStep;
-
+            myCurve.Line.StepType = StepType.ForwardStep;           
             pane.XAxis.Scale.Min = x.First();
             pane.XAxis.Scale.Max = x.Last();
+            this.xScaleMax = pane.XAxis.Scale.Max;
+            this.xScaleMin = pane.XAxis.Scale.Min;
             pane.YAxisList[yAxis].Scale.Min = 0;
             pane.YAxisList[yAxis].MajorGrid.IsVisible = true;
             pane.YAxisList[yAxis].MajorGrid.DashOn = 10;
