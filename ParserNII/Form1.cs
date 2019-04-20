@@ -27,12 +27,13 @@ namespace ParserNII
             InitializeComponent();
             button1.Visible = false;
             zedGraphControl1.Visible = false;
+            FormClosing += Form1_FormClosing;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "dat files (*.dat)|*.dat|All files (*.*)|*.*";
+            ofd.Filter = "dat files (*.dat)|*.dat|bin files (*.bin)|*.bin";
             ofd.FilterIndex = 2;
             ofd.RestoreDirectory = true;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -117,6 +118,22 @@ namespace ParserNII
             }
         }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Сохранить изменения?", "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                //Newtonsoft.Json.JsonConvert.SerializeObject(checkBoxes);
+                //File.WriteAllText("/settings.json", checkBoxes);
+            }
+            else if (result == System.Windows.Forms.DialogResult.No)
+            {
+                FormClosing -= Form1_FormClosing;
+                Close();
+            }
+            else e.Cancel = true;
+        }
+
         private void DisplayPanelElements(DataFile data)
         {
             panel3.Controls.Clear();
@@ -176,6 +193,8 @@ namespace ParserNII
                     }
                 };
 
+
+
                 var panel = new Panel();
                 panel3.Controls.Add(panel);
                 panel.Location = new Point(70, 6 + i * 26);
@@ -189,7 +208,7 @@ namespace ParserNII
 
             button1.Visible = true;
             zedGraphControl1.Visible = true;
-        }        
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -217,9 +236,11 @@ namespace ParserNII
         {
             GraphPane pane = zedGraphControl1.GraphPane;
             zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
-            verticalLine.Location.X = x;  
+            verticalLine.Location.X = x;
             zedGraphControl1.Refresh();
             drawer.Refresh();
         }
+
+
     }
 }
