@@ -118,6 +118,7 @@ namespace ParserNII.DataStructures
                         }
                     }
                 }
+                
 
                 result.Add(resultElement);
 

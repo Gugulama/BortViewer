@@ -15,12 +15,14 @@ namespace ParserNII
     {
         private List<TextBox> textBoxes;
         private List<CheckBox> checkBoxes;
+        private Dictionary<string, Panel> panels;
         private Dictionary<string, TextBox> uidNames;
-        private List<Panel> panels;
-        private Dictionary<string, int> DisplayedParamNames;
         private List<ZedGraphControl.PointValueHandler> pointEventHandlers = new List<ZedGraphControl.PointValueHandler>();
         private LineObj verticalLine;
         private Drawer drawer;
+        private Dictionary<string, int> LineIndexs;
+        private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(d => d.number);
+        private List<DataFile> result;
 
         public Form1()
         {
@@ -46,7 +48,7 @@ namespace ParserNII
                 stream.Read(fileBytes, 0, (int)stream.Length);
                 Размер.Text = (stream.Length / 1024).ToString() + " Кб";
                 var parser = Path.GetExtension(ofd.FileName) == ".dat" ? (Parser)new DatFileParser() : new BinFileParser();
-                List<DataFile> result = parser.Parse(fileBytes);
+                result = parser.Parse(fileBytes);
 
                 foreach (var pointEventHandler in pointEventHandlers)
                 {
@@ -77,20 +79,25 @@ namespace ParserNII
 
                 var arrayResult = parser.ToArray(result);
 
-                DisplayPanelElements(result[0]);
                 drawer = new Drawer(zedGraphControl1);
-
-                var keys = result[0].Data.Keys.Where(k => result[0].Data[k].Display).ToArray();
-
-                for (int i = 0; i < keys.Length; i++)
+                LineIndexs = new Dictionary<string, int>();
+                int i = 0;
+                foreach (var binFileParam in binFileParams)
                 {
-                    drawer.DrawGraph(xValues,
-                        arrayResult.Data[keys[i]].Select(d => d.ChartValue).ToList(),
-                        keys[i],
-                        Drawer.GetColor(i));
+                    if (arrayResult.Data.ContainsKey(binFileParam.Value.name))
+                    {
+                        drawer.DrawGraph(xValues,
+                            arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                            binFileParam.Value.name,
+                            Drawer.GetColor(i));
 
-                    panels[DisplayedParamNames[keys[i]]].BackColor = Drawer.GetColor(i);
+                        LineIndexs.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
+                    }
+
+                    i++;
                 }
+
+                DisplayPanelElements(result[0]);
 
                 verticalLine = drawer.CrateVerticalLine();
 
@@ -98,14 +105,18 @@ namespace ParserNII
 
                 pointEventHandlers.Add((pointSender, graphPane, curve, pt) =>
                 {
-                    for (int i = 0; i < keys.Length; i++)
-                    {
-                        uidNames[keys[i]].Text = result[pt].Data[keys[i]].DisplayValue;
-                    }
 
-                    verticalLine.Location.X = xValues[pt];
-                    verticalLine.Location.X1 = xValues[pt];
-                    zedGraphControl1.Refresh();
+                    //    foreach (var binFileParam in binFileParams)
+                    //    {
+                    //        if (result[pt].Data.ContainsKey(binFileParam.Value.name))
+                    //        {
+                    //            uidNames[binFileParam.Value.name].Text = result[pt].Data[binFileParam.Value.name].DisplayValue;
+                    //        }
+                    //    }
+
+                    //    verticalLine.Location.X = xValues[pt];
+                    //    verticalLine.Location.X1 = xValues[pt];
+                    //    zedGraphControl1.Refresh();
                     return "";
                 });
 
@@ -123,8 +134,8 @@ namespace ParserNII
             DialogResult result = MessageBox.Show("Сохранить изменения?", "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
-                //Newtonsoft.Json.JsonConvert.SerializeObject(checkBoxes);
-                //File.WriteAllText("/settings.json", checkBoxes);
+                string dataValues = Newtonsoft.Json.JsonConvert.SerializeObject(checkBoxes.Select(c => c.Checked).ToArray());
+                File.WriteAllText("./settings.json", dataValues);
             }
             else if (result == System.Windows.Forms.DialogResult.No)
             {
@@ -137,17 +148,14 @@ namespace ParserNII
         private void DisplayPanelElements(DataFile data)
         {
             panel3.Controls.Clear();
-            DisplayedParamNames = new Dictionary<string, int>();
             textBoxes = new List<TextBox>();
             checkBoxes = new List<CheckBox>();
-            panels = new List<Panel>();
+            panels = new Dictionary<string, Panel>();
             uidNames = new Dictionary<string, TextBox>();
-            var keys = data.Data.Keys.Where(k => data.Data[k].Display).ToArray();
 
-            for (int i = 0; i < keys.Length; i++)
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
             {
-                DisplayedParamNames.Add(keys[i], i);
-
                 var textBox = new TextBox();
                 textBoxes.Add(textBox);
                 panel3.Controls.Add(textBox);
@@ -164,34 +172,47 @@ namespace ParserNII
                 checkBox.Name = $"checkBox{i}";
                 checkBox.Size = new Size(80, 17);
                 checkBox.TabIndex = 0;
-                String s1 = data.Data[keys[i]].DataParams.measure;
-                String s2 = "";
-                if (s1.Equals(s2))
-                    checkBox.Text = keys[i];
+                string measure = binFileParam.Value.measure;
+                if (string.IsNullOrEmpty(measure))
+                {
+                    checkBox.Text = binFileParam.Value.name;
+                }
                 else
-                    checkBox.Text = keys[i] + ", " + s1;
+                {
+                    checkBox.Text = binFileParam.Value.name + ", " + measure;
+                }
                 checkBox.UseVisualStyleBackColor = true;
                 checkBoxes.Add(checkBox);
                 checkBox.Checked = true;
                 int index = i;
 
-                checkBox.CheckedChanged += (object sender, EventArgs e) =>
+                if (LineIndexs.ContainsKey(binFileParam.Value.name))
                 {
-                    if (zedGraphControl1.GraphPane.CurveList[index].IsVisible != checkBox.Checked)
-                    {
-                        zedGraphControl1.GraphPane.CurveList[index].IsVisible = checkBox.Checked;
 
-                        if (checkBox.Checked)
+
+                    checkBox.CheckedChanged += (object sender, EventArgs e) =>
+                    {
+                        if (zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible != checkBox.Checked)
                         {
-                            zedGraphControl1.AxisChange();
-                            zedGraphControl1.Refresh();
+                            zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible = checkBox.Checked;
+
+                            if (checkBox.Checked)
+                            {
+                                zedGraphControl1.AxisChange();
+                                zedGraphControl1.Refresh();
+                            }
+                            else
+                            {
+                                zedGraphControl1.Refresh();
+                            }
                         }
-                        else
-                        {
-                            zedGraphControl1.Refresh();
-                        }
-                    }
-                };
+                    };
+                }
+                else
+                {
+                    checkBox.Enabled = false;
+                }
+
 
 
 
@@ -201,10 +222,12 @@ namespace ParserNII
                 panel.Name = $"panel{i}";
                 panel.Size = new Size(17, 17);
                 panel.TabIndex = 0;
-                panels.Add(panel);
-
-                uidNames.Add(keys[i], textBoxes[i]);
+                panels.Add(binFileParam.Value.name, panel);
+                panel.BackColor = Drawer.GetColor(i);
+                uidNames.Add(binFileParam.Value.name, textBoxes[i]);
+                i++;
             }
+
 
             button1.Visible = true;
             zedGraphControl1.Visible = true;
@@ -237,10 +260,32 @@ namespace ParserNII
             GraphPane pane = zedGraphControl1.GraphPane;
             zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
             verticalLine.Location.X = x;
-            zedGraphControl1.Refresh();
-            drawer.Refresh();
+
+            CurveItem curve = pane.CurveList[0];
+
+            // Look for the min and max value
+            double min = curve.Points[0].X;
+            double max = curve.Points[curve.NPts - 1].X;
+
+            // Prevent error if mouse is out of bounds.
+            if (x <= min) return;
+            if (x >= max) return;
+
+            double delta = (max - min) / (curve.NPts - 1);
+            int index = (int)Math.Round((x - min) / delta, 0);
+
+            foreach (var binFileParam in binFileParams)
+            {
+                if (result[index].Data.ContainsKey(binFileParam.Value.name))
+                {
+                    uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
+                }
+            }
+
+            zedGraphControl1.Invalidate();
+            //zedGraphControl1.Refresh();
+            //drawer.Refresh();
+            //this.Refresh();
         }
-
-
     }
 }
