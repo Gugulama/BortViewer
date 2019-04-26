@@ -14,7 +14,7 @@ namespace ParserNII
     public partial class Form1 : Form
     {
         private List<TextBox> textBoxes;
-        private List<CheckBox> checkBoxes;
+        private Dictionary<string, CheckBox> checkBoxes;
         private Dictionary<string, Panel> panels;
         private Dictionary<string, TextBox> uidNames;
         private List<ZedGraphControl.PointValueHandler> pointEventHandlers = new List<ZedGraphControl.PointValueHandler>();
@@ -23,13 +23,16 @@ namespace ParserNII
         private Dictionary<string, int> LineIndexs;
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(d => d.number);
         private List<DataFile> result;
+        private PointF mouseLocation;
 
         public Form1()
         {
             InitializeComponent();
+            drawer = new Drawer(zedGraphControl1); 
             button1.Visible = false;
             zedGraphControl1.Visible = false;
             FormClosing += Form1_FormClosing;
+            DisplayPanelElements();
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -40,6 +43,8 @@ namespace ParserNII
             ofd.RestoreDirectory = true;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                drawer.Clear();
+                verticalLine = drawer.CrateVerticalLine();
                 string filename = ofd.FileName;
                 if (filename.EndsWith("gzdat", true, null) || filename.EndsWith("gzbin", true, null))
                     filename = GZip.Decompress(ofd.FileName);
@@ -79,44 +84,59 @@ namespace ParserNII
 
                 var arrayResult = parser.ToArray(result);
 
-                drawer = new Drawer(zedGraphControl1);
+
                 LineIndexs = new Dictionary<string, int>();
                 int i = 0;
                 foreach (var binFileParam in binFileParams)
                 {
+                    var checkBox = checkBoxes[binFileParam.Value.name];
                     if (arrayResult.Data.ContainsKey(binFileParam.Value.name))
                     {
                         drawer.DrawGraph(xValues,
                             arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
                             binFileParam.Value.name,
                             Drawer.GetColor(i));
+                        zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
-                        LineIndexs.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
+                        //LineIndexs.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
+                       
+
+                        checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
+                            {
+                                if (zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                {
+                                    zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible = checkBox.Checked;
+
+                                    if (checkBox.Checked)
+                                    {
+                                        zedGraphControl1.AxisChange();
+                                        zedGraphControl1.Refresh();
+                                    }
+                                    else
+                                    {
+                                        zedGraphControl1.Refresh();
+                                    }
+                                }
+                            };
+                    }
+                    else
+                    {
+                        checkBox.Enabled = false;
                     }
 
                     i++;
                 }
 
-                DisplayPanelElements(result[0]);
 
-                verticalLine = drawer.CrateVerticalLine();
+
+                
+
+                
 
                 zedGraphControl1.IsShowPointValues = true;
 
                 pointEventHandlers.Add((pointSender, graphPane, curve, pt) =>
                 {
-
-                    //    foreach (var binFileParam in binFileParams)
-                    //    {
-                    //        if (result[pt].Data.ContainsKey(binFileParam.Value.name))
-                    //        {
-                    //            uidNames[binFileParam.Value.name].Text = result[pt].Data[binFileParam.Value.name].DisplayValue;
-                    //        }
-                    //    }
-
-                    //    verticalLine.Location.X = xValues[pt];
-                    //    verticalLine.Location.X1 = xValues[pt];
-                    //    zedGraphControl1.Refresh();
                     return "";
                 });
 
@@ -134,8 +154,8 @@ namespace ParserNII
             DialogResult result = MessageBox.Show("Сохранить изменения?", "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
-                string dataValues = Newtonsoft.Json.JsonConvert.SerializeObject(checkBoxes.Select(c => c.Checked).ToArray());
-                File.WriteAllText("./settings.json", dataValues);
+                //string dataValues = Newtonsoft.Json.JsonConvert.SerializeObject(checkBoxes.Select(c => c.Checked).ToArray());
+                //File.WriteAllText("./settings.json", dataValues);
             }
             else if (result == System.Windows.Forms.DialogResult.No)
             {
@@ -145,11 +165,11 @@ namespace ParserNII
             else e.Cancel = true;
         }
 
-        private void DisplayPanelElements(DataFile data)
+        private void DisplayPanelElements()
         {
             panel3.Controls.Clear();
             textBoxes = new List<TextBox>();
-            checkBoxes = new List<CheckBox>();
+            checkBoxes = new Dictionary<string, CheckBox>();
             panels = new Dictionary<string, Panel>();
             uidNames = new Dictionary<string, TextBox>();
 
@@ -182,36 +202,11 @@ namespace ParserNII
                     checkBox.Text = binFileParam.Value.name + ", " + measure;
                 }
                 checkBox.UseVisualStyleBackColor = true;
-                checkBoxes.Add(checkBox);
-                checkBox.Checked = true;
+                checkBoxes.Add(binFileParam.Value.name, checkBox);
+                checkBox.Checked = false;
                 int index = i;
 
-                if (LineIndexs.ContainsKey(binFileParam.Value.name))
-                {
-
-
-                    checkBox.CheckedChanged += (object sender, EventArgs e) =>
-                    {
-                        if (zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible != checkBox.Checked)
-                        {
-                            zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible = checkBox.Checked;
-
-                            if (checkBox.Checked)
-                            {
-                                zedGraphControl1.AxisChange();
-                                zedGraphControl1.Refresh();
-                            }
-                            else
-                            {
-                                zedGraphControl1.Refresh();
-                            }
-                        }
-                    };
-                }
-                else
-                {
-                    checkBox.Enabled = false;
-                }
+                
 
 
 
@@ -239,7 +234,10 @@ namespace ParserNII
 
             zedGraphControl1.Refresh();
 
-            checkBoxes.ForEach(cb => cb.Checked = false);
+            foreach (var cb in checkBoxes)
+            {
+                cb.Value.Checked = false;
+            }
         }
 
         private void zedGraphControl1_ZoomEvent(ZedGraphControl sender, ZoomState oldState, ZoomState newState)
@@ -257,8 +255,15 @@ namespace ParserNII
 
         private void zedGraphControl1_MouseMove(object sender, MouseEventArgs e)
         {
+            mouseLocation = e.Location;
+            timer1.Interval = 350;
+            timer1.Enabled = true;
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
             GraphPane pane = zedGraphControl1.GraphPane;
-            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
+            zedGraphControl1.GraphPane.ReverseTransform(mouseLocation, out var x, out var y);
             verticalLine.Location.X = x;
 
             CurveItem curve = pane.CurveList[0];
@@ -283,9 +288,7 @@ namespace ParserNII
             }
 
             zedGraphControl1.Invalidate();
-            //zedGraphControl1.Refresh();
-            //drawer.Refresh();
-            //this.Refresh();
         }
     }
+
 }

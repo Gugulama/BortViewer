@@ -48,7 +48,6 @@ namespace ParserNII
         public Drawer(ZedGraphControl control)
         {
             this.control = control;
-            Clear();
 
             GraphPane pane = control.GraphPane;
             pane.XAxis.Type = AxisType.Date;
@@ -107,11 +106,6 @@ namespace ParserNII
             this.xScaleMax = pane.XAxis.Scale.Max;
             this.xScaleMin = pane.XAxis.Scale.Min;
             pane.YAxisList[yAxis].Scale.Min = 0;
-            //pane.YAxisList[yAxis].MajorGrid.IsVisible = true;
-            //pane.YAxisList[yAxis].MajorGrid.DashOn = 10;
-            //pane.YAxisList[yAxis].MajorGrid.DashOff = 5;
-            //pane.YAxisList[yAxis].MajorGrid.Color = Color.LightGray;
-            //pane.YAxisList[yAxis].MajorGrid.IsZeroLine = false;
             pane.YAxisList[yAxis].IsVisible = false;
             pane.YAxisList[yAxis].Title.IsVisible = false;
             control.GraphPane.Title.IsVisible = false;
@@ -125,7 +119,7 @@ namespace ParserNII
             control.Invalidate();
         }
 
-        private void Clear()
+        public void Clear()
         {
             GraphPane pane = control.GraphPane;
 
@@ -135,6 +129,7 @@ namespace ParserNII
             pane.YAxis.Scale.Max = 1.05;
 
             pane.CurveList.Clear();
+            pane.GraphObjList.Clear();
             pane.YAxisList.Clear();
             control.Invalidate();
         }
