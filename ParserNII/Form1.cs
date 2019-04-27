@@ -28,7 +28,7 @@ namespace ParserNII
         public Form1()
         {
             InitializeComponent();
-            drawer = new Drawer(zedGraphControl1); 
+            drawer = new Drawer(zedGraphControl1);
             button1.Visible = false;
             zedGraphControl1.Visible = false;
             FormClosing += Form1_FormClosing;
@@ -55,12 +55,12 @@ namespace ParserNII
                 var parser = Path.GetExtension(ofd.FileName) == ".dat" ? (Parser)new DatFileParser() : new BinFileParser();
                 result = parser.Parse(fileBytes);
 
-                foreach (var pointEventHandler in pointEventHandlers)
-                {
-                    zedGraphControl1.PointValueEvent -= pointEventHandler;
-                }
+                //foreach (var pointEventHandler in pointEventHandlers)
+                //{
+                //    zedGraphControl1.PointValueEvent -= pointEventHandler;
+                //}
 
-                pointEventHandlers = new List<ZedGraphControl.PointValueHandler>();
+                //pointEventHandlers = new List<ZedGraphControl.PointValueHandler>();
 
                 List<XDate> xValues;
                 if (Path.GetExtension(ofd.FileName) == ".dat")
@@ -98,8 +98,8 @@ namespace ParserNII
                             Drawer.GetColor(i));
                         zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
-                        //LineIndexs.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
-                       
+                        LineIndexs.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
+
 
                         checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
                             {
@@ -129,18 +129,18 @@ namespace ParserNII
 
 
 
-                
 
-                
 
-                zedGraphControl1.IsShowPointValues = true;
 
-                pointEventHandlers.Add((pointSender, graphPane, curve, pt) =>
-                {
-                    return "";
-                });
 
-                zedGraphControl1.PointValueEvent += pointEventHandlers.Last();
+                zedGraphControl1.IsShowPointValues = false;
+
+                //pointEventHandlers.Add((pointSender, graphPane, curve, pt) =>
+                //{
+                //    return "";
+                //});
+
+                //zedGraphControl1.PointValueEvent += pointEventHandlers.Last();
 
 
                 drawer.Refresh();
@@ -206,7 +206,7 @@ namespace ParserNII
                 checkBox.Checked = false;
                 int index = i;
 
-                
+
 
 
 
@@ -255,39 +255,55 @@ namespace ParserNII
 
         private void zedGraphControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            mouseLocation = e.Location;
-            timer1.Interval = 350;
-            timer1.Enabled = true;
-        }
+            //mouseLocation = e.Location;
+            //timer1.Interval = 1;
+            //timer1.Enabled = true;
 
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
             GraphPane pane = zedGraphControl1.GraphPane;
-            zedGraphControl1.GraphPane.ReverseTransform(mouseLocation, out var x, out var y);
+            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
             verticalLine.Location.X = x;
 
             CurveItem curve = pane.CurveList[0];
+
 
             // Look for the min and max value
             double min = curve.Points[0].X;
             double max = curve.Points[curve.NPts - 1].X;
 
             // Prevent error if mouse is out of bounds.
-            if (x <= min) return;
-            if (x >= max) return;
-
-            double delta = (max - min) / (curve.NPts - 1);
-            int index = (int)Math.Round((x - min) / delta, 0);
-
-            foreach (var binFileParam in binFileParams)
+            if (x > min && x < max)
             {
-                if (result[index].Data.ContainsKey(binFileParam.Value.name))
+                int index = 0;
+                for (int i = 0; i < curve.NPts; i++)
                 {
-                    uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
+
+                    if (x < curve.Points[i].X)
+                    {
+                        index = i - 1;
+                        break;
+                    }
+                }
+                foreach (var binFileParam in binFileParams)
+                {
+                    if (result[index].Data.ContainsKey(binFileParam.Value.name))
+                    {
+                        uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
+                    }
                 }
             }
-
+            else
+            {
+                foreach (var binFileParam in binFileParams)
+                {
+                    uidNames[binFileParam.Value.name].Text = "";
+                }
+            }
             zedGraphControl1.Invalidate();
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+
         }
     }
 
