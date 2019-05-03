@@ -259,7 +259,6 @@
             this.MinimumSize = new System.Drawing.Size(1191, 766);
             this.Name = "Form1";
             this.Text = "ParserKotoriySmog ver. 0.01";
-            this.Load += new System.EventHandler(this.открытьToolStripMenuItem_Click);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);

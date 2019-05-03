@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ParserNII.DataStructures;
 using ZedGraph;
 
@@ -17,7 +18,6 @@ namespace ParserNII
         private Dictionary<string, CheckBox> checkBoxes;
         private Dictionary<string, Panel> panels;
         private Dictionary<string, TextBox> uidNames;
-        private List<ZedGraphControl.PointValueHandler> pointEventHandlers = new List<ZedGraphControl.PointValueHandler>();
         private LineObj verticalLine;
         private Drawer drawer;
         private Dictionary<string, int> LineIndexs;
@@ -28,22 +28,25 @@ namespace ParserNII
         public Form1()
         {
             InitializeComponent();
-            drawer = new Drawer(zedGraphControl1);
-            button1.Visible = false;
-            zedGraphControl1.Visible = false;
+            drawer = new Drawer(zedGraphControl1);            
             FormClosing += Form1_FormClosing;
             DisplayPanelElements();
+            zedGraphControl1.Enabled = false;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
+        {            
+            OpenFileDialog ofd = new OpenFileDialog();            
             ofd.Filter = "dat files (*.dat)|*.dat|bin files (*.bin)|*.bin";
             ofd.FilterIndex = 2;
             ofd.RestoreDirectory = true;
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
+            {               
+                string settingsPath = "./settings.json";
+                bool[] settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
+                RefreshPanelElements();
                 drawer.Clear();
+                zedGraphControl1.Enabled = true;
                 verticalLine = drawer.CrateVerticalLine();
                 string filename = ofd.FileName;
                 if (filename.EndsWith("gzdat", true, null) || filename.EndsWith("gzbin", true, null))
@@ -54,13 +57,6 @@ namespace ParserNII
                 Размер.Text = (stream.Length / 1024).ToString() + " Кб";
                 var parser = Path.GetExtension(ofd.FileName) == ".dat" ? (Parser)new DatFileParser() : new BinFileParser();
                 result = parser.Parse(fileBytes);
-
-                //foreach (var pointEventHandler in pointEventHandlers)
-                //{
-                //    zedGraphControl1.PointValueEvent -= pointEventHandler;
-                //}
-
-                //pointEventHandlers = new List<ZedGraphControl.PointValueHandler>();
 
                 List<XDate> xValues;
                 if (Path.GetExtension(ofd.FileName) == ".dat")
@@ -90,6 +86,7 @@ namespace ParserNII
                 foreach (var binFileParam in binFileParams)
                 {
                     var checkBox = checkBoxes[binFileParam.Value.name];
+                    var textBox = textBoxes[i];
                     if (arrayResult.Data.ContainsKey(binFileParam.Value.name))
                     {
                         drawer.DrawGraph(xValues,
@@ -122,26 +119,13 @@ namespace ParserNII
                     else
                     {
                         checkBox.Enabled = false;
+                        textBox.Enabled = false;
                     }
+
+                    if (settings[i] && checkBox.Enabled) checkBox.Checked = true;
 
                     i++;
                 }
-
-
-
-
-
-
-
-                zedGraphControl1.IsShowPointValues = false;
-
-                //pointEventHandlers.Add((pointSender, graphPane, curve, pt) =>
-                //{
-                //    return "";
-                //});
-
-                //zedGraphControl1.PointValueEvent += pointEventHandlers.Last();
-
 
                 drawer.Refresh();
 
@@ -153,9 +137,9 @@ namespace ParserNII
         {
             DialogResult result = MessageBox.Show("Сохранить изменения?", "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (result == System.Windows.Forms.DialogResult.Yes)
-            {
-                //string dataValues = Newtonsoft.Json.JsonConvert.SerializeObject(checkBoxes.Select(c => c.Checked).ToArray());
-                //File.WriteAllText("./settings.json", dataValues);
+            {               
+                string dataValues = JsonConvert.SerializeObject(checkBoxes.Select(c => c.Value.Checked).ToArray());
+                File.WriteAllText("./settings.json", dataValues);
             }
             else if (result == System.Windows.Forms.DialogResult.No)
             {
@@ -163,6 +147,21 @@ namespace ParserNII
                 Close();
             }
             else e.Cancel = true;
+        }
+
+        private void RefreshPanelElements()
+        {
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var checkBox = checkBoxes[binFileParam.Value.name];
+                var textBox = textBoxes[i];
+                checkBox.Checked = false;
+                checkBox.Enabled = true;
+                textBox.Enabled = true;
+                textBox.Clear();
+                i++;
+            }
         }
 
         private void DisplayPanelElements()
@@ -205,11 +204,6 @@ namespace ParserNII
                 checkBoxes.Add(binFileParam.Value.name, checkBox);
                 checkBox.Checked = false;
                 int index = i;
-
-
-
-
-
 
                 var panel = new Panel();
                 panel3.Controls.Add(panel);
@@ -260,8 +254,9 @@ namespace ParserNII
             //timer1.Enabled = true;
 
             GraphPane pane = zedGraphControl1.GraphPane;
-            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
-            verticalLine.Location.X = x;
+            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);            
+            verticalLine.Location.X = x; 
+            
 
             CurveItem curve = pane.CurveList[0];
 
