@@ -23,7 +23,9 @@ namespace ParserNII
         private Dictionary<string, int> LineIndexs;
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(d => d.number);
         private List<DataFile> result;
+        private bool[] settings;
         private PointF mouseLocation;
+        private bool isFirstOpen;
 
         public Form1()
         {
@@ -32,19 +34,22 @@ namespace ParserNII
             FormClosing += Form1_FormClosing;
             DisplayPanelElements();
             zedGraphControl1.Enabled = false;
+            isFirstOpen = true;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {            
-            OpenFileDialog ofd = new OpenFileDialog();            
+            OpenFileDialog ofd = new OpenFileDialog();  
             ofd.Filter = "dat files (*.dat)|*.dat|bin files (*.bin)|*.bin";
             ofd.FilterIndex = 2;
             ofd.RestoreDirectory = true;
+
+            if (!isFirstOpen) settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
+
             if (ofd.ShowDialog() == DialogResult.OK)
-            {               
-                string settingsPath = "./settings.json";
-                bool[] settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
-                RefreshPanelElements();
+            {
+                isFirstOpen = false;
+                RefreshPanelElements();                
                 drawer.Clear();
                 zedGraphControl1.Enabled = true;
                 verticalLine = drawer.CrateVerticalLine();
@@ -97,38 +102,41 @@ namespace ParserNII
 
                         LineIndexs.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
 
-
                         checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
                             {
-                                if (zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                try
                                 {
-                                    zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible = checkBox.Checked;
+                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                    {
+                                        zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible = checkBox.Checked;
 
-                                    if (checkBox.Checked)
-                                    {
-                                        zedGraphControl1.AxisChange();
-                                        zedGraphControl1.Refresh();
-                                    }
-                                    else
-                                    {
-                                        zedGraphControl1.Refresh();
+                                        if (checkBox.Checked)
+                                        {
+                                            zedGraphControl1.AxisChange();
+                                            zedGraphControl1.Refresh();
+                                        }
+                                        else
+                                        {
+                                            zedGraphControl1.Refresh();
+                                        }
                                     }
                                 }
+                                catch (KeyNotFoundException ex)
+                                { }
+                                                               
                             };
                     }
                     else
                     {
                         checkBox.Enabled = false;
                         textBox.Enabled = false;
-                    }
-
-                    if (settings[i] && checkBox.Enabled) checkBox.Checked = true;
+                    }                  
 
                     i++;
                 }
 
                 drawer.Refresh();
-
+                RefreshChecks();
                 stream.Close();
             }
         }
@@ -138,7 +146,7 @@ namespace ParserNII
             DialogResult result = MessageBox.Show("Сохранить изменения?", "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (result == System.Windows.Forms.DialogResult.Yes)
             {               
-                string dataValues = JsonConvert.SerializeObject(checkBoxes.Select(c => c.Value.Checked).ToArray());
+                string dataValues = JsonConvert.SerializeObject(settings);
                 File.WriteAllText("./settings.json", dataValues);
             }
             else if (result == System.Windows.Forms.DialogResult.No)
@@ -149,6 +157,18 @@ namespace ParserNII
             else e.Cancel = true;
         }
 
+        private void RefreshChecks()
+        {
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var checkBox = checkBoxes[binFileParam.Value.name];
+                checkBox.Checked = false;
+                if (checkBox.Enabled && settings[i]) checkBox.Checked = true;                
+                i++;
+            }
+        }
+
         private void RefreshPanelElements()
         {
             int i = 0;
@@ -156,7 +176,6 @@ namespace ParserNII
             {
                 var checkBox = checkBoxes[binFileParam.Value.name];
                 var textBox = textBoxes[i];
-                checkBox.Checked = false;
                 checkBox.Enabled = true;
                 textBox.Enabled = true;
                 textBox.Clear();
@@ -300,6 +319,21 @@ namespace ParserNII
         {
 
         }
-    }
 
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Загрузить сохраненные изменения?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                string settingsPath = "./settings.json";
+                settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
+            }
+            else settings = new bool[78];
+        }
+    }
 }

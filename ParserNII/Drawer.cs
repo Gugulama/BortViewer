@@ -65,6 +65,7 @@ namespace ParserNII
             pane.XAxis.MajorGrid.DashOff = 5;
             pane.XAxis.MajorGrid.Color = Color.LightGray;
             pane.XAxis.MajorGrid.IsZeroLine = true;
+            pane.YAxis.Title.IsVisible = false;
 
             pane.Margin.Left = 0;
             pane.Margin.Top = 0;
@@ -77,6 +78,9 @@ namespace ParserNII
             control.IsShowHScrollBar = true;
             control.IsAutoScrollRange = true;
             control.ScrollGrace = 0.01;
+
+            control.GraphPane.Title.IsVisible = false;
+            control.GraphPane.Legend.IsVisible = false;
 
         }
 
@@ -108,8 +112,6 @@ namespace ParserNII
             pane.YAxisList[yAxis].Scale.Min = 0;
             pane.YAxisList[yAxis].IsVisible = false;
             pane.YAxisList[yAxis].Title.IsVisible = false;
-            control.GraphPane.Title.IsVisible = false;
-            control.GraphPane.Legend.IsVisible = false;
         }
 
         public void Refresh()
