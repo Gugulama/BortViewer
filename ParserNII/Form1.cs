@@ -40,7 +40,7 @@ namespace ParserNII
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {            
             OpenFileDialog ofd = new OpenFileDialog();  
-            ofd.Filter = "dat files (*.dat)|*.dat|bin files (*.bin)|*.bin";
+            ofd.Filter = "dat files (*.dat)|*.dat|bin files (*.bin)|*.bin|All files (*.*)|*.*";
             ofd.FilterIndex = 2;
             ofd.RestoreDirectory = true;
 

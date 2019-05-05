@@ -65,7 +65,7 @@ namespace ParserNII
             pane.XAxis.MajorGrid.DashOff = 5;
             pane.XAxis.MajorGrid.Color = Color.LightGray;
             pane.XAxis.MajorGrid.IsZeroLine = true;
-            pane.YAxis.Title.IsVisible = false;
+            pane.YAxis.IsVisible = false;
 
             pane.Margin.Left = 0;
             pane.Margin.Top = 0;
