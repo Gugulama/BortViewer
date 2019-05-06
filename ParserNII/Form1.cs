@@ -40,8 +40,12 @@ namespace ParserNII
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {            
             OpenFileDialog ofd = new OpenFileDialog();  
-            ofd.Filter = "dat files (*.dat)|*.dat|bin files (*.bin)|*.bin|All files (*.*)|*.*";
-            ofd.FilterIndex = 2;
+            ofd.Filter = "dat files (*.dat)|*.dat|" +
+                "gzdat files (*.gzdat)|*.gzdat|" +
+                "bin files (*.bin)|*.bin|" +
+                "gzbin files (*.gzbin)|*.gzbin|" +
+                "All files (*.*)|*.*";
+            ofd.FilterIndex = 5;
             ofd.RestoreDirectory = true;
 
             if (!isFirstOpen) settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
@@ -60,11 +64,11 @@ namespace ParserNII
                 byte[] fileBytes = new byte[stream.Length];
                 stream.Read(fileBytes, 0, (int)stream.Length);
                 Размер.Text = (stream.Length / 1024).ToString() + " Кб";
-                var parser = Path.GetExtension(ofd.FileName) == ".dat" ? (Parser)new DatFileParser() : new BinFileParser();
+                var parser = (Path.GetExtension(ofd.FileName) == ".dat" || Path.GetExtension(ofd.FileName) == ".gzdat") ? (Parser)new DatFileParser() : new BinFileParser();
                 result = parser.Parse(fileBytes);
 
                 List<XDate> xValues;
-                if (Path.GetExtension(ofd.FileName) == ".dat")
+                if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {
                     xValues = result.Select(r => new XDate(DateTimeOffset.FromUnixTimeSeconds((uint)r.Data["Время в “UNIX” формате"].OriginalValue).AddHours(3).DateTime)).ToList();
 
@@ -143,18 +147,8 @@ namespace ParserNII
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult result = MessageBox.Show("Сохранить изменения?", "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (result == System.Windows.Forms.DialogResult.Yes)
-            {               
-                string dataValues = JsonConvert.SerializeObject(settings);
-                File.WriteAllText("./settings.json", dataValues);
-            }
-            else if (result == System.Windows.Forms.DialogResult.No)
-            {
-                FormClosing -= Form1_FormClosing;
-                Close();
-            }
-            else e.Cancel = true;
+            string dataValues = JsonConvert.SerializeObject(checkBoxes.Select(c => c.Value.Checked).ToArray());
+            File.WriteAllText("./settings.json", dataValues);
         }
 
         private void RefreshChecks()
@@ -327,13 +321,10 @@ namespace ParserNII
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Загрузить сохраненные изменения?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == System.Windows.Forms.DialogResult.Yes)
-            {
+          
                 string settingsPath = "./settings.json";
                 settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
-            }
-            else settings = new bool[78];
+
         }
     }
 }
