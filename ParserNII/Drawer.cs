@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -100,6 +101,16 @@ namespace ParserNII
                 list1.Add(point);
             }
 
+            double min = 0;
+            double max = 0;
+            foreach (var item in list1)
+            {
+                if (item.Y < min)
+                    min = item.Y;
+                else if (item.Y > max)
+                    max = item.Y;
+            }
+
             int yAxis = pane.AddYAxis(name);
             LineItem myCurve = pane.AddCurve(name, list1, color, SymbolType.None);
             myCurve.YAxisIndex = yAxis;
@@ -109,7 +120,8 @@ namespace ParserNII
             pane.XAxis.Scale.Max = x.Last();
             this.xScaleMax = pane.XAxis.Scale.Max;
             this.xScaleMin = pane.XAxis.Scale.Min;
-            pane.YAxisList[yAxis].Scale.Min = 0;
+            //pane.YAxisList[yAxis].Scale.Min = min - 10;
+            //pane.YAxisList[yAxis].Scale.Max = max + 10;
             pane.YAxisList[yAxis].IsVisible = false;
             pane.YAxisList[yAxis].Title.IsVisible = false;
         }

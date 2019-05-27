@@ -60,7 +60,7 @@ namespace ParserNII.DataStructures
 
                 // byte
                 var CoolingCircuitTemperature = (sbyte)dataChunk[position++];
-                result.Data.Add("Температура контура охлаждения", new DataElement { OriginalValue = CoolingCircuitTemperature, DisplayValue = CoolingCircuitTemperature.ToString(), ChartValue = CoolingCircuitTemperature, Display = true, DataParams = datFileParams["Температура воды на выходе дизеля"] });
+                result.Data.Add("Температура воды на выходе дизеля", new DataElement { OriginalValue = CoolingCircuitTemperature, DisplayValue = CoolingCircuitTemperature.ToString(), ChartValue = CoolingCircuitTemperature, Display = true, DataParams = datFileParams["Температура воды на выходе дизеля"] });
 
                 // short
                 buffer = new[] { dataChunk[position++], dataChunk[position++] };

@@ -115,4 +115,9 @@
     <Content Include="Config.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties config_1json__JsonSchema="http://json.schemastore.org/cryproj.53.schema" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
