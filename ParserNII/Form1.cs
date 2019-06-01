@@ -32,15 +32,71 @@ namespace ParserNII
         public Form1()
         {
             InitializeComponent();
-            drawer = new Drawer(zedGraphControl1);            
+
+            int i;
+            panel3.Controls.Clear();
+            textBoxes = new List<TextBox>();
+            checkBoxes = new Dictionary<string, CheckBox>();
+            panels = new Dictionary<string, Panel>();
+            uidNames = new Dictionary<string, TextBox>();
+
+            i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var textBox = new TextBox();
+                textBoxes.Add(textBox);
+                panel3.Controls.Add(textBox);
+                textBox.Location = new Point(2, 4 + i * 26);
+                textBox.Name = $"textBox{i}";
+                textBox.ReadOnly = true;
+                textBox.Size = new Size(62, 20);
+                textBox.TabIndex = 30 + i;
+
+                var checkBox = new CheckBox();
+                panel3.Controls.Add(checkBox);
+                checkBox.AutoSize = true;
+                checkBox.Location = new Point(90, 6 + i * 26);
+                checkBox.Name = $"checkBox{i}";
+                checkBox.Size = new Size(80, 17);
+                checkBox.TabIndex = 0;
+                string measure = binFileParam.Value.measure;
+                if (string.IsNullOrEmpty(measure))
+                {
+                    checkBox.Text = binFileParam.Value.name;
+                }
+                else
+                {
+                    checkBox.Text = binFileParam.Value.name + ", " + measure;
+                }
+                checkBox.UseVisualStyleBackColor = true;
+                checkBoxes.Add(binFileParam.Value.name, checkBox);
+                checkBox.Checked = false;
+                int index = i;
+
+                var panel = new Panel();
+                panel3.Controls.Add(panel);
+                panel.Location = new Point(70, 6 + i * 26);
+                panel.Name = $"panel{i}";
+                panel.Size = new Size(17, 17);
+                panel.TabIndex = 0;
+                panels.Add(binFileParam.Value.name, panel);
+                panel.BackColor = Drawer.GetColor(i);
+                uidNames.Add(binFileParam.Value.name, textBoxes[i]);
+                i++;
+            }
+
+            button1.Visible = true;
+            zedGraphControl1.Visible = true;
+            drawer = new Drawer(zedGraphControl1);
+
             FormClosing += Form1_FormClosing;
             zedGraphControl1.Enabled = false;
             isFirstOpen = true;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
-        {            
-            OpenFileDialog ofd = new OpenFileDialog();  
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "dat files (*.dat)|*.dat|" +
                 "gzdat files (*.gzdat)|*.gzdat|" +
                 "bin files (*.bin)|*.bin|" +
@@ -50,7 +106,10 @@ namespace ParserNII
             ofd.RestoreDirectory = true;
             int i = 0;
 
-            if (!isFirstOpen) settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
+            if (!isFirstOpen)
+            {
+                settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
+            }
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -69,46 +128,46 @@ namespace ParserNII
                         i = 0;
                         foreach (var datFileParam in datFileParams)
                         {
-                            var textBox = new TextBox();
-                            textBoxes.Add(textBox);
-                            panel3.Controls.Add(textBox);
-                            textBox.Location = new Point(2, 4 + i * 26);
-                            textBox.Name = $"textBox{i}";
-                            textBox.ReadOnly = true;
-                            textBox.Size = new Size(62, 20);
-                            textBox.TabIndex = 30 + i;
+                                var textBox = new TextBox();
+                                textBoxes.Add(textBox);
+                                panel3.Controls.Add(textBox);
+                                textBox.Location = new Point(2, 4 + i * 26);
+                                textBox.Name = $"textBox{i}";
+                                textBox.ReadOnly = true;
+                                textBox.Size = new Size(62, 20);
+                                textBox.TabIndex = 30 + i;
 
-                            var checkBox = new CheckBox();
-                            panel3.Controls.Add(checkBox);
-                            checkBox.AutoSize = true;
-                            checkBox.Location = new Point(90, 6 + i * 26);
-                            checkBox.Name = $"checkBox{i}";
-                            checkBox.Size = new Size(80, 17);
-                            checkBox.TabIndex = 0;
-                            string measure = datFileParam.Value.measure;
-                            if (string.IsNullOrEmpty(measure))
-                            {
-                                checkBox.Text = datFileParam.Value.name;
-                            }
-                            else
-                            {
-                                checkBox.Text = datFileParam.Value.name + ", " + measure;
-                            }
-                            checkBox.UseVisualStyleBackColor = true;
-                            checkBoxes.Add(datFileParam.Value.name, checkBox);
-                            checkBox.Checked = false;
-                            int index = i;
+                                var checkBox = new CheckBox();
+                                panel3.Controls.Add(checkBox);
+                                checkBox.AutoSize = true;
+                                checkBox.Location = new Point(90, 6 + i * 26);
+                                checkBox.Name = $"checkBox{i}";
+                                checkBox.Size = new Size(80, 17);
+                                checkBox.TabIndex = 0;
+                                string measure = datFileParam.Value.measure;
+                                if (string.IsNullOrEmpty(measure))
+                                {
+                                    checkBox.Text = datFileParam.Value.name;
+                                }
+                                else
+                                {
+                                    checkBox.Text = datFileParam.Value.name + ", " + measure;
+                                }
+                                checkBox.UseVisualStyleBackColor = true;
+                                checkBoxes.Add(datFileParam.Value.name, checkBox);
+                                checkBox.Checked = false;
+                                int index = i;
 
-                            var panel = new Panel();
-                            panel3.Controls.Add(panel);
-                            panel.Location = new Point(70, 6 + i * 26);
-                            panel.Name = $"panel{i}";
-                            panel.Size = new Size(17, 17);
-                            panel.TabIndex = 0;
-                            panels.Add(datFileParam.Value.name, panel);
-                            panel.BackColor = Drawer.GetColor(i);
-                            uidNames.Add(datFileParam.Value.name, textBoxes[i]);
-                            i++;
+                                var panel = new Panel();
+                                panel3.Controls.Add(panel);
+                                panel.Location = new Point(70, 6 + i * 26);
+                                panel.Name = $"panel{i}";
+                                panel.Size = new Size(17, 17);
+                                panel.TabIndex = 0;
+                                panels.Add(datFileParam.Value.name, panel);
+                                panel.BackColor = Drawer.GetColor(i);
+                                uidNames.Add(datFileParam.Value.name, textBoxes[i]);
+                                i++;
                         }
 
                         button1.Visible = true;
@@ -123,6 +182,8 @@ namespace ParserNII
                         textBox.Enabled = true;
                         textBox.Clear();
                         i++;
+
+
                     }
                 }
                 else
@@ -195,7 +256,7 @@ namespace ParserNII
                         i++;
                     }
                 }
-                                 
+
                 drawer.Clear();
                 zedGraphControl1.Enabled = true;
                 verticalLine = drawer.CrateVerticalLine();
@@ -214,20 +275,20 @@ namespace ParserNII
                 {
                     xValues = result.Select(r => new XDate(DateTimeOffset.FromUnixTimeSeconds((uint)r.Data["Время в “UNIX” формате"].OriginalValue).AddHours(3).DateTime)).ToList();
 
-                    Тип.Text = TrainNames.NamesDictionary[(byte)result[0].Data["Тип локомотива"].OriginalValue];
-                    Номер.Text = result[0].Data["№ тепловоза"].DisplayValue;
-                    Секция.Text = result[0].Data["Секция локомотива"].DisplayValue;                    
+                    type.Text = TrainNames.NamesDictionary[(byte)result[0].Data["Тип локомотива"].OriginalValue];
+                    number.Text = result[0].Data["№ тепловоза"].DisplayValue;
+                    section.Text = result[0].Data["Секция локомотива"].DisplayValue;
                 }
                 else
                 {
                     xValues = result.Select(r => new XDate(DateTimeOffset.FromUnixTimeMilliseconds((long)r.Data["Время в “UNIX” формате"].OriginalValue).AddHours(3).DateTime)).ToList();
                     string[] nameParams = Path.GetFileName(ofd.FileName).Split('_', '-');
-                    Тип.Text = nameParams[2];
-                    Номер.Text = nameParams[3];
-                    Секция.Text = nameParams[4];                    
+                    type.Text = nameParams[2];
+                    number.Text = nameParams[3];
+                    section.Text = nameParams[4];
                 }
 
-                Время.Text = result.First().Data["Время в “UNIX” формате"].DisplayValue + " - " + result.Last().Data["Время в “UNIX” формате"].DisplayValue;
+                ВремяLabel.Text = result.First().Data["Время в “UNIX” формате"].DisplayValue + " - " + result.Last().Data["Время в “UNIX” формате"].DisplayValue;
 
                 var arrayResult = parser.ToArray(result);
 
@@ -235,51 +296,52 @@ namespace ParserNII
                 i = 0;
 
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
-                    foreach (var datFileParam in datFileParams) {
-                    var checkBox = checkBoxes[datFileParam.Value.name];
-                    var textBox = textBoxes[i];
-                    if (arrayResult.Data.ContainsKey(datFileParam.Value.name))
+                    foreach (var datFileParam in datFileParams)
                     {
-                        drawer.DrawGraph(xValues,
-                            arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
-                            datFileParam.Value.name,
-                            Drawer.GetColor(i));
-                        zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
+                        var checkBox = checkBoxes[datFileParam.Value.name];
+                        var textBox = textBoxes[i];
+                        if (arrayResult.Data.ContainsKey(datFileParam.Value.name))
+                        {
+                            drawer.DrawGraph(xValues,
+                                arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                                datFileParam.Value.name,
+                                Drawer.GetColor(i));
+                            zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
-                        LineIndexs.Add(datFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
+                            LineIndexs.Add(datFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
 
-                        checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
-                            {
-                                try
+                            checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
                                 {
-                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                    try
                                     {
-                                        zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible = checkBox.Checked;
+                                        if (zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                        {
+                                            zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible = checkBox.Checked;
 
-                                        if (checkBox.Checked)
-                                        {
-                                            zedGraphControl1.AxisChange();
-                                            zedGraphControl1.Refresh();
-                                        }
-                                        else
-                                        {
-                                            zedGraphControl1.Refresh();
+                                            if (checkBox.Checked)
+                                            {
+                                                zedGraphControl1.AxisChange();
+                                                zedGraphControl1.Refresh();
+                                            }
+                                            else
+                                            {
+                                                zedGraphControl1.Refresh();
+                                            }
                                         }
                                     }
-                                }
-                                catch (KeyNotFoundException ex)
-                                { }
-                                                               
-                            };
-                    }
-                    else
-                    {
-                        checkBox.Enabled = false;
-                        textBox.Enabled = false;
-                    }                  
+                                    catch (KeyNotFoundException ex)
+                                    { }
 
-                    i++;
-                }
+                                };
+                        }
+                        else
+                        {
+                            checkBox.Enabled = false;
+                            textBox.Enabled = false;
+                        }
+
+                        i++;
+                    }
                 else
                     foreach (var binFileParam in binFileParams)
                     {
@@ -363,8 +425,8 @@ namespace ParserNII
                 File.WriteAllText("./settings.json", dataValues);
             }
             catch (Exception exp) { }
-            
-        }           
+
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -398,9 +460,9 @@ namespace ParserNII
             //timer1.Enabled = true;
 
             GraphPane pane = zedGraphControl1.GraphPane;
-            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);            
-            verticalLine.Location.X = x; 
-            
+            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
+            verticalLine.Location.X = x;
+
 
             CurveItem curve = pane.CurveList[0];
 
@@ -442,7 +504,7 @@ namespace ParserNII
                         }
                     }
                 }
-                
+
             }
             else
             {
@@ -460,7 +522,7 @@ namespace ParserNII
                         uidNames[binFileParam.Value.name].Text = "";
                     }
                 }
-                
+
             }
             zedGraphControl1.Invalidate();
         }
@@ -477,93 +539,93 @@ namespace ParserNII
 
         private void Form1_Load(object sender, EventArgs e)
         {
-          
-                string settingsPath = "./settings.json";
-                settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
+
+            string settingsPath = "./settings.json";
+            settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
 
         }
 
-        //private void RefreshChecks()
-        //{
-        //    int i = 0;
-        //    foreach (var binFileParam in binFileParams)
-        //    {
-        //        var checkBox = checkBoxes[binFileParam.Value.name];
-        //        checkBox.Checked = false;
-        //        if (checkBox.Enabled && settings[i]) checkBox.Checked = true;                
-        //        i++;
-        //    }
-        //}
+        private void RefreshChecks()
+        {
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var checkBox = checkBoxes[binFileParam.Value.name];
+                checkBox.Checked = false;
+                if (checkBox.Enabled && settings[i]) checkBox.Checked = true;
+                i++;
+            }
+        }
 
-        //private void RefreshPanelElements()
-        //{
-        //    int i = 0;
-        //    foreach (var binFileParam in binFileParams)
-        //    {
-        //        var checkBox = checkBoxes[binFileParam.Value.name];
-        //        var textBox = textBoxes[i];
-        //        checkBox.Enabled = true;
-        //        textBox.Enabled = true;
-        //        textBox.Clear();
-        //        i++;
-        //    }
-        //}
+        private void RefreshPanelElements()
+        {
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var checkBox = checkBoxes[binFileParam.Value.name];
+                var textBox = textBoxes[i];
+                checkBox.Enabled = true;
+                textBox.Enabled = true;
+                textBox.Clear();
+                i++;
+            }
+        }
 
-        //private void DisplayPanelElements()
-        //{
-        //    panel3.Controls.Clear();
-        //    textBoxes = new List<TextBox>();
-        //    checkBoxes = new Dictionary<string, CheckBox>();
-        //    panels = new Dictionary<string, Panel>();
-        //    uidNames = new Dictionary<string, TextBox>();
+        private void DisplayPanelElements()
+        {
+            panel3.Controls.Clear();
+            textBoxes = new List<TextBox>();
+            checkBoxes = new Dictionary<string, CheckBox>();
+            panels = new Dictionary<string, Panel>();
+            uidNames = new Dictionary<string, TextBox>();
 
-        //    int i = 0;
-        //    foreach (var binFileParam in binFileParams)
-        //    {
-        //        var textBox = new TextBox();
-        //        textBoxes.Add(textBox);
-        //        panel3.Controls.Add(textBox);
-        //        textBox.Location = new Point(2, 4 + i * 26);
-        //        textBox.Name = $"textBox{i}";
-        //        textBox.ReadOnly = true;
-        //        textBox.Size = new Size(62, 20);
-        //        textBox.TabIndex = 30 + i;
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var textBox = new TextBox();
+                textBoxes.Add(textBox);
+                panel3.Controls.Add(textBox);
+                textBox.Location = new Point(2, 4 + i * 26);
+                textBox.Name = $"textBox{i}";
+                textBox.ReadOnly = true;
+                textBox.Size = new Size(62, 20);
+                textBox.TabIndex = 30 + i;
 
-        //        var checkBox = new CheckBox();
-        //        panel3.Controls.Add(checkBox);
-        //        checkBox.AutoSize = true;
-        //        checkBox.Location = new Point(90, 6 + i * 26);
-        //        checkBox.Name = $"checkBox{i}";
-        //        checkBox.Size = new Size(80, 17);
-        //        checkBox.TabIndex = 0;
-        //        string measure = binFileParam.Value.measure;
-        //        if (string.IsNullOrEmpty(measure))
-        //        {
-        //            checkBox.Text = binFileParam.Value.name;
-        //        }
-        //        else
-        //        {
-        //            checkBox.Text = binFileParam.Value.name + ", " + measure;
-        //        }
-        //        checkBox.UseVisualStyleBackColor = true;
-        //        checkBoxes.Add(binFileParam.Value.name, checkBox);
-        //        checkBox.Checked = false;
-        //        int index = i;
+                var checkBox = new CheckBox();
+                panel3.Controls.Add(checkBox);
+                checkBox.AutoSize = true;
+                checkBox.Location = new Point(90, 6 + i * 26);
+                checkBox.Name = $"checkBox{i}";
+                checkBox.Size = new Size(80, 17);
+                checkBox.TabIndex = 0;
+                string measure = binFileParam.Value.measure;
+                if (string.IsNullOrEmpty(measure))
+                {
+                    checkBox.Text = binFileParam.Value.name;
+                }
+                else
+                {
+                    checkBox.Text = binFileParam.Value.name + ", " + measure;
+                }
+                checkBox.UseVisualStyleBackColor = true;
+                checkBoxes.Add(binFileParam.Value.name, checkBox);
+                checkBox.Checked = false;
+                int index = i;
 
-        //        var panel = new Panel();
-        //        panel3.Controls.Add(panel);
-        //        panel.Location = new Point(70, 6 + i * 26);
-        //        panel.Name = $"panel{i}";
-        //        panel.Size = new Size(17, 17);
-        //        panel.TabIndex = 0;
-        //        panels.Add(binFileParam.Value.name, panel);
-        //        panel.BackColor = Drawer.GetColor(i);
-        //        uidNames.Add(binFileParam.Value.name, textBoxes[i]);
-        //        i++;
-        //    }
+                var panel = new Panel();
+                panel3.Controls.Add(panel);
+                panel.Location = new Point(70, 6 + i * 26);
+                panel.Name = $"panel{i}";
+                panel.Size = new Size(17, 17);
+                panel.TabIndex = 0;
+                panels.Add(binFileParam.Value.name, panel);
+                panel.BackColor = Drawer.GetColor(i);
+                uidNames.Add(binFileParam.Value.name, textBoxes[i]);
+                i++;
+            }
 
-        //    button1.Visible = true;
-        //    zedGraphControl1.Visible = true;
-        //}
+            button1.Visible = true;
+            zedGraphControl1.Visible = true;
+        }
     }
 }

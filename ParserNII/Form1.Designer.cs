@@ -37,11 +37,13 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.zedGraphControl1 = new ZedGraph.ZedGraphControl();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.Секция = new System.Windows.Forms.Label();
-            this.Время = new System.Windows.Forms.Label();
+            this.section = new System.Windows.Forms.Label();
+            this.time = new System.Windows.Forms.Label();
             this.ВремяLabel = new System.Windows.Forms.Label();
-            this.Номер = new System.Windows.Forms.Label();
-            this.Тип = new System.Windows.Forms.Label();
+            this.number = new System.Windows.Forms.Label();
+            this.type = new System.Windows.Forms.Label();
+            this.Размер = new System.Windows.Forms.Label();
+            this.РазмерLabel = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -49,8 +51,6 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.РазмерLabel = new System.Windows.Forms.Label();
-            this.Размер = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -127,11 +127,11 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.Секция);
-            this.groupBox4.Controls.Add(this.Время);
+            this.groupBox4.Controls.Add(this.section);
+            this.groupBox4.Controls.Add(this.time);
             this.groupBox4.Controls.Add(this.ВремяLabel);
-            this.groupBox4.Controls.Add(this.Номер);
-            this.groupBox4.Controls.Add(this.Тип);
+            this.groupBox4.Controls.Add(this.number);
+            this.groupBox4.Controls.Add(this.type);
             this.groupBox4.Controls.Add(this.Размер);
             this.groupBox4.Controls.Add(this.РазмерLabel);
             this.groupBox4.Location = new System.Drawing.Point(12, 27);
@@ -141,22 +141,22 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Информация";
             // 
-            // Секция
+            // section
             // 
-            this.Секция.AutoSize = true;
-            this.Секция.Location = new System.Drawing.Point(139, 20);
-            this.Секция.Name = "Секция";
-            this.Секция.Size = new System.Drawing.Size(44, 13);
-            this.Секция.TabIndex = 27;
-            this.Секция.Text = "Секция";
+            this.section.AutoSize = true;
+            this.section.Location = new System.Drawing.Point(139, 20);
+            this.section.Name = "section";
+            this.section.Size = new System.Drawing.Size(44, 13);
+            this.section.TabIndex = 27;
+            this.section.Text = "Секция";
             // 
-            // Время
+            // time
             // 
-            this.Время.AutoSize = true;
-            this.Время.Location = new System.Drawing.Point(308, 20);
-            this.Время.Name = "Время";
-            this.Время.Size = new System.Drawing.Size(0, 13);
-            this.Время.TabIndex = 25;
+            this.time.AutoSize = true;
+            this.time.Location = new System.Drawing.Point(308, 20);
+            this.time.Name = "time";
+            this.time.Size = new System.Drawing.Size(0, 13);
+            this.time.TabIndex = 25;
             // 
             // ВремяLabel
             // 
@@ -167,23 +167,40 @@
             this.ВремяLabel.TabIndex = 24;
             this.ВремяLabel.Text = "Время данных:";
             // 
-            // Номер
+            // number
             // 
-            this.Номер.AutoSize = true;
-            this.Номер.Location = new System.Drawing.Point(92, 20);
-            this.Номер.Name = "Номер";
-            this.Номер.Size = new System.Drawing.Size(41, 13);
-            this.Номер.TabIndex = 23;
-            this.Номер.Text = "Номер";
+            this.number.AutoSize = true;
+            this.number.Location = new System.Drawing.Point(92, 20);
+            this.number.Name = "number";
+            this.number.Size = new System.Drawing.Size(41, 13);
+            this.number.TabIndex = 23;
+            this.number.Text = "Номер";
             // 
-            // Тип
+            // type
             // 
-            this.Тип.AutoSize = true;
-            this.Тип.Location = new System.Drawing.Point(18, 20);
-            this.Тип.Name = "Тип";
-            this.Тип.Size = new System.Drawing.Size(68, 13);
-            this.Тип.TabIndex = 21;
-            this.Тип.Text = "Тип локо-ва";
+            this.type.AutoSize = true;
+            this.type.Location = new System.Drawing.Point(18, 20);
+            this.type.Name = "type";
+            this.type.Size = new System.Drawing.Size(68, 13);
+            this.type.TabIndex = 21;
+            this.type.Text = "Тип локо-ва";
+            // 
+            // Размер
+            // 
+            this.Размер.AutoSize = true;
+            this.Размер.Location = new System.Drawing.Point(617, 20);
+            this.Размер.Name = "Размер";
+            this.Размер.Size = new System.Drawing.Size(0, 13);
+            this.Размер.TabIndex = 17;
+            // 
+            // РазмерLabel
+            // 
+            this.РазмерLabel.AutoSize = true;
+            this.РазмерLabel.Location = new System.Drawing.Point(569, 20);
+            this.РазмерLabel.Name = "РазмерLabel";
+            this.РазмерLabel.Size = new System.Drawing.Size(49, 13);
+            this.РазмерLabel.TabIndex = 16;
+            this.РазмерLabel.Text = "Размер:";
             // 
             // label4
             // 
@@ -238,23 +255,6 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // РазмерLabel
-            // 
-            this.РазмерLabel.AutoSize = true;
-            this.РазмерLabel.Location = new System.Drawing.Point(569, 20);
-            this.РазмерLabel.Name = "РазмерLabel";
-            this.РазмерLabel.Size = new System.Drawing.Size(49, 13);
-            this.РазмерLabel.TabIndex = 16;
-            this.РазмерLabel.Text = "Размер:";
-            // 
-            // Размер
-            // 
-            this.Размер.AutoSize = true;
-            this.Размер.Location = new System.Drawing.Point(617, 20);
-            this.Размер.Name = "Размер";
-            this.Размер.Size = new System.Drawing.Size(0, 13);
-            this.Размер.TabIndex = 17;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -290,13 +290,13 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private ZedGraph.ZedGraphControl zedGraphControl1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label Номер;
-        private System.Windows.Forms.Label Тип;
-        private System.Windows.Forms.Label Время;
+        private System.Windows.Forms.Label number;
+        private System.Windows.Forms.Label type;
+        private System.Windows.Forms.Label time;
         private System.Windows.Forms.Label ВремяLabel;
         private System.Windows.Forms.Button button1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.Label Секция;
+        private System.Windows.Forms.Label section;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Panel panel3;
