@@ -32,66 +32,22 @@ namespace ParserNII
         public Form1()
         {
             InitializeComponent();
-
-            int i;
-            panel3.Controls.Clear();
-            textBoxes = new List<TextBox>();
-            checkBoxes = new Dictionary<string, CheckBox>();
-            panels = new Dictionary<string, Panel>();
-            uidNames = new Dictionary<string, TextBox>();
-
-            i = 0;
-            foreach (var binFileParam in binFileParams)
-            {
-                var textBox = new TextBox();
-                textBoxes.Add(textBox);
-                panel3.Controls.Add(textBox);
-                textBox.Location = new Point(2, 4 + i * 26);
-                textBox.Name = $"textBox{i}";
-                textBox.ReadOnly = true;
-                textBox.Size = new Size(62, 20);
-                textBox.TabIndex = 30 + i;
-
-                var checkBox = new CheckBox();
-                panel3.Controls.Add(checkBox);
-                checkBox.AutoSize = true;
-                checkBox.Location = new Point(90, 6 + i * 26);
-                checkBox.Name = $"checkBox{i}";
-                checkBox.Size = new Size(80, 17);
-                checkBox.TabIndex = 0;
-                string measure = binFileParam.Value.measure;
-                if (string.IsNullOrEmpty(measure))
-                {
-                    checkBox.Text = binFileParam.Value.name;
-                }
-                else
-                {
-                    checkBox.Text = binFileParam.Value.name + ", " + measure;
-                }
-                checkBox.UseVisualStyleBackColor = true;
-                checkBoxes.Add(binFileParam.Value.name, checkBox);
-                checkBox.Checked = false;
-                int index = i;
-
-                var panel = new Panel();
-                panel3.Controls.Add(panel);
-                panel.Location = new Point(70, 6 + i * 26);
-                panel.Name = $"panel{i}";
-                panel.Size = new Size(17, 17);
-                panel.TabIndex = 0;
-                panels.Add(binFileParam.Value.name, panel);
-                panel.BackColor = Drawer.GetColor(i);
-                uidNames.Add(binFileParam.Value.name, textBoxes[i]);
-                i++;
-            }
-
+            BinDisplayPanel();
             button1.Visible = true;
             zedGraphControl1.Visible = true;
             drawer = new Drawer(zedGraphControl1);
-
             FormClosing += Form1_FormClosing;
             zedGraphControl1.Enabled = false;
             isFirstOpen = true;
+            var keys = datFileParams.Keys.ToArray();
+            for (int i = 0; i < datFileParams.Count; i++)
+            {
+                if (i < 6)
+                {
+                    datFileParams.Remove(keys[i]);
+                }
+            }
+
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -118,143 +74,15 @@ namespace ParserNII
                 {
                     isDatFile = true;
                     //displaypanelElements
-                    {
-                        panel3.Controls.Clear();
-                        textBoxes = new List<TextBox>();
-                        checkBoxes = new Dictionary<string, CheckBox>();
-                        panels = new Dictionary<string, Panel>();
-                        uidNames = new Dictionary<string, TextBox>();
-
-                        i = 0;
-                        foreach (var datFileParam in datFileParams)
-                        {
-                                var textBox = new TextBox();
-                                textBoxes.Add(textBox);
-                                panel3.Controls.Add(textBox);
-                                textBox.Location = new Point(2, 4 + i * 26);
-                                textBox.Name = $"textBox{i}";
-                                textBox.ReadOnly = true;
-                                textBox.Size = new Size(62, 20);
-                                textBox.TabIndex = 30 + i;
-
-                                var checkBox = new CheckBox();
-                                panel3.Controls.Add(checkBox);
-                                checkBox.AutoSize = true;
-                                checkBox.Location = new Point(90, 6 + i * 26);
-                                checkBox.Name = $"checkBox{i}";
-                                checkBox.Size = new Size(80, 17);
-                                checkBox.TabIndex = 0;
-                                string measure = datFileParam.Value.measure;
-                                if (string.IsNullOrEmpty(measure))
-                                {
-                                    checkBox.Text = datFileParam.Value.name;
-                                }
-                                else
-                                {
-                                    checkBox.Text = datFileParam.Value.name + ", " + measure;
-                                }
-                                checkBox.UseVisualStyleBackColor = true;
-                                checkBoxes.Add(datFileParam.Value.name, checkBox);
-                                checkBox.Checked = false;
-                                int index = i;
-
-                                var panel = new Panel();
-                                panel3.Controls.Add(panel);
-                                panel.Location = new Point(70, 6 + i * 26);
-                                panel.Name = $"panel{i}";
-                                panel.Size = new Size(17, 17);
-                                panel.TabIndex = 0;
-                                panels.Add(datFileParam.Value.name, panel);
-                                panel.BackColor = Drawer.GetColor(i);
-                                uidNames.Add(datFileParam.Value.name, textBoxes[i]);
-                                i++;
-                        }
-
-                        button1.Visible = true;
-                        zedGraphControl1.Visible = true;
-                    }
-                    i = 0;
-                    foreach (var datFileParam in datFileParams)
-                    {
-                        var checkBox = checkBoxes[datFileParam.Value.name];
-                        var textBox = textBoxes[i];
-                        checkBox.Enabled = true;
-                        textBox.Enabled = true;
-                        textBox.Clear();
-                        i++;
-
-
-                    }
+                    DatDisplayPanel();
+                    RefreshDat();
                 }
                 else
                 {
                     isDatFile = false;
                     //displaypanelElements
-                    {
-                        panel3.Controls.Clear();
-                        textBoxes = new List<TextBox>();
-                        checkBoxes = new Dictionary<string, CheckBox>();
-                        panels = new Dictionary<string, Panel>();
-                        uidNames = new Dictionary<string, TextBox>();
-
-                        i = 0;
-                        foreach (var binFileParam in binFileParams)
-                        {
-                            var textBox = new TextBox();
-                            textBoxes.Add(textBox);
-                            panel3.Controls.Add(textBox);
-                            textBox.Location = new Point(2, 4 + i * 26);
-                            textBox.Name = $"textBox{i}";
-                            textBox.ReadOnly = true;
-                            textBox.Size = new Size(62, 20);
-                            textBox.TabIndex = 30 + i;
-
-                            var checkBox = new CheckBox();
-                            panel3.Controls.Add(checkBox);
-                            checkBox.AutoSize = true;
-                            checkBox.Location = new Point(90, 6 + i * 26);
-                            checkBox.Name = $"checkBox{i}";
-                            checkBox.Size = new Size(80, 17);
-                            checkBox.TabIndex = 0;
-                            string measure = binFileParam.Value.measure;
-                            if (string.IsNullOrEmpty(measure))
-                            {
-                                checkBox.Text = binFileParam.Value.name;
-                            }
-                            else
-                            {
-                                checkBox.Text = binFileParam.Value.name + ", " + measure;
-                            }
-                            checkBox.UseVisualStyleBackColor = true;
-                            checkBoxes.Add(binFileParam.Value.name, checkBox);
-                            checkBox.Checked = false;
-                            int index = i;
-
-                            var panel = new Panel();
-                            panel3.Controls.Add(panel);
-                            panel.Location = new Point(70, 6 + i * 26);
-                            panel.Name = $"panel{i}";
-                            panel.Size = new Size(17, 17);
-                            panel.TabIndex = 0;
-                            panels.Add(binFileParam.Value.name, panel);
-                            panel.BackColor = Drawer.GetColor(i);
-                            uidNames.Add(binFileParam.Value.name, textBoxes[i]);
-                            i++;
-                        }
-
-                        button1.Visible = true;
-                        zedGraphControl1.Visible = true;
-                    }
-                    i = 0;
-                    foreach (var binFileParam in binFileParams)
-                    {
-                        var checkBox = checkBoxes[binFileParam.Value.name];
-                        var textBox = textBoxes[i];
-                        checkBox.Enabled = true;
-                        textBox.Enabled = true;
-                        textBox.Clear();
-                        i++;
-                    }
+                    BinDisplayPanel();
+                    RefreshBin();
                 }
 
                 drawer.Clear();
@@ -398,7 +226,10 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[datFileParam.Value.name];
                         checkBox.Checked = false;
-                        //if (checkBox.Enabled && settings[i]) checkBox.Checked = true;
+                        if (checkBox.Enabled && settings[i])
+                        {
+                            checkBox.Checked = true;
+                        }
                         i++;
                     }
                 }
@@ -409,7 +240,10 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[binFileParam.Value.name];
                         checkBox.Checked = false;
-                        //if (checkBox.Enabled && settings[i]) checkBox.Checked = true;
+                        if (checkBox.Enabled && settings[i])
+                        {
+                            checkBox.Checked = true;
+                        }
                         i++;
                     }
                 }
@@ -417,6 +251,149 @@ namespace ParserNII
             }
         }
 
+        private void DatDisplayPanel()
+        {
+            {
+                panel3.Controls.Clear();
+                textBoxes = new List<TextBox>();
+                checkBoxes = new Dictionary<string, CheckBox>();
+                panels = new Dictionary<string, Panel>();
+                uidNames = new Dictionary<string, TextBox>();
+
+                int i = 0;
+                foreach (var datFileParam in datFileParams)
+                {
+                    var textBox = new TextBox();
+                    textBoxes.Add(textBox);
+                    panel3.Controls.Add(textBox);
+                    textBox.Location = new Point(2, 4 + i * 26);
+                    textBox.Name = $"textBox{i}";
+                    textBox.ReadOnly = true;
+                    textBox.Size = new Size(62, 20);
+                    textBox.TabIndex = 30 + i;
+
+                    var checkBox = new CheckBox();
+                    panel3.Controls.Add(checkBox);
+                    checkBox.AutoSize = true;
+                    checkBox.Location = new Point(90, 6 + i * 26);
+                    checkBox.Name = $"checkBox{i}";
+                    checkBox.Size = new Size(80, 17);
+                    checkBox.TabIndex = 0;
+                    string measure = datFileParam.Value.measure;
+                    if (string.IsNullOrEmpty(measure))
+                    {
+                        checkBox.Text = datFileParam.Value.name;
+                    }
+                    else
+                    {
+                        checkBox.Text = datFileParam.Value.name + ", " + measure;
+                    }
+                    checkBox.UseVisualStyleBackColor = true;
+                    checkBoxes.Add(datFileParam.Value.name, checkBox);
+                    checkBox.Checked = false;
+                    int index = i;
+
+                    var panel = new Panel();
+                    panel3.Controls.Add(panel);
+                    panel.Location = new Point(70, 6 + i * 26);
+                    panel.Name = $"panel{i}";
+                    panel.Size = new Size(17, 17);
+                    panel.TabIndex = 0;
+                    panels.Add(datFileParam.Value.name, panel);
+                    panel.BackColor = Drawer.GetColor(i);
+                    uidNames.Add(datFileParam.Value.name, textBoxes[i]);
+                    i++;
+                }
+
+                button1.Visible = true;
+                zedGraphControl1.Visible = true;
+            }
+        }
+
+        private void RefreshDat()
+        {
+            int i = 0;
+            foreach (var datFileParam in datFileParams)
+            {
+                var checkBox = checkBoxes[datFileParam.Value.name];
+                var textBox = textBoxes[i];
+                checkBox.Enabled = true;
+                textBox.Enabled = true;
+                textBox.Clear();
+                i++;
+            }
+        }
+
+        private void BinDisplayPanel()
+        {
+            panel3.Controls.Clear();
+            textBoxes = new List<TextBox>();
+            checkBoxes = new Dictionary<string, CheckBox>();
+            panels = new Dictionary<string, Panel>();
+            uidNames = new Dictionary<string, TextBox>();
+
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var textBox = new TextBox();
+                textBoxes.Add(textBox);
+                panel3.Controls.Add(textBox);
+                textBox.Location = new Point(2, 4 + i * 26);
+                textBox.Name = $"textBox{i}";
+                textBox.ReadOnly = true;
+                textBox.Size = new Size(62, 20);
+                textBox.TabIndex = 30 + i;
+
+                var checkBox = new CheckBox();
+                panel3.Controls.Add(checkBox);
+                checkBox.AutoSize = true;
+                checkBox.Location = new Point(90, 6 + i * 26);
+                checkBox.Name = $"checkBox{i}";
+                checkBox.Size = new Size(80, 17);
+                checkBox.TabIndex = 0;
+                string measure = binFileParam.Value.measure;
+                if (string.IsNullOrEmpty(measure))
+                {
+                    checkBox.Text = binFileParam.Value.name;
+                }
+                else
+                {
+                    checkBox.Text = binFileParam.Value.name + ", " + measure;
+                }
+                checkBox.UseVisualStyleBackColor = true;
+                checkBoxes.Add(binFileParam.Value.name, checkBox);
+                checkBox.Checked = false;
+                int index = i;
+
+                var panel = new Panel();
+                panel3.Controls.Add(panel);
+                panel.Location = new Point(70, 6 + i * 26);
+                panel.Name = $"panel{i}";
+                panel.Size = new Size(17, 17);
+                panel.TabIndex = 0;
+                panels.Add(binFileParam.Value.name, panel);
+                panel.BackColor = Drawer.GetColor(i);
+                uidNames.Add(binFileParam.Value.name, textBoxes[i]);
+                i++;
+            }
+
+            button1.Visible = true;
+            zedGraphControl1.Visible = true;
+        }
+
+        private void RefreshBin()
+        {
+            int i = 0;
+            foreach (var binFileParam in binFileParams)
+            {
+                var checkBox = checkBoxes[binFileParam.Value.name];
+                var textBox = textBoxes[i];
+                checkBox.Enabled = true;
+                textBox.Enabled = true;
+                textBox.Clear();
+                i++;
+            }
+        }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -543,89 +520,6 @@ namespace ParserNII
             string settingsPath = "./settings.json";
             settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
 
-        }
-
-        private void RefreshChecks()
-        {
-            int i = 0;
-            foreach (var binFileParam in binFileParams)
-            {
-                var checkBox = checkBoxes[binFileParam.Value.name];
-                checkBox.Checked = false;
-                if (checkBox.Enabled && settings[i]) checkBox.Checked = true;
-                i++;
-            }
-        }
-
-        private void RefreshPanelElements()
-        {
-            int i = 0;
-            foreach (var binFileParam in binFileParams)
-            {
-                var checkBox = checkBoxes[binFileParam.Value.name];
-                var textBox = textBoxes[i];
-                checkBox.Enabled = true;
-                textBox.Enabled = true;
-                textBox.Clear();
-                i++;
-            }
-        }
-
-        private void DisplayPanelElements()
-        {
-            panel3.Controls.Clear();
-            textBoxes = new List<TextBox>();
-            checkBoxes = new Dictionary<string, CheckBox>();
-            panels = new Dictionary<string, Panel>();
-            uidNames = new Dictionary<string, TextBox>();
-
-            int i = 0;
-            foreach (var binFileParam in binFileParams)
-            {
-                var textBox = new TextBox();
-                textBoxes.Add(textBox);
-                panel3.Controls.Add(textBox);
-                textBox.Location = new Point(2, 4 + i * 26);
-                textBox.Name = $"textBox{i}";
-                textBox.ReadOnly = true;
-                textBox.Size = new Size(62, 20);
-                textBox.TabIndex = 30 + i;
-
-                var checkBox = new CheckBox();
-                panel3.Controls.Add(checkBox);
-                checkBox.AutoSize = true;
-                checkBox.Location = new Point(90, 6 + i * 26);
-                checkBox.Name = $"checkBox{i}";
-                checkBox.Size = new Size(80, 17);
-                checkBox.TabIndex = 0;
-                string measure = binFileParam.Value.measure;
-                if (string.IsNullOrEmpty(measure))
-                {
-                    checkBox.Text = binFileParam.Value.name;
-                }
-                else
-                {
-                    checkBox.Text = binFileParam.Value.name + ", " + measure;
-                }
-                checkBox.UseVisualStyleBackColor = true;
-                checkBoxes.Add(binFileParam.Value.name, checkBox);
-                checkBox.Checked = false;
-                int index = i;
-
-                var panel = new Panel();
-                panel3.Controls.Add(panel);
-                panel.Location = new Point(70, 6 + i * 26);
-                panel.Name = $"panel{i}";
-                panel.Size = new Size(17, 17);
-                panel.TabIndex = 0;
-                panels.Add(binFileParam.Value.name, panel);
-                panel.BackColor = Drawer.GetColor(i);
-                uidNames.Add(binFileParam.Value.name, textBoxes[i]);
-                i++;
-            }
-
-            button1.Visible = true;
-            zedGraphControl1.Visible = true;
         }
     }
 }
