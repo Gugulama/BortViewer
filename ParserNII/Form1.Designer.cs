@@ -51,6 +51,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.button2 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -136,7 +137,7 @@
             this.groupBox4.Controls.Add(this.РазмерLabel);
             this.groupBox4.Location = new System.Drawing.Point(12, 27);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(713, 41);
+            this.groupBox4.Size = new System.Drawing.Size(708, 41);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Информация";
@@ -220,7 +221,7 @@
             // 
             this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(746, 43);
+            this.button1.Location = new System.Drawing.Point(758, 43);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(25, 25);
             this.button1.TabIndex = 14;
@@ -251,15 +252,22 @@
             this.panel3.Size = new System.Drawing.Size(365, 668);
             this.panel3.TabIndex = 6;
             // 
-            // timer1
+            // button2
             // 
-            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
+            this.button2.Location = new System.Drawing.Point(727, 43);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(25, 27);
+            this.button2.TabIndex = 16;
+            this.button2.Text = "P";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1175, 727);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox4);
@@ -304,6 +312,7 @@
         private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
         private System.Windows.Forms.Label Размер;
         private System.Windows.Forms.Label РазмерLabel;
+        private System.Windows.Forms.Button button2;
     }
 }
 

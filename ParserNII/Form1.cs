@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using ParserNII.DataStructures;
 using ZedGraph;
 
@@ -25,7 +26,6 @@ namespace ParserNII
         private readonly Dictionary<string, ConfigElement> datFileParams = Config.Instance.datFileParams.ToDictionary(d => d.name);
         private List<DataFile> result;
         private bool[] settings;
-        private PointF mouseLocation;
         private bool isFirstOpen;
         private bool isDatFile;
 
@@ -47,7 +47,6 @@ namespace ParserNII
                     datFileParams.Remove(keys[i]);
                 }
             }
-
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -394,6 +393,7 @@ namespace ParserNII
                 i++;
             }
         }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -504,11 +504,6 @@ namespace ParserNII
             zedGraphControl1.Invalidate();
         }
 
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
-
-        }
-
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
@@ -519,7 +514,50 @@ namespace ParserNII
 
             string settingsPath = "./settings.json";
             settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
+        }
+        
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Set the file name and get the output directory
+            var fileName = "Example-CRM-" + DateTime.Now.ToString("yyyy-MM-dd--hh-mm-ss") + ".xlsx";
+            // Create the file using the FileInfo object
+            var file = new FileInfo("./" + fileName);
 
+            using (var package = new ExcelPackage(file))
+            {
+                // add a new worksheet to the empty workbook
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Sales list - " + DateTime.Now.ToShortDateString());
+
+                // --------- Data and styling goes here -------------- //
+                // Add some formatting to the worksheet
+                worksheet.TabColor = Color.Blue;
+                worksheet.Row(1).Height = 20;
+                worksheet.Row(2).Height = 18;
+                // Start adding the header
+                // First of all the first row
+                worksheet.Cells[1, 1].Value = "Company name";
+                worksheet.Cells[1, 2].Value = "Address";
+                worksheet.Cells[1, 3].Value = "Status (unstyled)";
+
+                // Add the second row of header data
+                worksheet.Cells[2, 1].Value = "Vehicle registration plate";
+                worksheet.Cells[2, 2].Value = "Vehicle brand";
+
+                // Fit the columns according to its content
+                worksheet.Column(1).AutoFit();
+                worksheet.Column(2).AutoFit();
+                worksheet.Column(3).AutoFit();
+
+                // Set some document properties
+                package.Workbook.Properties.Title = "Sales list";
+                package.Workbook.Properties.Author = "Gustaf Lindqvist @ Ted & Gustaf";
+                package.Workbook.Properties.Company = "Ted & Gustaf";
+
+                // save our new workbook and we are done!
+                package.Save();
+
+                //-------- Now leaving the using statement
+            } // Outside the using statement
         }
     }
 }
