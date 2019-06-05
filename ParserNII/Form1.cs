@@ -17,6 +17,7 @@ namespace ParserNII
     {
         private List<TextBox> textBoxes;
         private Dictionary<string, CheckBox> checkBoxes;
+        private Dictionary<string, int> json;
         private Dictionary<string, Panel> panels;
         private Dictionary<string, TextBox> uidNames;
         private LineObj verticalLine;
@@ -62,8 +63,10 @@ namespace ParserNII
             int i = 0;
 
             if (!isFirstOpen)
-            {
+            {                
                 settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
+                int ParamCount = settings.Length + 1;               
+                
             }
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -218,8 +221,9 @@ namespace ParserNII
                     }
 
                 drawer.Refresh();
+
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
-                {
+                {                    
                     i = 0;
                     foreach (var datFileParam in datFileParams)
                     {
@@ -233,12 +237,13 @@ namespace ParserNII
                     }
                 }
                 else
-                {
+                {                    
                     i = 0;
                     foreach (var binFileParam in binFileParams)
                     {
                         var checkBox = checkBoxes[binFileParam.Value.name];
                         checkBox.Checked = false;
+                        
                         if (checkBox.Enabled && settings[i])
                         {
                             checkBox.Checked = true;

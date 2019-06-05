@@ -120,6 +120,10 @@
     <None Include="Config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Content\leaflet-src.esm.js.map" />
+    <None Include="Content\leaflet-src.js.map" />
+    <None Include="Content\leaflet.js.map" />
+    <None Include="LeafletCsharp_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -136,6 +140,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config.xml" />
+    <Content Include="Content\images\layers-2x.png" />
+    <Content Include="Content\images\layers.png" />
+    <Content Include="Content\images\marker-icon-2x.png" />
+    <Content Include="Content\images\marker-icon.png" />
+    <Content Include="Content\images\marker-shadow.png" />
+    <Content Include="Content\leaflet.css" />
+    <Content Include="index.html" />
+    <Content Include="Content\leaflet-src.esm.js" />
+    <Content Include="Content\leaflet-src.js" />
+    <Content Include="Content\leaflet.js" />
+    <Content Include="Scripts\leaflet-0.7.3.js" />
+    <Content Include="Scripts\leaflet-0.7.3.min.js" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

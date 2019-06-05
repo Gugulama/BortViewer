@@ -52,6 +52,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -233,10 +234,11 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.AutoSize = true;
+            this.groupBox2.Controls.Add(this.webBrowser1);
             this.groupBox2.Controls.Add(this.panel3);
             this.groupBox2.Location = new System.Drawing.Point(789, 27);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 696);
+            this.groupBox2.Size = new System.Drawing.Size(380, 707);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Список параметров";
@@ -249,7 +251,7 @@
             this.panel3.AutoScroll = true;
             this.panel3.Location = new System.Drawing.Point(9, 16);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(365, 668);
+            this.panel3.Size = new System.Drawing.Size(365, 447);
             this.panel3.TabIndex = 6;
             // 
             // button2
@@ -261,6 +263,16 @@
             this.button2.Text = "P";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Location = new System.Drawing.Point(9, 469);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(365, 219);
+            this.webBrowser1.TabIndex = 0;
+            string curDir = System.IO.Directory.GetCurrentDirectory();
+            this.webBrowser1.Url = new System.Uri(System.String.Format("file:///{0}/index.html", curDir));
             // 
             // Form1
             // 
@@ -313,6 +325,7 @@
         private System.Windows.Forms.Label Размер;
         private System.Windows.Forms.Label РазмерLabel;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 
