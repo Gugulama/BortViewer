@@ -26,6 +26,7 @@ namespace ParserNII
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(b => b.number);
         private readonly Dictionary<string, ConfigElement> datFileParams = Config.Instance.datFileParams.ToDictionary(d => d.name);
         private List<DataFile> result;
+        private DataArrays arrayResult;
         private bool[] settings;
         private bool isFirstOpen;
         private bool isDatFile;
@@ -120,7 +121,7 @@ namespace ParserNII
 
                 ВремяLabel.Text = result.First().Data["Время в “UNIX” формате"].DisplayValue + " - " + result.Last().Data["Время в “UNIX” формате"].DisplayValue;
 
-                var arrayResult = parser.ToArray(result);
+                arrayResult = parser.ToArray(result);
 
                 LineIndexs = new Dictionary<string, int>();
                 i = 0;
@@ -229,10 +230,10 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[datFileParam.Value.name];
                         checkBox.Checked = false;
-                        if (checkBox.Enabled && settings[i])
-                        {
-                            checkBox.Checked = true;
-                        }
+                        //if (checkBox.Enabled && settings[i])
+                        //{
+                        //    checkBox.Checked = true;
+                        //}
                         i++;
                     }
                 }
@@ -243,11 +244,11 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[binFileParam.Value.name];
                         checkBox.Checked = false;
-                        
-                        if (checkBox.Enabled && settings[i])
-                        {
-                            checkBox.Checked = true;
-                        }
+
+                        //if (checkBox.Enabled && settings[i])
+                        //{
+                        //    checkBox.Checked = true;
+                        //}
                         i++;
                     }
                 }
@@ -516,7 +517,6 @@ namespace ParserNII
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
             string settingsPath = "./settings.json";
             settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
         }
@@ -524,45 +524,76 @@ namespace ParserNII
         private void button2_Click(object sender, EventArgs e)
         {
             // Set the file name and get the output directory
-            var fileName = "Example-CRM-" + DateTime.Now.ToString("yyyy-MM-dd--hh-mm-ss") + ".xlsx";
+            var fileName = "ExportExcel-" + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss") + ".xlsx";
             // Create the file using the FileInfo object
             var file = new FileInfo("./" + fileName);
 
             using (var package = new ExcelPackage(file))
             {
                 // add a new worksheet to the empty workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Sales list - " + DateTime.Now.ToShortDateString());
-
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Datalist 1");
                 // --------- Data and styling goes here -------------- //
                 // Add some formatting to the worksheet
-                worksheet.TabColor = Color.Blue;
-                worksheet.Row(1).Height = 20;
-                worksheet.Row(2).Height = 18;
+                //worksheet.TabColor = Color.Blue;
+                //worksheet.Row(1).Height = 20;
+                //worksheet.Row(2).Height = 18;
                 // Start adding the header
-                // First of all the first row
-                worksheet.Cells[1, 1].Value = "Company name";
-                worksheet.Cells[1, 2].Value = "Address";
-                worksheet.Cells[1, 3].Value = "Status (unstyled)";
+                if (isDatFile)
+                {
 
-                // Add the second row of header data
-                worksheet.Cells[2, 1].Value = "Vehicle registration plate";
-                worksheet.Cells[2, 2].Value = "Vehicle brand";
+                }
+                else
+                {
+                    //headers
+                    var keys = arrayResult.Data.Keys.ToArray();
+                    worksheet.Cells[1, 1].Value = "Время";
+                    for (int i = 1; i < keys.Length; i++)
+                    {
+                        worksheet.Cells[1, i + 1].Value = keys[i];
+                    }
+                    //data
+                    var temp = arrayResult.Data["Время в “UNIX” формате"];
+                    for (int i = 0; i < temp.Length; i++)
+                    {
+                        worksheet.Cells[i+2, 1].Value = temp[i].DisplayValue;
+                    }
+                    for (int i = 1; i < keys.Length; i++)
+                    {
+                        temp = arrayResult.Data[keys[i]];
+                        for (int j = 0; j < temp.Length; j++)
+                        {
+                            worksheet.Cells[j + 2, i + 1].Value = temp[j].DisplayValue;
+                        }
+                    }
+                }
 
-                // Fit the columns according to its content
-                worksheet.Column(1).AutoFit();
-                worksheet.Column(2).AutoFit();
-                worksheet.Column(3).AutoFit();
+                for (int i = 1; i < arrayResult.Data.Count + 2; i++)
+                {
+                    worksheet.Column(i).AutoFit();
+                    worksheet.Column(i).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+
+                //    worksheet.Cells[1, 1].Value = "Company name";
+                //worksheet.Cells[1, 2].Value = "Address";
+                //worksheet.Cells[1, 3].Value = "Status (unstyled)";
+
+                //// Add the second row of header data
+                //worksheet.Cells[2, 1].Value = "Vehicle registration plate";
+                //worksheet.Cells[2, 2].Value = "Vehicle brand";
+
+                //// Fit the columns according to its content
+                //worksheet.Column(1).AutoFit();
+                //worksheet.Column(2).AutoFit();
+                //worksheet.Column(3).AutoFit();                
 
                 // Set some document properties
-                package.Workbook.Properties.Title = "Sales list";
-                package.Workbook.Properties.Author = "Gustaf Lindqvist @ Ted & Gustaf";
-                package.Workbook.Properties.Company = "Ted & Gustaf";
-
+                //package.Workbook.Properties.Title = "Sales list";
+                //package.Workbook.Properties.Author = "Gustaf Lindqvist @ Ted & Gustaf";
+                //package.Workbook.Properties.Company = "Ted & Gustaf";
                 // save our new workbook and we are done!
-                package.Save();
-
-                //-------- Now leaving the using statement
-            } // Outside the using statement
+                package.Save();                
+            } 
         }
     }
 }
