@@ -11,6 +11,7 @@ using OfficeOpenXml.Style;
 using ParserNII.DataStructures;
 using ZedGraph;
 
+
 namespace ParserNII
 {
     public partial class Form1 : Form
@@ -30,6 +31,7 @@ namespace ParserNII
         private bool[] settings;
         private bool isFirstOpen;
         private bool isDatFile;
+        private readonly string mapUrl = String.Format("file:///{0}/index.html?", Directory.GetCurrentDirectory());
 
         public Form1()
         {
@@ -448,7 +450,7 @@ namespace ParserNII
             //mouseLocation = e.Location;
             //timer1.Interval = 1;
             //timer1.Enabled = true;
-
+            
             GraphPane pane = zedGraphControl1.GraphPane;
             zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
             verticalLine.Location.X = x;
@@ -474,6 +476,9 @@ namespace ParserNII
                         break;
                     }
                 }
+                var latitude = result[index].Data["Широта"].DisplayValue.Replace(',','.');
+                var longitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
+                this.webBrowser1.Url = new System.Uri($"{mapUrl}latitude={latitude}&longitude={longitude}");
                 if (isDatFile)
                 {
                     foreach (var datFileParam in datFileParams)
@@ -618,6 +623,10 @@ namespace ParserNII
             {
                 MessageBox.Show("Откройте файл, необходимый для экспорта", "Внимание", MessageBoxButtons.OK);
             }
+        }
+
+        private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
         }
     }
 }
