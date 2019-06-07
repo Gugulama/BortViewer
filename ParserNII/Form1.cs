@@ -251,7 +251,7 @@ namespace ParserNII
                         //}
                         i++;
                     }
-                }
+                }                
                 stream.Close();
             }
         }
@@ -521,79 +521,97 @@ namespace ParserNII
             settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
         }
         
-        private void button2_Click(object sender, EventArgs e)
+        private void ЭкпортироватьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Set the file name and get the output directory
-            var fileName = "ExportExcel-" + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss") + ".xlsx";
-            // Create the file using the FileInfo object
-            var file = new FileInfo("./" + fileName);
-
-            using (var package = new ExcelPackage(file))
+            if (!isFirstOpen)
             {
-                // add a new worksheet to the empty workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Datalist 1");
-                // --------- Data and styling goes here -------------- //
-                // Add some formatting to the worksheet
-                //worksheet.TabColor = Color.Blue;
-                //worksheet.Row(1).Height = 20;
-                //worksheet.Row(2).Height = 18;
-                // Start adding the header
-                if (isDatFile)
-                {
+                this.Enabled = false;
+                try
+                {                    
+                    string fileName;
+                    if (isDatFile)
+                    {
+                        fileName = "DatExport-" + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss") + ".xlsx";
+                    }
+                    else
+                    {
+                        fileName = "BinExport-" + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss") + ".xlsx";
+                    }
 
-                }
-                else
-                {
-                    //headers
-                    var keys = arrayResult.Data.Keys.ToArray();
-                    worksheet.Cells[1, 1].Value = "Время";
-                    for (int i = 1; i < keys.Length; i++)
+                    var file = new FileInfo("./" + fileName);
+
+                    using (var package = new ExcelPackage(file))
                     {
-                        worksheet.Cells[1, i + 1].Value = keys[i];
-                    }
-                    //data
-                    var temp = arrayResult.Data["Время в “UNIX” формате"];
-                    for (int i = 0; i < temp.Length; i++)
-                    {
-                        worksheet.Cells[i+2, 1].Value = temp[i].DisplayValue;
-                    }
-                    for (int i = 1; i < keys.Length; i++)
-                    {
-                        temp = arrayResult.Data[keys[i]];
-                        for (int j = 0; j < temp.Length; j++)
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Datalist 1");
+                        if (isDatFile)
                         {
-                            worksheet.Cells[j + 2, i + 1].Value = temp[j].DisplayValue;
+                            //headers
+                            var keys = arrayResult.Data.Keys.ToArray();
+                            worksheet.Cells[1, 1].Value = "Время";
+                            for (int i = 8; i < keys.Length; i++)
+                            {
+                                worksheet.Cells[1, i - 6].Value = keys[i];
+                            }
+                            //data
+                            var temp = arrayResult.Data["Время в “UNIX” формате"];
+                            for (int i = 0; i < temp.Length; i++)
+                            {
+                                worksheet.Cells[i + 2, 1].Value = temp[i].DisplayValue;
+                            }
+                            for (int i = 8; i < keys.Length; i++)
+                            {
+                                temp = arrayResult.Data[keys[i]];
+                                for (int j = 0; j < temp.Length; j++)
+                                {
+                                    worksheet.Cells[j + 2, i - 6].Value = temp[j].DisplayValue;
+                                }
+                            }
                         }
+                        else
+                        {
+                            //headers
+                            var keys = arrayResult.Data.Keys.ToArray();
+                            worksheet.Cells[1, 1].Value = "Время";
+                            for (int i = 1; i < keys.Length; i++)
+                            {
+                                worksheet.Cells[1, i + 1].Value = keys[i];
+                            }
+                            //data
+                            var temp = arrayResult.Data["Время в “UNIX” формате"];
+                            for (int i = 0; i < temp.Length; i++)
+                            {
+                                worksheet.Cells[i + 2, 1].Value = temp[i].DisplayValue;
+                            }
+                            for (int i = 1; i < keys.Length+1; i++)
+                            {
+                                temp = arrayResult.Data[keys[i]];
+                                for (int j = 0; j < temp.Length; j++)
+                                {
+                                    worksheet.Cells[j + 2, i + 1].Value = temp[j].DisplayValue;
+                                }
+                            }
+                        }
+                        for (int i = 1; i < arrayResult.Data.Count + 2; i++)
+                        {
+                            worksheet.Column(i).AutoFit();
+                            worksheet.Column(i).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        }
+                        package.Save();
                     }
+                    this.Enabled = true;
+                    MessageBox.Show("Файл успешно экспортирован", "Внимание", MessageBoxButtons.OK);
                 }
-
-                for (int i = 1; i < arrayResult.Data.Count + 2; i++)
+                catch (Exception exc)
                 {
-                    worksheet.Column(i).AutoFit();
-                    worksheet.Column(i).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    MessageBox.Show("Произошла ошибка\nТекст ошибки:\n" + exc.ToString(), "Внимание", MessageBoxButtons.OK);
+                    this.Enabled = true;
                 }
-
-
-                //    worksheet.Cells[1, 1].Value = "Company name";
-                //worksheet.Cells[1, 2].Value = "Address";
-                //worksheet.Cells[1, 3].Value = "Status (unstyled)";
-
-                //// Add the second row of header data
-                //worksheet.Cells[2, 1].Value = "Vehicle registration plate";
-                //worksheet.Cells[2, 2].Value = "Vehicle brand";
-
-                //// Fit the columns according to its content
-                //worksheet.Column(1).AutoFit();
-                //worksheet.Column(2).AutoFit();
-                //worksheet.Column(3).AutoFit();                
-
-                // Set some document properties
-                //package.Workbook.Properties.Title = "Sales list";
-                //package.Workbook.Properties.Author = "Gustaf Lindqvist @ Ted & Gustaf";
-                //package.Workbook.Properties.Company = "Ted & Gustaf";
-                // save our new workbook and we are done!
-                package.Save();                
-            } 
+            }
+            else
+            {
+                MessageBox.Show("Откройте файл, необходимый для экспорта", "Внимание", MessageBoxButtons.OK);
+            }
         }
     }
 }
+
