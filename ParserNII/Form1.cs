@@ -66,8 +66,14 @@ namespace ParserNII
             if (!isFirstOpen)
             {                
                 settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
-                int ParamCount = settings.Length + 1;               
-                
+                int ParamCount = settings.Length + 1;
+                bool[] temp = new bool[ParamCount];
+                temp[0] = isDatFile;
+                for (int c = 0; c < settings.Length; c++)
+                {
+                    temp[c+1] = settings[c];
+                }
+                settings = temp;
             }
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -142,28 +148,28 @@ namespace ParserNII
                             LineIndexs.Add(datFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
 
                             checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
+                            {
+                                try
                                 {
-                                    try
+                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible != checkBox.Checked)
                                     {
-                                        if (zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible != checkBox.Checked)
-                                        {
-                                            zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible = checkBox.Checked;
+                                        zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible = checkBox.Checked;
 
-                                            if (checkBox.Checked)
-                                            {
-                                                zedGraphControl1.AxisChange();
-                                                zedGraphControl1.Refresh();
-                                            }
-                                            else
-                                            {
-                                                zedGraphControl1.Refresh();
-                                            }
+                                        if (checkBox.Checked)
+                                        {
+                                            zedGraphControl1.AxisChange();
+                                            zedGraphControl1.Refresh();
+                                        }
+                                        else
+                                        {
+                                            zedGraphControl1.Refresh();
                                         }
                                     }
-                                    catch (KeyNotFoundException ex)
-                                    { }
+                                }
+                                catch (KeyNotFoundException ex)
+                                { }
 
-                                };
+                            };
                         }
                         else
                         {
@@ -225,30 +231,31 @@ namespace ParserNII
 
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {                    
-                    i = 0;
+                    i = 1;
                     foreach (var datFileParam in datFileParams)
                     {
                         var checkBox = checkBoxes[datFileParam.Value.name];
                         checkBox.Checked = false;
-                        //if (checkBox.Enabled && settings[i])
-                        //{
-                        //    checkBox.Checked = true;
-                        //}
+                        if (!settings[0]) break;
+                        if (checkBox.Enabled && settings[i])
+                        {
+                            checkBox.Checked = true;
+                        }
                         i++;
                     }
                 }
                 else
                 {                    
-                    i = 0;
+                    i = 1;
                     foreach (var binFileParam in binFileParams)
                     {
                         var checkBox = checkBoxes[binFileParam.Value.name];
                         checkBox.Checked = false;
-
-                        //if (checkBox.Enabled && settings[i])
-                        //{
-                        //    checkBox.Checked = true;
-                        //}
+                        if (settings[0]) break;
+                        if (checkBox.Enabled && settings[i])
+                        {
+                            checkBox.Checked = true;
+                        }
                         i++;
                     }
                 }                
@@ -404,7 +411,7 @@ namespace ParserNII
         {
             try
             {
-                string dataValues = JsonConvert.SerializeObject(checkBoxes.Select(c => c.Value.Checked).ToArray());
+                string dataValues = JsonConvert.SerializeObject(settings);
                 File.WriteAllText("./settings.json", dataValues);
             }
             catch (Exception exp) { }
@@ -582,7 +589,7 @@ namespace ParserNII
                             {
                                 worksheet.Cells[i + 2, 1].Value = temp[i].DisplayValue;
                             }
-                            for (int i = 1; i < keys.Length+1; i++)
+                            for (int i = 1; i < keys.Length; i++)
                             {
                                 temp = arrayResult.Data[keys[i]];
                                 for (int j = 0; j < temp.Length; j++)
