@@ -83,14 +83,15 @@
             // открытьToolStripMenuItem
             // 
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.открытьToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.открытьToolStripMenuItem.Text = "Открыть...";
             this.открытьToolStripMenuItem.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
             // 
             // экпортироватьToolStripMenuItem
             // 
             this.экпортироватьToolStripMenuItem.Name = "экпортироватьToolStripMenuItem";
-            this.экпортироватьToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.экпортироватьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.экпортироватьToolStripMenuItem.Text = "Экпортировать...";
             this.экпортироватьToolStripMenuItem.Click += new System.EventHandler(this.ЭкпортироватьToolStripMenuItem_Click);
             // 
@@ -98,7 +99,7 @@
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
             this.выходToolStripMenuItem.ShortcutKeyDisplayString = "Alt + F4";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
             // 
@@ -261,8 +262,6 @@
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(365, 219);
             this.webBrowser1.TabIndex = 0;
-            
-            
             this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.WebBrowser1_DocumentCompleted);
             // 
             // panel3

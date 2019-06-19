@@ -51,6 +51,7 @@ namespace ParserNII
                     datFileParams.Remove(keys[i]);
                 }
             }
+            this.webBrowser1.Url = new System.Uri(mapUrl);
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -66,14 +67,14 @@ namespace ParserNII
             int i = 0;
 
             if (!isFirstOpen)
-            {                
+            {
                 settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
                 int ParamCount = settings.Length + 1;
                 bool[] temp = new bool[ParamCount];
                 temp[0] = isDatFile;
                 for (int c = 0; c < settings.Length; c++)
                 {
-                    temp[c+1] = settings[c];
+                    temp[c + 1] = settings[c];
                 }
                 settings = temp;
             }
@@ -232,7 +233,7 @@ namespace ParserNII
                 drawer.Refresh();
 
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
-                {                    
+                {
                     i = 1;
                     foreach (var datFileParam in datFileParams)
                     {
@@ -247,7 +248,7 @@ namespace ParserNII
                     }
                 }
                 else
-                {                    
+                {
                     i = 1;
                     foreach (var binFileParam in binFileParams)
                     {
@@ -260,7 +261,7 @@ namespace ParserNII
                         }
                         i++;
                     }
-                }                
+                }
                 stream.Close();
             }
         }
@@ -450,7 +451,7 @@ namespace ParserNII
             //mouseLocation = e.Location;
             //timer1.Interval = 1;
             //timer1.Enabled = true;
-            
+
             GraphPane pane = zedGraphControl1.GraphPane;
             zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
             verticalLine.Location.X = x;
@@ -476,9 +477,9 @@ namespace ParserNII
                         break;
                     }
                 }
-                var latitude = result[index].Data["Широта"].DisplayValue.Replace(',','.');
+                var latitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
                 var longitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
-                this.webBrowser1.Url = new System.Uri($"{mapUrl}latitude={latitude}&longitude={longitude}");
+                this.webBrowser1.Document.InvokeScript("setMarker", new[] { latitude, longitude });
                 if (isDatFile)
                 {
                     foreach (var datFileParam in datFileParams)
@@ -532,14 +533,14 @@ namespace ParserNII
             string settingsPath = "./settings.json";
             settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
         }
-        
+
         private void ЭкпортироватьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!isFirstOpen)
             {
                 this.Enabled = false;
                 try
-                {                    
+                {
                     string fileName;
                     if (isDatFile)
                     {
