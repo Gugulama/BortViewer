@@ -32,6 +32,8 @@ namespace ParserNII
         private bool isFirstOpen;
         private bool isDatFile;
         private readonly string mapUrl = String.Format("file:///{0}/index.html?", Directory.GetCurrentDirectory());
+        private string latitude = "";
+        private string longitude = "";        
 
         public Form1()
         {
@@ -477,9 +479,14 @@ namespace ParserNII
                         break;
                     }
                 }
-                var latitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
-                var longitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
-                this.webBrowser1.Document.InvokeScript("setMarker", new[] { latitude, longitude });
+                var newLatitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
+                var newLongitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
+                if (latitude != newLatitude || longitude != newLongitude)
+                {
+                    latitude = newLatitude;
+                    longitude = newLatitude;
+                    this.webBrowser1.Document.InvokeScript("setMarker", new[] { latitude, longitude });
+                }                
                 if (isDatFile)
                 {
                     foreach (var datFileParam in datFileParams)

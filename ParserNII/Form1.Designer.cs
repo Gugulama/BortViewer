@@ -53,10 +53,12 @@
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.panel3 = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -84,14 +86,14 @@
             // 
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
             this.открытьToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.открытьToolStripMenuItem.Text = "Открыть...";
             this.открытьToolStripMenuItem.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
             // 
             // экпортироватьToolStripMenuItem
             // 
             this.экпортироватьToolStripMenuItem.Name = "экпортироватьToolStripMenuItem";
-            this.экпортироватьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.экпортироватьToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.экпортироватьToolStripMenuItem.Text = "Экпортировать...";
             this.экпортироватьToolStripMenuItem.Click += new System.EventHandler(this.ЭкпортироватьToolStripMenuItem_Click);
             // 
@@ -99,7 +101,7 @@
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
             this.выходToolStripMenuItem.ShortcutKeyDisplayString = "Alt + F4";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
             // 
@@ -242,44 +244,51 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.AutoSize = true;
-            this.groupBox2.Controls.Add(this.webBrowser1);
             this.groupBox2.Controls.Add(this.panel3);
             this.groupBox2.Location = new System.Drawing.Point(789, 27);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 707);
+            this.groupBox2.Size = new System.Drawing.Size(380, 427);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Список параметров";
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.webBrowser1.Location = new System.Drawing.Point(9, 469);
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.Location = new System.Drawing.Point(3, 16);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(365, 219);
+            this.webBrowser1.ScrollBarsEnabled = false;
+            this.webBrowser1.Size = new System.Drawing.Size(371, 241);
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.WebBrowser1_DocumentCompleted);
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.AutoScroll = true;
-            this.panel3.Location = new System.Drawing.Point(9, 16);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 16);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(365, 447);
+            this.panel3.Size = new System.Drawing.Size(374, 408);
             this.panel3.TabIndex = 6;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.webBrowser1);
+            this.groupBox3.Location = new System.Drawing.Point(789, 460);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(377, 260);
+            this.groupBox3.TabIndex = 16;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Карта";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1175, 727);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox4);
@@ -296,6 +305,7 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -326,6 +336,7 @@
         private System.Windows.Forms.Label РазмерLabel;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.ToolStripMenuItem экпортироватьToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }
 
