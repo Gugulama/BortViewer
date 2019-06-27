@@ -484,7 +484,7 @@ namespace ParserNII
                 if (latitude != newLatitude || longitude != newLongitude)
                 {
                     latitude = newLatitude;
-                    longitude = newLatitude;
+                    longitude = newLongitude;
                     this.webBrowser1.Document.InvokeScript("setMarker", new[] { latitude, longitude });
                 }                
                 if (isDatFile)
