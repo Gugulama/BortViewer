@@ -50,10 +50,10 @@
             this.button1 = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -252,6 +252,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Список параметров";
             // 
+            // panel3
+            // 
+            this.panel3.AutoScroll = true;
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 16);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(374, 408);
+            this.panel3.TabIndex = 6;
+            // 
             // webBrowser1
             // 
             this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -262,15 +271,6 @@
             this.webBrowser1.Size = new System.Drawing.Size(371, 241);
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.WebBrowser1_DocumentCompleted);
-            // 
-            // panel3
-            // 
-            this.panel3.AutoScroll = true;
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(3, 16);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(374, 408);
-            this.panel3.TabIndex = 6;
             // 
             // groupBox3
             // 
@@ -283,11 +283,20 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Карта";
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(381, 63);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(371, 30);
+            this.progressBar1.TabIndex = 1;
+            this.progressBar1.Click += new System.EventHandler(this.ProgressBar1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1175, 727);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button1);
@@ -330,13 +339,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
         private System.Windows.Forms.Label Размер;
         private System.Windows.Forms.Label РазмерLabel;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.ToolStripMenuItem экпортироватьToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

@@ -33,7 +33,7 @@ namespace ParserNII
         private bool isDatFile;
         private readonly string mapUrl = String.Format("file:///{0}/index.html?", Directory.GetCurrentDirectory());
         private string latitude = "";
-        private string longitude = "";        
+        private string longitude = "";
 
         public Form1()
         {
@@ -54,6 +54,7 @@ namespace ParserNII
                 }
             }
             this.webBrowser1.Url = new System.Uri(mapUrl);
+            progressBar1.Visible = false;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -67,6 +68,8 @@ namespace ParserNII
             ofd.FilterIndex = 5;
             ofd.RestoreDirectory = true;
             int i = 0;
+            
+            
 
             if (!isFirstOpen)
             {
@@ -278,8 +281,13 @@ namespace ParserNII
                 uidNames = new Dictionary<string, TextBox>();
 
                 int i = 0;
+                progressBar1.Visible = true;
+                progressBar1.Value = 0;
+                progressBar1.Minimum = 0;
+                progressBar1.Maximum = datFileParams.Count;
                 foreach (var datFileParam in datFileParams)
                 {
+ 
                     var textBox = new TextBox();
                     textBoxes.Add(textBox);
                     panel3.Controls.Add(textBox);
@@ -320,10 +328,12 @@ namespace ParserNII
                     panel.BackColor = Drawer.GetColor(i);
                     uidNames.Add(datFileParam.Value.name, textBoxes[i]);
                     i++;
+                    progressBar1.Value++;
                 }
-
+                progressBar1.Visible = false;
                 button1.Visible = true;
                 zedGraphControl1.Visible = true;
+                
             }
         }
 
@@ -350,6 +360,10 @@ namespace ParserNII
             uidNames = new Dictionary<string, TextBox>();
 
             int i = 0;
+            progressBar1.Visible = true;
+            progressBar1.Value = 0;
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = binFileParams.Count;
             foreach (var binFileParam in binFileParams)
             {
                 var textBox = new TextBox();
@@ -392,8 +406,9 @@ namespace ParserNII
                 panel.BackColor = Drawer.GetColor(i);
                 uidNames.Add(binFileParam.Value.name, textBoxes[i]);
                 i++;
+                progressBar1.Value++;
             }
-
+            progressBar1.Visible = false;
             button1.Visible = true;
             zedGraphControl1.Visible = true;
         }
@@ -486,7 +501,7 @@ namespace ParserNII
                     latitude = newLatitude;
                     longitude = newLongitude;
                     this.webBrowser1.Document.InvokeScript("setMarker", new[] { latitude, longitude });
-                }                
+                }
                 if (isDatFile)
                 {
                     foreach (var datFileParam in datFileParams)
@@ -636,6 +651,24 @@ namespace ParserNII
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
         }
+
+        private void ProgressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //private void StartBar()
+        //{
+        //    progressBar.Visible = true;
+        //    progressBar.Style = ProgressBarStyle.Marquee;
+        //    progressBar.MarqueeAnimationSpeed = 30;
+        //}
+        //public void StopBarDelegate()
+        //{
+        //    progressBar.Style = ProgressBarStyle.Continuous;
+        //    progressBar.MarqueeAnimationSpeed = 0;
+        //    progressBar.Visible = false;
+        //}
     }
 }
 
