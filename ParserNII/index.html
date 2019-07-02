@@ -18,14 +18,15 @@
     <div id="map"></div>
     <script>
         var map = L.map('map', { attributionControl: false });
-        map.setView([0, 0], 11);
+        map.setView([0, 0], 15);
         var marker = L.marker([0, 0]);
         marker.addTo(map);
         function setMarker(latitude, longitude) 
 		{
             map.panTo([latitude, longitude]);
             L.tileLayer('http://tiles.maps.sputnik.ru/{z}/{x}/{y}.png', {
-                maxZoom: 15
+                minZoom: 3,
+                maxZoom: 16
             }).addTo(map);
             marker.setLatLng([latitude, longitude]);
         }

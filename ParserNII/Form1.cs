@@ -54,7 +54,9 @@ namespace ParserNII
                 }
             }
             this.webBrowser1.Url = new System.Uri(mapUrl);
-            progressBar1.Visible = false;
+            circularProgressBar1.Visible = false;
+            //circularProgressBar1.Font = Font.;
+
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -68,8 +70,8 @@ namespace ParserNII
             ofd.FilterIndex = 5;
             ofd.RestoreDirectory = true;
             int i = 0;
-            
-            
+
+
 
             if (!isFirstOpen)
             {
@@ -281,13 +283,13 @@ namespace ParserNII
                 uidNames = new Dictionary<string, TextBox>();
 
                 int i = 0;
-                progressBar1.Visible = true;
-                progressBar1.Value = 0;
-                progressBar1.Minimum = 0;
-                progressBar1.Maximum = datFileParams.Count;
+                circularProgressBar1.Visible = true;
+                circularProgressBar1.Value = 0;
+                circularProgressBar1.StartAngle = 0;
+
                 foreach (var datFileParam in datFileParams)
                 {
- 
+
                     var textBox = new TextBox();
                     textBoxes.Add(textBox);
                     panel3.Controls.Add(textBox);
@@ -328,12 +330,17 @@ namespace ParserNII
                     panel.BackColor = Drawer.GetColor(i);
                     uidNames.Add(datFileParam.Value.name, textBoxes[i]);
                     i++;
-                    progressBar1.Value++;
+                    circularProgressBar1.Value++;
+                    circularProgressBar1.StartAngle += +20;
+                    if (circularProgressBar1.Value == 100)
+                    {
+                        circularProgressBar1.Value = circularProgressBar1.StartAngle;
+                    }
                 }
-                progressBar1.Visible = false;
+                circularProgressBar1.Visible = false;
                 button1.Visible = true;
                 zedGraphControl1.Visible = true;
-                
+
             }
         }
 
@@ -360,10 +367,9 @@ namespace ParserNII
             uidNames = new Dictionary<string, TextBox>();
 
             int i = 0;
-            progressBar1.Visible = true;
-            progressBar1.Value = 0;
-            progressBar1.Minimum = 0;
-            progressBar1.Maximum = binFileParams.Count;
+            circularProgressBar1.Visible = true;
+            circularProgressBar1.Value = 0;
+            circularProgressBar1.StartAngle += -1;
             foreach (var binFileParam in binFileParams)
             {
                 var textBox = new TextBox();
@@ -406,9 +412,14 @@ namespace ParserNII
                 panel.BackColor = Drawer.GetColor(i);
                 uidNames.Add(binFileParam.Value.name, textBoxes[i]);
                 i++;
-                progressBar1.Value++;
+                circularProgressBar1.Value++;
+                circularProgressBar1.StartAngle += +10;
+                if (circularProgressBar1.Value == 100)
+                {
+                    circularProgressBar1.Value = circularProgressBar1.StartAngle;
+                }
             }
-            progressBar1.Visible = false;
+            circularProgressBar1.Visible = false;
             button1.Visible = true;
             zedGraphControl1.Visible = true;
         }
