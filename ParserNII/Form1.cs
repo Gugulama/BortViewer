@@ -10,7 +10,8 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using ParserNII.DataStructures;
 using ZedGraph;
-
+using CefSharp;
+using CefSharp.WinForms;
 
 namespace ParserNII
 {
@@ -18,7 +19,6 @@ namespace ParserNII
     {
         private List<TextBox> textBoxes;
         private Dictionary<string, CheckBox> checkBoxes;
-        private Dictionary<string, int> json;
         private Dictionary<string, Panel> panels;
         private Dictionary<string, TextBox> uidNames;
         private LineObj verticalLine;
@@ -34,6 +34,7 @@ namespace ParserNII
         private readonly string mapUrl = String.Format("file:///{0}/index.html?", Directory.GetCurrentDirectory());
         private string latitude = "";
         private string longitude = "";
+        private ChromiumWebBrowser browser;
 
         public Form1()
         {
@@ -53,10 +54,12 @@ namespace ParserNII
                     datFileParams.Remove(keys[i]);
                 }
             }
-            this.webBrowser1.Url = new System.Uri(mapUrl);
             circularProgressBar1.Visible = false;
-            //circularProgressBar1.Font = Font.;
-
+            CefSettings cefSettings = new CefSettings();
+            Cef.Initialize(cefSettings);
+            browser = new ChromiumWebBrowser(mapUrl);
+            groupBox3.Controls.Add(browser);
+            browser.Dock = DockStyle.Fill;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,8 +73,6 @@ namespace ParserNII
             ofd.FilterIndex = 5;
             ofd.RestoreDirectory = true;
             int i = 0;
-
-
 
             if (!isFirstOpen)
             {
@@ -340,7 +341,6 @@ namespace ParserNII
                 circularProgressBar1.Visible = false;
                 button1.Visible = true;
                 zedGraphControl1.Visible = true;
-
             }
         }
 
@@ -445,7 +445,11 @@ namespace ParserNII
                 string dataValues = JsonConvert.SerializeObject(settings);
                 File.WriteAllText("./settings.json", dataValues);
             }
-            catch (Exception exp) { }
+            catch (Exception exp)
+            {
+                MessageBox.Show("Произошла ошибка\nТекст ошибки:\n" + exp.ToString(), "Внимание", MessageBoxButtons.OK);
+            }
+            Cef.Shutdown();
 
         }
 
@@ -511,7 +515,8 @@ namespace ParserNII
                 {
                     latitude = newLatitude;
                     longitude = newLongitude;
-                    this.webBrowser1.Document.InvokeScript("setMarker", new[] { latitude, longitude });
+                    browser.ExecuteScriptAsync("map.panTo([" + latitude + "," + longitude + "]); " 
+                                             + "marker.setLatLng([" + latitude + "," + longitude + "]); ");
                 }
                 if (isDatFile)
                 {
@@ -658,16 +663,6 @@ namespace ParserNII
                 MessageBox.Show("Откройте файл, необходимый для экспорта", "Внимание", MessageBoxButtons.OK);
             }
         }
-
-        private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-        }
-
-        private void ProgressBar1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         //private void StartBar()
         //{
         //    progressBar.Visible = true;
