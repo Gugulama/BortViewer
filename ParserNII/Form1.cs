@@ -23,7 +23,7 @@ namespace ParserNII
         private Dictionary<string, TextBox> uidNames;
         private LineObj verticalLine;
         private Drawer drawer;
-        private Dictionary<string, int> LineIndexs;
+        private Dictionary<string, int> LineIndexes;
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(b => b.number);
         private readonly Dictionary<string, ConfigElement> datFileParams = Config.Instance.datFileParams.ToDictionary(d => d.name);
         private List<DataFile> result;
@@ -140,7 +140,7 @@ namespace ParserNII
 
                 arrayResult = parser.ToArray(result);
 
-                LineIndexs = new Dictionary<string, int>();
+                LineIndexes = new Dictionary<string, int>();
                 i = 0;
 
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
@@ -156,15 +156,15 @@ namespace ParserNII
                                 Drawer.GetColor(i));
                             zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
-                            LineIndexs.Add(datFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
+                            LineIndexes.Add(datFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
 
                             checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
                             {
                                 try
                                 {
-                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexes[datFileParam.Value.name]].IsVisible != checkBox.Checked)
                                     {
-                                        zedGraphControl1.GraphPane.CurveList[LineIndexs[datFileParam.Value.name]].IsVisible = checkBox.Checked;
+                                        zedGraphControl1.GraphPane.CurveList[LineIndexes[datFileParam.Value.name]].IsVisible = checkBox.Checked;
 
                                         if (checkBox.Checked)
                                         {
@@ -203,15 +203,15 @@ namespace ParserNII
                                 Drawer.GetColor(i));
                             zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
-                            LineIndexs.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
+                            LineIndexes.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
 
                             checkBox.CheckedChanged += (object otherSender, EventArgs eventArgs) =>
                             {
                                 try
                                 {
-                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexes[binFileParam.Value.name]].IsVisible != checkBox.Checked)
                                     {
-                                        zedGraphControl1.GraphPane.CurveList[LineIndexs[binFileParam.Value.name]].IsVisible = checkBox.Checked;
+                                        zedGraphControl1.GraphPane.CurveList[LineIndexes[binFileParam.Value.name]].IsVisible = checkBox.Checked;
 
                                         if (checkBox.Checked)
                                         {
@@ -480,9 +480,7 @@ namespace ParserNII
 
         private void zedGraphControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            //mouseLocation = e.Location;
-            //timer1.Interval = 1;
-            //timer1.Enabled = true;
+
 
             GraphPane pane = zedGraphControl1.GraphPane;
             zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
@@ -509,35 +507,43 @@ namespace ParserNII
                         break;
                     }
                 }
-                var newLatitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
-                var newLongitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
-                if (latitude != newLatitude || longitude != newLongitude)
+                try
                 {
-                    latitude = newLatitude;
-                    longitude = newLongitude;
-                    browser.ExecuteScriptAsync("map.panTo([" + latitude + "," + longitude + "]); " 
-                                             + "marker.setLatLng([" + latitude + "," + longitude + "]); ");
-                }
-                if (isDatFile)
-                {
-                    foreach (var datFileParam in datFileParams)
+                    var newLatitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
+                    var newLongitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
+                    if (latitude != newLatitude || longitude != newLongitude)
                     {
-                        if (result[index].Data.ContainsKey(datFileParam.Value.name))
+                        latitude = newLatitude;
+                        longitude = newLongitude;
+                        browser.ExecuteScriptAsync("map.panTo([" + latitude + "," + longitude + "]); "
+                                                 + "marker.setLatLng([" + latitude + "," + longitude + "]); ");
+                    }
+                    if (isDatFile)
+                    {
+                        foreach (var datFileParam in datFileParams)
                         {
-                            uidNames[datFileParam.Value.name].Text = result[index].Data[datFileParam.Value.name].DisplayValue;
+                            if (result[index].Data.ContainsKey(datFileParam.Value.name))
+                            {
+                                uidNames[datFileParam.Value.name].Text = result[index].Data[datFileParam.Value.name].DisplayValue;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var binFileParam in binFileParams)
+                        {
+                            if (result[index].Data.ContainsKey(binFileParam.Value.name))
+                            {
+                                uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
+                            }
                         }
                     }
                 }
-                else
+                catch(KeyNotFoundException exp)
                 {
-                    foreach (var binFileParam in binFileParams)
-                    {
-                        if (result[index].Data.ContainsKey(binFileParam.Value.name))
-                        {
-                            uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
-                        }
-                    }
+                    
                 }
+
 
             }
             else
@@ -569,6 +575,16 @@ namespace ParserNII
         private void Form1_Load(object sender, EventArgs e)
         {
             string settingsPath = "./settings.json";
+            if (!File.Exists("settings.json"))
+            {
+                File.Create("settings.json");
+                List<string> createSettings = new List<string>();
+                for (int i = 0; i < datFileParams.Count; i++)
+                {
+                    createSettings[i] = "false";
+                }
+                File.WriteAllLines("settings.json", createSettings);
+            }
             settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
         }
 
@@ -663,18 +679,6 @@ namespace ParserNII
                 MessageBox.Show("Откройте файл, необходимый для экспорта", "Внимание", MessageBoxButtons.OK);
             }
         }
-        //private void StartBar()
-        //{
-        //    progressBar.Visible = true;
-        //    progressBar.Style = ProgressBarStyle.Marquee;
-        //    progressBar.MarqueeAnimationSpeed = 30;
-        //}
-        //public void StopBarDelegate()
-        //{
-        //    progressBar.Style = ProgressBarStyle.Continuous;
-        //    progressBar.MarqueeAnimationSpeed = 0;
-        //    progressBar.Visible = false;
-        //}
     }
 }
 

@@ -31,7 +31,7 @@ namespace ParserNII.DataStructures
                         arr[i] = data[i].Data[key];
                     }
                     catch (KeyNotFoundException e)
-                    {                        
+                    {
                         arr[i] = new DataElement
                         {
                             ChartValue = 0,
@@ -44,20 +44,6 @@ namespace ParserNII.DataStructures
             }
             return result;
 
-            //try
-            //{
-            //    foreach (var key in keys)
-            //    {
-            //        result.Data.Add(key, data.Select(d => d.Data[key]).ToArray());
-            //    }
-
-                //    return result;
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex);
-                //    return result;
-                //}
         }
 
         protected string ParseCoordinate(int coordinate)

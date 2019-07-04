@@ -62,12 +62,9 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(1175, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
             // 
             // файлToolStripMenuItem
             // 
@@ -76,51 +73,37 @@
             this.экпортироватьToolStripMenuItem,
             this.выходToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.файлToolStripMenuItem.Text = "Файл";
+            resources.ApplyResources(this.файлToolStripMenuItem, "файлToolStripMenuItem");
             // 
             // открытьToolStripMenuItem
             // 
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.открытьToolStripMenuItem.Text = "Открыть...";
+            resources.ApplyResources(this.открытьToolStripMenuItem, "открытьToolStripMenuItem");
             this.открытьToolStripMenuItem.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
             // 
             // экпортироватьToolStripMenuItem
             // 
             this.экпортироватьToolStripMenuItem.Name = "экпортироватьToolStripMenuItem";
-            this.экпортироватьToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.экпортироватьToolStripMenuItem.Text = "Экпортировать...";
+            resources.ApplyResources(this.экпортироватьToolStripMenuItem, "экпортироватьToolStripMenuItem");
             this.экпортироватьToolStripMenuItem.Click += new System.EventHandler(this.ЭкпортироватьToolStripMenuItem_Click);
             // 
             // выходToolStripMenuItem
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.ShortcutKeyDisplayString = "Alt + F4";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.выходToolStripMenuItem.Text = "Выход";
+            resources.ApplyResources(this.выходToolStripMenuItem, "выходToolStripMenuItem");
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.AutoSize = true;
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.circularProgressBar1);
             this.groupBox1.Controls.Add(this.zedGraphControl1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 80);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(774, 643);
-            this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "График";
             // 
             // zedGraphControl1
             // 
-            this.zedGraphControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zedGraphControl1.Location = new System.Drawing.Point(3, 16);
-            this.zedGraphControl1.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.zedGraphControl1, "zedGraphControl1");
             this.zedGraphControl1.Name = "zedGraphControl1";
             this.zedGraphControl1.ScrollGrace = 0D;
             this.zedGraphControl1.ScrollMaxX = 0D;
@@ -129,8 +112,6 @@
             this.zedGraphControl1.ScrollMinX = 0D;
             this.zedGraphControl1.ScrollMinY = 0D;
             this.zedGraphControl1.ScrollMinY2 = 0D;
-            this.zedGraphControl1.Size = new System.Drawing.Size(768, 624);
-            this.zedGraphControl1.TabIndex = 0;
             this.zedGraphControl1.UseExtendedPrintDialog = true;
             this.zedGraphControl1.ZoomEvent += new ZedGraph.ZedGraphControl.ZoomEventHandler(this.zedGraphControl1_ZoomEvent);
             this.zedGraphControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraphControl1_MouseMove);
@@ -144,168 +125,112 @@
             this.groupBox4.Controls.Add(this.type);
             this.groupBox4.Controls.Add(this.Размер);
             this.groupBox4.Controls.Add(this.РазмерLabel);
-            this.groupBox4.Location = new System.Drawing.Point(12, 27);
+            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(740, 41);
-            this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Информация";
             // 
             // section
             // 
-            this.section.AutoSize = true;
-            this.section.Location = new System.Drawing.Point(139, 20);
+            resources.ApplyResources(this.section, "section");
             this.section.Name = "section";
-            this.section.Size = new System.Drawing.Size(44, 13);
-            this.section.TabIndex = 27;
-            this.section.Text = "Секция";
             // 
             // time
             // 
-            this.time.AutoSize = true;
-            this.time.Location = new System.Drawing.Point(308, 20);
+            resources.ApplyResources(this.time, "time");
             this.time.Name = "time";
-            this.time.Size = new System.Drawing.Size(0, 13);
-            this.time.TabIndex = 25;
             // 
             // ВремяLabel
             // 
-            this.ВремяLabel.AutoSize = true;
-            this.ВремяLabel.Location = new System.Drawing.Point(219, 20);
+            resources.ApplyResources(this.ВремяLabel, "ВремяLabel");
             this.ВремяLabel.Name = "ВремяLabel";
-            this.ВремяLabel.Size = new System.Drawing.Size(83, 13);
-            this.ВремяLabel.TabIndex = 24;
-            this.ВремяLabel.Text = "Время данных:";
             // 
             // number
             // 
-            this.number.AutoSize = true;
-            this.number.Location = new System.Drawing.Point(92, 20);
+            resources.ApplyResources(this.number, "number");
             this.number.Name = "number";
-            this.number.Size = new System.Drawing.Size(41, 13);
-            this.number.TabIndex = 23;
-            this.number.Text = "Номер";
             // 
             // type
             // 
-            this.type.AutoSize = true;
-            this.type.Location = new System.Drawing.Point(18, 20);
+            resources.ApplyResources(this.type, "type");
             this.type.Name = "type";
-            this.type.Size = new System.Drawing.Size(68, 13);
-            this.type.TabIndex = 21;
-            this.type.Text = "Тип локо-ва";
             // 
             // Размер
             // 
-            this.Размер.AutoSize = true;
-            this.Размер.Location = new System.Drawing.Point(617, 20);
+            resources.ApplyResources(this.Размер, "Размер");
             this.Размер.Name = "Размер";
-            this.Размер.Size = new System.Drawing.Size(0, 13);
-            this.Размер.TabIndex = 17;
             // 
             // РазмерLabel
             // 
-            this.РазмерLabel.AutoSize = true;
-            this.РазмерLabel.Location = new System.Drawing.Point(569, 20);
+            resources.ApplyResources(this.РазмерLabel, "РазмерLabel");
             this.РазмерLabel.Name = "РазмерLabel";
-            this.РазмерLabel.Size = new System.Drawing.Size(49, 13);
-            this.РазмерLabel.TabIndex = 16;
-            this.РазмерLabel.Text = "Размер:";
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 23);
-            this.label4.TabIndex = 0;
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 23);
-            this.label2.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(758, 43);
+            resources.ApplyResources(this.button1, "button1");
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(25, 25);
-            this.button1.TabIndex = 14;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.panel3);
-            this.groupBox2.Location = new System.Drawing.Point(789, 27);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 427);
-            this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Список параметров";
             // 
             // panel3
             // 
-            this.panel3.AutoScroll = true;
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(3, 16);
+            resources.ApplyResources(this.panel3, "panel3");
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(374, 408);
-            this.panel3.TabIndex = 6;
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Location = new System.Drawing.Point(789, 460);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(377, 260);
-            this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Карта";
             // 
             // circularProgressBar1
             // 
             this.circularProgressBar1.AnimationFunction = WinFormAnimation.KnownAnimationFunctions.Liner;
             this.circularProgressBar1.AnimationSpeed = 500;
             this.circularProgressBar1.BackColor = System.Drawing.Color.Transparent;
-            this.circularProgressBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold);
+            resources.ApplyResources(this.circularProgressBar1, "circularProgressBar1");
             this.circularProgressBar1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.circularProgressBar1.InnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.circularProgressBar1.InnerMargin = 2;
             this.circularProgressBar1.InnerWidth = -1;
-            this.circularProgressBar1.Location = new System.Drawing.Point(496, 181);
             this.circularProgressBar1.MarqueeAnimationSpeed = 2000;
             this.circularProgressBar1.Name = "circularProgressBar1";
             this.circularProgressBar1.OuterColor = System.Drawing.Color.Gray;
             this.circularProgressBar1.OuterMargin = -25;
             this.circularProgressBar1.OuterWidth = 26;
-            this.circularProgressBar1.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.circularProgressBar1.ProgressColor = System.Drawing.Color.Lime;
             this.circularProgressBar1.ProgressWidth = 25;
             this.circularProgressBar1.SecondaryFont = new System.Drawing.Font("Microsoft Sans Serif", 36F);
-            this.circularProgressBar1.Size = new System.Drawing.Size(320, 320);
             this.circularProgressBar1.StartAngle = 270;
             this.circularProgressBar1.SubscriptColor = System.Drawing.Color.FromArgb(((int)(((byte)(166)))), ((int)(((byte)(166)))), ((int)(((byte)(166)))));
             this.circularProgressBar1.SubscriptMargin = new System.Windows.Forms.Padding(10, -35, 0, 0);
-            this.circularProgressBar1.SubscriptText = ".23";
+            this.circularProgressBar1.SubscriptText = "";
             this.circularProgressBar1.SuperscriptColor = System.Drawing.Color.FromArgb(((int)(((byte)(166)))), ((int)(((byte)(166)))), ((int)(((byte)(166)))));
             this.circularProgressBar1.SuperscriptMargin = new System.Windows.Forms.Padding(10, 35, 0, 0);
-            this.circularProgressBar1.SuperscriptText = "°C";
-            this.circularProgressBar1.TabIndex = 17;
-            this.circularProgressBar1.Text = "circularProgressBar1";
+            this.circularProgressBar1.SuperscriptText = "";
             this.circularProgressBar1.TextMargin = new System.Windows.Forms.Padding(8, 8, 0, 0);
             this.circularProgressBar1.Value = 68;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1175, 727);
-            this.Controls.Add(this.circularProgressBar1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button1);
@@ -313,9 +238,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(1191, 766);
             this.Name = "Form1";
-            this.Text = "ParserKotoriySmog ver. 0.01";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

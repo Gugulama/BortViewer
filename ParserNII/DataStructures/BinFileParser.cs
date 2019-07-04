@@ -25,7 +25,6 @@ namespace ParserNII.DataStructures
                     {
                         if (Math.Abs(value) > 0.001 || value == 0) // Отсекаем кривые метки путем выявления чисел в степени овермного/овермало
                         {
-                            //Console.Write(time + " - "); Console.Write(uid + " - "); Console.WriteLine(value);
 
                             if ((uid == 2 || uid == 6 || uid == 9 || uid == 19
                            || uid == 20 || uid == 50 || uid == 101

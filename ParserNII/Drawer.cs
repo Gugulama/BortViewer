@@ -57,8 +57,6 @@ namespace ParserNII
             pane.XAxis.Scale.MinGrace = 0;
             pane.XAxis.Scale.MaxGrace = 1;
 
-            //pane.XAxis.Title.Text = "Дата";
-            //pane.XAxis.Title.FontSpec.Size = 12;
             pane.XAxis.Title.IsVisible = false;
             pane.IsFontsScaled = false;
             pane.XAxis.MajorGrid.IsVisible = true;
@@ -120,8 +118,6 @@ namespace ParserNII
             pane.XAxis.Scale.Max = x.Last();
             this.xScaleMax = pane.XAxis.Scale.Max;
             this.xScaleMin = pane.XAxis.Scale.Min;
-            //pane.YAxisList[yAxis].Scale.Min = min - 10;
-            //pane.YAxisList[yAxis].Scale.Max = max + 10;
             pane.YAxisList[yAxis].IsVisible = false;
             pane.YAxisList[yAxis].Title.IsVisible = false;
         }
