@@ -89,6 +89,7 @@ namespace ParserNII
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                circularProgressBar1.Visible = true;
                 isFirstOpen = false;
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {
@@ -271,6 +272,7 @@ namespace ParserNII
                     }
                 }
                 stream.Close();
+                circularProgressBar1.Visible = false;
             }
         }
 
@@ -284,9 +286,6 @@ namespace ParserNII
                 uidNames = new Dictionary<string, TextBox>();
 
                 int i = 0;
-                circularProgressBar1.Visible = true;
-                circularProgressBar1.Value = 0;
-                circularProgressBar1.StartAngle = 0;
 
                 foreach (var datFileParam in datFileParams)
                 {
@@ -331,14 +330,7 @@ namespace ParserNII
                     panel.BackColor = Drawer.GetColor(i);
                     uidNames.Add(datFileParam.Value.name, textBoxes[i]);
                     i++;
-                    circularProgressBar1.Value++;
-                    circularProgressBar1.StartAngle += +20;
-                    if (circularProgressBar1.Value == 100)
-                    {
-                        circularProgressBar1.Value = circularProgressBar1.StartAngle;
-                    }
                 }
-                circularProgressBar1.Visible = false;
                 button1.Visible = true;
                 zedGraphControl1.Visible = true;
             }
@@ -367,9 +359,7 @@ namespace ParserNII
             uidNames = new Dictionary<string, TextBox>();
 
             int i = 0;
-            circularProgressBar1.Visible = true;
-            circularProgressBar1.Value = 0;
-            circularProgressBar1.StartAngle += -1;
+
             foreach (var binFileParam in binFileParams)
             {
                 var textBox = new TextBox();
@@ -412,14 +402,7 @@ namespace ParserNII
                 panel.BackColor = Drawer.GetColor(i);
                 uidNames.Add(binFileParam.Value.name, textBoxes[i]);
                 i++;
-                circularProgressBar1.Value++;
-                circularProgressBar1.StartAngle += +10;
-                if (circularProgressBar1.Value == 100)
-                {
-                    circularProgressBar1.Value = circularProgressBar1.StartAngle;
-                }
             }
-            circularProgressBar1.Visible = false;
             button1.Visible = true;
             zedGraphControl1.Visible = true;
         }
@@ -480,15 +463,10 @@ namespace ParserNII
 
         private void zedGraphControl1_MouseMove(object sender, MouseEventArgs e)
         {
-
-
             GraphPane pane = zedGraphControl1.GraphPane;
             zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
             verticalLine.Location.X = x;
-
-
             CurveItem curve = pane.CurveList[0];
-
 
             // Look for the min and max value
             double min = curve.Points[0].X;
@@ -500,7 +478,6 @@ namespace ParserNII
                 int index = 0;
                 for (int i = 0; i < curve.NPts; i++)
                 {
-
                     if (x < curve.Points[i].X)
                     {
                         index = i - 1;
@@ -518,6 +495,11 @@ namespace ParserNII
                         browser.ExecuteScriptAsync("map.panTo([" + latitude + "," + longitude + "]); "
                                                  + "marker.setLatLng([" + latitude + "," + longitude + "]); ");
                     }
+                }
+                catch (Exception exp)
+                { }
+
+
                     if (isDatFile)
                     {
                         foreach (var datFileParam in datFileParams)
@@ -538,14 +520,7 @@ namespace ParserNII
                             }
                         }
                     }
-                }
-                catch(KeyNotFoundException exp)
-                {
-                    
-                }
-
-
-            }
+                } 
             else
             {
                 if (isDatFile)
@@ -575,17 +550,14 @@ namespace ParserNII
         private void Form1_Load(object sender, EventArgs e)
         {
             string settingsPath = "./settings.json";
-            if (!File.Exists("settings.json"))
+            try
             {
-                File.Create("settings.json");
-                List<string> createSettings = new List<string>();
-                for (int i = 0; i < datFileParams.Count; i++)
-                {
-                    createSettings[i] = "false";
-                }
-                File.WriteAllLines("settings.json", createSettings);
+                settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
             }
-            settings = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(settingsPath)).ToObject<bool[]>();
+            catch (Exception ex)
+            {
+                settings = new bool[100];
+            }
         }
 
         private void ЭкпортироватьToolStripMenuItem_Click(object sender, EventArgs e)

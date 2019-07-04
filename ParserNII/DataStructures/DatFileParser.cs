@@ -170,7 +170,7 @@ namespace ParserNII.DataStructures
 
                 // byte
                 var dieselSpeed = (byte)dataChunk[position++];
-                result.Data.Add("Коэффициент по оборотам дизеля", new DataElement { OriginalValue = dieselSpeed, DisplayValue = dieselSpeed.ToString(), ChartValue = dieselSpeed, Display = true, DataParams = datFileParams["Коэффициент по оборотам"] });
+                result.Data.Add("Коэффициент по оборотам дизеля", new DataElement { OriginalValue = dieselSpeed, DisplayValue = dieselSpeed.ToString(), ChartValue = dieselSpeed, Display = true, DataParams = datFileParams["Коэффициент по оборотам дизеля"] });
 
                 // skip 2 bytes
                 position+=2;
