@@ -105,6 +105,8 @@
             this.zedGraphControl1.BackColor = System.Drawing.SystemColors.Control;
             resources.ApplyResources(this.zedGraphControl1, "zedGraphControl1");
             this.zedGraphControl1.EditButtons = System.Windows.Forms.MouseButtons.None;
+            this.zedGraphControl1.IsAntiAlias = true;
+            this.zedGraphControl1.IsAutoScrollRange = true;
             this.zedGraphControl1.IsShowContextMenu = false;
             this.zedGraphControl1.Name = "zedGraphControl1";
             this.zedGraphControl1.ScrollGrace = 0D;

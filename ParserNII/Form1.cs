@@ -454,7 +454,7 @@ namespace ParserNII
 
             double diff = origialXScale / newXScale;
             bool isXLess = (bool)((diff) > 1500);
-            bool isXBigger = (bool)((diff) < 1);
+            bool isXBigger = (bool)((diff) < 0.9);
 
             if (isXLess || isXBigger) sender.ZoomOut(sender.GraphPane);
         }
@@ -464,7 +464,8 @@ namespace ParserNII
             GraphPane pane = zedGraphControl1.GraphPane;
             zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
             verticalLine.Location.X = x;
-            CurveItem curve = pane.CurveList[0];
+            bool Nan = false;
+            CurveItem curve = pane.CurveList[0];          
 
             // Look for the min and max value
             double min = curve.Points[0].X;
@@ -479,9 +480,11 @@ namespace ParserNII
                     if (x < curve.Points[i].X)
                     {
                         index = i - 1;
+                        if (Double.IsNaN(curve.Points[i].Y)) Nan = true;
                         break;
                     }
                 }
+                
                 try
                 {
                     var newLatitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
@@ -498,7 +501,7 @@ namespace ParserNII
                 { }
 
 
-                if (isDatFile)
+                if (isDatFile && !Nan)
                 {
                     foreach (var datFileParam in datFileParams)
                     {
@@ -508,7 +511,7 @@ namespace ParserNII
                         }
                     }
                 }
-                else
+                else if(!isDatFile && !Nan)
                 {
                     foreach (var binFileParam in binFileParams)
                     {
@@ -519,7 +522,7 @@ namespace ParserNII
                     }
                 }
             }
-            else
+            else if (!(x > min && x < max) || Nan)
             {
                 if (isDatFile)
                 {

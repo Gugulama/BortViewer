@@ -113,7 +113,7 @@ namespace ParserNII
             LineItem myCurve = pane.AddCurve(name, list1, color, SymbolType.None);
             myCurve.YAxisIndex = yAxis;
             myCurve.Line.Width = 1.0F;
-            myCurve.Line.StepType = StepType.ForwardStep;           
+            myCurve.Line.StepType = StepType.ForwardStep;
             pane.XAxis.Scale.Min = x.First();
             pane.XAxis.Scale.Max = x.Last();
             this.xScaleMax = pane.XAxis.Scale.Max;
