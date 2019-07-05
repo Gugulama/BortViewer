@@ -54,7 +54,6 @@ namespace ParserNII
                     datFileParams.Remove(keys[i]);
                 }
             }
-            circularProgressBar1.Visible = false;
             CefSettings cefSettings = new CefSettings();
             Cef.Initialize(cefSettings);
             browser = new ChromiumWebBrowser(mapUrl);
@@ -76,21 +75,11 @@ namespace ParserNII
 
             if (!isFirstOpen)
             {
-                settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
-                int ParamCount = settings.Length + 1;
-                bool[] temp = new bool[ParamCount];
-                temp[0] = isDatFile;
-                for (int c = 0; c < settings.Length; c++)
-                {
-                    temp[c + 1] = settings[c];
-                }
-                settings = temp;
+                MakeSettings();
             }
 
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                circularProgressBar1.Visible = true;
-                isFirstOpen = false;
+            {                
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {
                     isDatFile = true;
@@ -98,14 +87,22 @@ namespace ParserNII
                     DatDisplayPanel();
                     RefreshDat();
                 }
-                else
+                else if (Path.GetExtension(ofd.FileName) == ".gzbin" || Path.GetExtension(ofd.FileName) == ".bin")
                 {
                     isDatFile = false;
                     //displaypanelElements
                     BinDisplayPanel();
                     RefreshBin();
                 }
+                else
+                {
+                    MessageBox.Show("Выбран некорректный тип файла", "Внимание", MessageBoxButtons.OK);
+                    открытьToolStripMenuItem.PerformClick();
+                    return;
+                }
 
+                Enabled = false;
+                isFirstOpen = false;
                 drawer.Clear();
                 zedGraphControl1.Enabled = true;
                 verticalLine = drawer.CrateVerticalLine();
@@ -240,6 +237,7 @@ namespace ParserNII
                     }
 
                 drawer.Refresh();
+                Enabled = true;
 
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {
@@ -271,8 +269,7 @@ namespace ParserNII
                         i++;
                     }
                 }
-                stream.Close();
-                circularProgressBar1.Visible = false;
+                stream.Close();                
             }
         }
 
@@ -425,6 +422,7 @@ namespace ParserNII
         {
             try
             {
+                MakeSettings();
                 string dataValues = JsonConvert.SerializeObject(settings);
                 File.WriteAllText("./settings.json", dataValues);
             }
@@ -493,34 +491,34 @@ namespace ParserNII
                         latitude = newLatitude;
                         longitude = newLongitude;
                         browser.ExecuteScriptAsync("map.panTo([" + latitude + "," + longitude + "]); "
-                                                 + "marker.setLatLng([" + latitude + "," + longitude + "]); ");
+                                                         + "marker.setLatLng([" + latitude + "," + longitude + "]); ");                       
                     }
                 }
                 catch (Exception exp)
                 { }
 
 
-                    if (isDatFile)
+                if (isDatFile)
+                {
+                    foreach (var datFileParam in datFileParams)
                     {
-                        foreach (var datFileParam in datFileParams)
+                        if (result[index].Data.ContainsKey(datFileParam.Value.name))
                         {
-                            if (result[index].Data.ContainsKey(datFileParam.Value.name))
-                            {
-                                uidNames[datFileParam.Value.name].Text = result[index].Data[datFileParam.Value.name].DisplayValue;
-                            }
+                            uidNames[datFileParam.Value.name].Text = result[index].Data[datFileParam.Value.name].DisplayValue;
                         }
                     }
-                    else
+                }
+                else
+                {
+                    foreach (var binFileParam in binFileParams)
                     {
-                        foreach (var binFileParam in binFileParams)
+                        if (result[index].Data.ContainsKey(binFileParam.Value.name))
                         {
-                            if (result[index].Data.ContainsKey(binFileParam.Value.name))
-                            {
-                                uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
-                            }
+                            uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
                         }
                     }
-                } 
+                }
+            }
             else
             {
                 if (isDatFile)
@@ -651,6 +649,35 @@ namespace ParserNII
                 MessageBox.Show("Откройте файл, необходимый для экспорта", "Внимание", MessageBoxButtons.OK);
             }
         }
+
+        private void MakeSettings()
+        {
+            settings = checkBoxes.Select(c => c.Value.Checked).ToArray();
+            int ParamCount = settings.Length + 1;
+            bool[] temp = new bool[ParamCount];
+            temp[0] = isDatFile;
+            for (int c = 0; c < settings.Length; c++)
+            {
+                temp[c + 1] = settings[c];
+            }
+            settings = temp;
+        }
+
+        //private bool CheckConnection()
+        //{
+        //    WebClient client = new WebClient();
+        //    try
+        //    {
+        //        using (client.OpenRead("http://www.google.com"))
+        //        {
+        //        }
+        //        return true;
+        //    }
+        //    catch (WebException)
+        //    {
+        //        return false;
+        //    }
+        //}
     }
 }
 

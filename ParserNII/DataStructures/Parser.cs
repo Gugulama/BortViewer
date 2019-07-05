@@ -35,7 +35,7 @@ namespace ParserNII.DataStructures
                         arr[i] = new DataElement
                         {
                             ChartValue = 0,
-                            DisplayValue = "0",
+                            DisplayValue = null,
                             Display = true
                         };
                     }
