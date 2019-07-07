@@ -66,10 +66,10 @@ namespace ParserNII
             pane.XAxis.MajorGrid.IsZeroLine = true;
             pane.YAxis.IsVisible = false;
 
-            pane.Margin.Left = 0;
-            pane.Margin.Top = 0;
+            pane.Margin.Left = -30;
+            pane.Margin.Top = 5;
             pane.Margin.Bottom = 2;
-            pane.Margin.Right = 0;
+            pane.Margin.Right = -30;
 
             control.IsEnableVZoom = false;
             control.IsEnableVPan = false;
@@ -86,8 +86,8 @@ namespace ParserNII
         public void DrawGraph(List<XDate> x, List<double> y, string name, Color color)
         {
             GraphPane pane = control.GraphPane;
-
-            PointPairList list1 = new PointPairList();
+            LineItem myCurve;
+            PointPairList pointList = new PointPairList();
 
             for (int i = 0; i < x.Count; i++)
             {
@@ -96,28 +96,34 @@ namespace ParserNII
                     X = x[i],
                     Y = y[i]
                 };
-                list1.Add(point);
+                pointList.Add(point);
             }
-
-            double min = 0;
-            double max = 0;
-            foreach (var item in list1)
+            
+            try
             {
-                if (item.Y < min)
-                    min = item.Y;
-                else if (item.Y > max)
-                    max = item.Y;
+                FilteredPointList filteredList = new FilteredPointList(XDateListToDoubleArray(x), y.ToArray());
+                double filteredXMin = x.First();
+                double filteredXMax = x.Last();
+                int filteredCount = pointList.Count/10;
+                filteredList.SetBounds(filteredXMin, filteredXMax, filteredCount);
+                myCurve = pane.AddCurve(name, filteredList, color, SymbolType.None);
+            }
+            catch (Exception e)
+            {
+                myCurve = pane.AddCurve(name, pointList, color, SymbolType.None);
             }
 
-            int yAxis = pane.AddYAxis(name);
-            LineItem myCurve = pane.AddCurve(name, list1, color, SymbolType.None);
+            int yAxis = pane.AddYAxis(name);            
             myCurve.YAxisIndex = yAxis;
             myCurve.Line.Width = 1.0F;
             myCurve.Line.StepType = StepType.ForwardStep;
-            pane.XAxis.Scale.Min = x.First();
-            pane.XAxis.Scale.Max = x.Last();
-            this.xScaleMax = pane.XAxis.Scale.Max;
-            this.xScaleMin = pane.XAxis.Scale.Min;
+            if (x.First() < pane.XAxis.Scale.Min || x.Last() > pane.XAxis.Scale.Max)
+            {
+                pane.XAxis.Scale.Min = x.First() - 0.01;
+                pane.XAxis.Scale.Max = x.Last() + 0.01;
+                xScaleMax = pane.XAxis.Scale.Max;
+                xScaleMin = pane.XAxis.Scale.Min;
+            }             
             pane.YAxisList[yAxis].IsVisible = false;
             pane.YAxisList[yAxis].Title.IsVisible = false;
         }
@@ -155,6 +161,16 @@ namespace ParserNII
             threshHoldLine.Location.CoordinateFrame = CoordType.XScaleYChartFraction;
             control.GraphPane.GraphObjList.Add(threshHoldLine);
             return threshHoldLine;
+        }
+
+        private double[] XDateListToDoubleArray(List<XDate> xArr)
+        {
+            double[] arr = new double[xArr.Count];
+            for (int i = 0; i < xArr.Count; i++)
+            {
+                arr[i] = xArr[i]; 
+            }
+            return arr;
         }
     }
 }

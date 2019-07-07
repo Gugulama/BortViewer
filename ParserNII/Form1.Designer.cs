@@ -52,6 +52,8 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.button2 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -106,9 +108,9 @@
             resources.ApplyResources(this.zedGraphControl1, "zedGraphControl1");
             this.zedGraphControl1.EditButtons = System.Windows.Forms.MouseButtons.None;
             this.zedGraphControl1.IsAntiAlias = true;
-            this.zedGraphControl1.IsAutoScrollRange = true;
             this.zedGraphControl1.IsShowContextMenu = false;
             this.zedGraphControl1.Name = "zedGraphControl1";
+            this.zedGraphControl1.PanButtons = System.Windows.Forms.MouseButtons.None;
             this.zedGraphControl1.ScrollGrace = 0D;
             this.zedGraphControl1.ScrollMaxX = 0D;
             this.zedGraphControl1.ScrollMaxY = 0D;
@@ -117,8 +119,9 @@
             this.zedGraphControl1.ScrollMinY = 0D;
             this.zedGraphControl1.ScrollMinY2 = 0D;
             this.zedGraphControl1.UseExtendedPrintDialog = true;
-            this.zedGraphControl1.ZoomButtons2 = System.Windows.Forms.MouseButtons.Right;
+            this.zedGraphControl1.ZoomButtons = System.Windows.Forms.MouseButtons.None;
             this.zedGraphControl1.ZoomEvent += new ZedGraph.ZedGraphControl.ZoomEventHandler(this.zedGraphControl1_ZoomEvent);
+            this.zedGraphControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraphControl1_MouseClick);
             this.zedGraphControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraphControl1_MouseMove);
             // 
             // groupBox4
@@ -204,10 +207,25 @@
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
+            // button2
+            // 
+            resources.ApplyResources(this.button2, "button2");
+            this.button2.Name = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // checkBox1
+            // 
+            resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button1);
@@ -252,6 +270,8 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private ZedGraph.ZedGraphControl zedGraphControl1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

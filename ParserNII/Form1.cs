@@ -31,6 +31,7 @@ namespace ParserNII
         private bool[] settings;
         private bool isFirstOpen;
         private bool isDatFile;
+        private bool isAllowMouseMove;
         private readonly string mapUrl = String.Format("file:///{0}/index.html?", Directory.GetCurrentDirectory());
         private string latitude = "";
         private string longitude = "";
@@ -59,6 +60,8 @@ namespace ParserNII
             browser = new ChromiumWebBrowser(mapUrl);
             groupBox3.Controls.Add(browser);
             browser.Dock = DockStyle.Fill;
+            isAllowMouseMove = true;
+            checkBox1.Checked = isAllowMouseMove;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -461,86 +464,89 @@ namespace ParserNII
 
         private void zedGraphControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            GraphPane pane = zedGraphControl1.GraphPane;
-            zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
-            verticalLine.Location.X = x;
-            bool Nan = false;
-            CurveItem curve = pane.CurveList[0];          
-
-            // Look for the min and max value
-            double min = curve.Points[0].X;
-            double max = curve.Points[curve.NPts - 1].X;
-
-            // Prevent error if mouse is out of bounds.
-            if (x > min && x < max)
+            if (isAllowMouseMove)
             {
-                int index = 0;
-                for (int i = 0; i < curve.NPts; i++)
-                {
-                    if (x < curve.Points[i].X)
-                    {
-                        index = i - 1;
-                        if (Double.IsNaN(curve.Points[i].Y)) Nan = true;
-                        break;
-                    }
-                }
-                
-                try
-                {
-                    var newLatitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
-                    var newLongitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
-                    if (latitude != newLatitude || longitude != newLongitude)
-                    {
-                        latitude = newLatitude;
-                        longitude = newLongitude;
-                        browser.ExecuteScriptAsync("map.panTo([" + latitude + "," + longitude + "]); "
-                                                         + "marker.setLatLng([" + latitude + "," + longitude + "]); ");                       
-                    }
-                }
-                catch (Exception exp)
-                { }
+                GraphPane pane = zedGraphControl1.GraphPane;
+                zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
+                verticalLine.Location.X = x;
+                bool Nan = false;
+                CurveItem curve = pane.CurveList[0];
 
+                // Look for the min and max value
+                double min = curve.Points[0].X;
+                double max = curve.Points[curve.NPts - 1].X;
 
-                if (isDatFile && !Nan)
+                // Prevent error if mouse is out of bounds.
+                if (x > min && x < max)
                 {
-                    foreach (var datFileParam in datFileParams)
+                    int index = 0;
+                    for (int i = 0; i < curve.NPts; i++)
                     {
-                        if (result[index].Data.ContainsKey(datFileParam.Value.name))
+                        if (x < curve.Points[i].X)
                         {
-                            uidNames[datFileParam.Value.name].Text = result[index].Data[datFileParam.Value.name].DisplayValue;
+                            index = i - 1;
+                            if (Double.IsNaN(curve.Points[i].Y)) Nan = true;
+                            break;
+                        }
+                    }
+
+                    try
+                    {
+                        var newLatitude = result[index].Data["Широта"].DisplayValue.Replace(',', '.');
+                        var newLongitude = result[index].Data["Долгота"].DisplayValue.Replace(',', '.');
+                        if (latitude != newLatitude || longitude != newLongitude)
+                        {
+                            latitude = newLatitude;
+                            longitude = newLongitude;
+                            browser.ExecuteScriptAsync("map.panTo([" + latitude + "," + longitude + "]); "
+                                                             + "marker.setLatLng([" + latitude + "," + longitude + "]); ");
+                        }
+                    }
+                    catch (Exception exp)
+                    { }
+
+
+                    if (isDatFile && !Nan)
+                    {
+                        foreach (var datFileParam in datFileParams)
+                        {
+                            if (result[index].Data.ContainsKey(datFileParam.Value.name))
+                            {
+                                uidNames[datFileParam.Value.name].Text = result[index].Data[datFileParam.Value.name].DisplayValue;
+                            }
+                        }
+                    }
+                    else if (!isDatFile && !Nan)
+                    {
+                        foreach (var binFileParam in binFileParams)
+                        {
+                            if (result[index].Data.ContainsKey(binFileParam.Value.name))
+                            {
+                                uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
+                            }
                         }
                     }
                 }
-                else if(!isDatFile && !Nan)
+                else if (!(x > min && x < max) || Nan)
                 {
-                    foreach (var binFileParam in binFileParams)
+                    if (isDatFile)
                     {
-                        if (result[index].Data.ContainsKey(binFileParam.Value.name))
+                        foreach (var datFileParam in datFileParams)
                         {
-                            uidNames[binFileParam.Value.name].Text = result[index].Data[binFileParam.Value.name].DisplayValue;
+                            uidNames[datFileParam.Value.name].Text = "";
                         }
                     }
-                }
-            }
-            else if (!(x > min && x < max) || Nan)
-            {
-                if (isDatFile)
-                {
-                    foreach (var datFileParam in datFileParams)
+                    else
                     {
-                        uidNames[datFileParam.Value.name].Text = "";
+                        foreach (var binFileParam in binFileParams)
+                        {
+                            uidNames[binFileParam.Value.name].Text = "";
+                        }
                     }
-                }
-                else
-                {
-                    foreach (var binFileParam in binFileParams)
-                    {
-                        uidNames[binFileParam.Value.name].Text = "";
-                    }
-                }
 
+                }
+                zedGraphControl1.Invalidate();
             }
-            zedGraphControl1.Invalidate();
         }
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
@@ -666,21 +672,23 @@ namespace ParserNII
             settings = temp;
         }
 
-        //private bool CheckConnection()
-        //{
-        //    WebClient client = new WebClient();
-        //    try
-        //    {
-        //        using (client.OpenRead("http://www.google.com"))
-        //        {
-        //        }
-        //        return true;
-        //    }
-        //    catch (WebException)
-        //    {
-        //        return false;
-        //    }
-        //}
+        private void button2_Click(object sender, EventArgs e)
+        {
+            GraphPane pane = zedGraphControl1.GraphPane;
+            pane.XAxis.Scale.Min = drawer.xScaleMin;
+            pane.XAxis.Scale.Max = drawer.xScaleMax;
+            drawer.Refresh();
+        }
+
+        private void zedGraphControl1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (isAllowMouseMove) isAllowMouseMove = false;
+                else isAllowMouseMove = true;
+                checkBox1.Checked = isAllowMouseMove;
+            }            
+        }
     }
 }
 
