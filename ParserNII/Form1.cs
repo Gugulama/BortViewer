@@ -27,11 +27,13 @@ namespace ParserNII
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(b => b.number);
         private readonly Dictionary<string, ConfigElement> datFileParams = Config.Instance.datFileParams.ToDictionary(d => d.name);
         private List<DataFile> result;
+        private List<XDate> xValues;
         private DataArrays arrayResult;
         private bool[] settings;
         private bool isFirstOpen;
         private bool isDatFile;
         private bool isAllowMouseMove;
+        private bool isRightBtnPressed;
         private readonly string mapUrl = String.Format("file:///{0}/index.html?", Directory.GetCurrentDirectory());
         private string latitude = "";
         private string longitude = "";
@@ -62,6 +64,7 @@ namespace ParserNII
             browser.Dock = DockStyle.Fill;
             isAllowMouseMove = true;
             checkBox1.Checked = isAllowMouseMove;
+            isRightBtnPressed = false;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -118,8 +121,7 @@ namespace ParserNII
                 Размер.Text = (stream.Length / 1024).ToString() + " Кб";
                 var parser = (Path.GetExtension(ofd.FileName) == ".dat" || Path.GetExtension(ofd.FileName) == ".gzdat") ? (Parser)new DatFileParser() : new BinFileParser();
                 result = parser.Parse(fileBytes);
-
-                List<XDate> xValues;
+                
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {
                     xValues = result.Select(r => new XDate(DateTimeOffset.FromUnixTimeSeconds((uint)r.Data["Время в “UNIX” формате"].OriginalValue).AddHours(3).DateTime)).ToList();
@@ -297,7 +299,7 @@ namespace ParserNII
                     textBox.Name = $"textBox{i}";
                     textBox.ReadOnly = true;
                     textBox.Size = new Size(62, 20);
-                    textBox.TabIndex = 30 + i;
+                    textBox.TabIndex = 30 + i;                    
 
                     var checkBox = new CheckBox();
                     panel3.Controls.Add(checkBox);
@@ -318,7 +320,30 @@ namespace ParserNII
                     checkBox.UseVisualStyleBackColor = true;
                     checkBoxes.Add(datFileParam.Value.name, checkBox);
                     checkBox.Checked = false;
-                    int index = i;
+                    checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
+                    {
+                        if (e.Button == MouseButtons.Right && !isRightBtnPressed)
+                        {
+                            isRightBtnPressed = true;
+                            Form2 f = new Form2(datFileParam.Value.name);
+                            f.Owner = this;
+                            f.StartPosition = FormStartPosition.Manual;
+                            f.Location = new Point()
+                            {
+                                X = Location.X + Size.Width - groupBox2.Size.Width - 211,
+                                Y = Location.Y + Size.Height / 2 - 99
+                            };
+
+                            if (f.ShowDialog() == DialogResult.OK)
+                            {
+                                isRightBtnPressed = false;
+                            }
+                            else
+                            {
+                                isRightBtnPressed = false;
+                            }
+                        }
+                    };
 
                     var panel = new Panel();
                     panel3.Controls.Add(panel);
@@ -390,7 +415,30 @@ namespace ParserNII
                 checkBox.UseVisualStyleBackColor = true;
                 checkBoxes.Add(binFileParam.Value.name, checkBox);
                 checkBox.Checked = false;
-                int index = i;
+                checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
+                {
+                    if (e.Button == MouseButtons.Right && !isRightBtnPressed)
+                    {
+                        isRightBtnPressed = true;
+                        Form2 f = new Form2(binFileParam.Value.name);
+                        f.Owner = this;
+                        f.StartPosition = FormStartPosition.Manual;
+                        f.Location = new Point()
+                        {
+                            X = Location.X + Size.Width - groupBox2.Size.Width -211,
+                            Y = Location.Y + Size.Height / 2 - 99
+                        };
+
+                        if (f.ShowDialog() == DialogResult.OK)
+                        {
+                            isRightBtnPressed = false;
+                        }
+                        else
+                        {
+                            isRightBtnPressed = false;
+                        }
+                    }
+                };
 
                 var panel = new Panel();
                 panel3.Controls.Add(panel);
@@ -480,12 +528,12 @@ namespace ParserNII
                 if (x > min && x < max)
                 {
                     int index = 0;
-                    for (int i = 0; i < curve.NPts; i++)
+                    for (int i = 0; i < xValues.Count; i++)
                     {
-                        if (x < curve.Points[i].X)
+                        if (x < xValues[i].XLDate)
                         {
                             index = i - 1;
-                            if (Double.IsNaN(curve.Points[i].Y)) Nan = true;
+                            if (Double.IsNaN(xValues[i].XLDate)) Nan = true;
                             break;
                         }
                     }
@@ -688,6 +736,12 @@ namespace ParserNII
                 else isAllowMouseMove = true;
                 checkBox1.Checked = isAllowMouseMove;
             }            
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox1.Checked != isAllowMouseMove)
+                checkBox1.Checked = isAllowMouseMove;
         }
     }
 }
