@@ -12,6 +12,7 @@ namespace ParserNII
 {
     public partial class Form2 : Form
     {
+        Form1 mainForm;
         public Form2(string param)
         {
             InitializeComponent();

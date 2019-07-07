@@ -323,7 +323,7 @@ namespace ParserNII
                     checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
                     {
                         if (e.Button == MouseButtons.Right && !isRightBtnPressed)
-                        {
+                        {                            
                             isRightBtnPressed = true;
                             Form2 f = new Form2(datFileParam.Value.name);
                             f.Owner = this;
@@ -336,10 +336,39 @@ namespace ParserNII
 
                             if (f.ShowDialog() == DialogResult.OK)
                             {
-                                isRightBtnPressed = false;
+                                GraphPane pane = zedGraphControl1.GraphPane;
+                                PointPairList pointList = new PointPairList();
+                                CurveItem curve = pane.CurveList[datFileParam.Value.name];
+                                double limit;
+                                try { limit = double.Parse(f.textBox1.Text); }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
+                                    limit = 0;
+                                }
+                                if (limit != 0)
+                                {
+                                    pointList.Add(new PointPair()
+                                    {
+                                        X = xValues.First(),
+                                        Y = limit
+                                    });
+                                    pointList.Add(new PointPair()
+                                    {
+                                        X = xValues.Last(),
+                                        Y = limit
+                                    });
+                                    LineItem limiter = pane.AddCurve("limit", pointList, Color.Red, SymbolType.None);
+                                    pane.LineType = LineType.Normal;
+                                    limiter.YAxisIndex = curve.YAxisIndex;
+                                    limiter.Line.Width = 1.0F;
+                                    limiter.Line.StepType = StepType.ForwardStep;
+                                    isRightBtnPressed = false;
+                                    drawer.Refresh();
+                                }
                             }
                             else
-                            {
+                            {                                
                                 isRightBtnPressed = false;
                             }
                         }

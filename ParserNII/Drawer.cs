@@ -51,6 +51,7 @@ namespace ParserNII
             this.control = control;
 
             GraphPane pane = control.GraphPane;
+            pane.LineType = LineType.Normal;
             pane.XAxis.Type = AxisType.Date;
             pane.XAxis.Scale.Format = "dd/MM HH:mm:ss";
             pane.XAxis.Scale.FontSpec.Size = 11;
@@ -163,7 +164,7 @@ namespace ParserNII
             return threshHoldLine;
         }
 
-        private double[] XDateListToDoubleArray(List<XDate> xArr)
+        public double[] XDateListToDoubleArray(List<XDate> xArr)
         {
             double[] arr = new double[xArr.Count];
             for (int i = 0; i < xArr.Count; i++)
