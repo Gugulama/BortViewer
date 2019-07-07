@@ -193,7 +193,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="zedGraphControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>768, 624</value>
+    <value>780, 624</value>
   </data>
   <data name="zedGraphControl1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -214,7 +214,7 @@
     <value>12, 80</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>774, 643</value>
+    <value>786, 643</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -735,6 +735,24 @@
   <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="button2.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        xAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAWdEVYdENvcHly
+        aWdodACpIER1dGNoIEljb27AhZ4OAAACfElEQVRIS82U7UtTcRTH+4tKy9RlRJlTZ3twc87U1RrCZqsX
+        StQqpAVR+apHoSwJIYIMIgpGQdSrtSBzBTNN01lm1LtQJNnu4Nvv/Dour/devcGQPjAG3/vw4ZzfOXcT
+        NoD/RzL3/QfGJqcwmZnBwuIip+YxlOTzeVy4dgPWlgDKbR5s3mtHidWBna4WtB7uwqvhEb5zfXQlybcp
+        WBzNKKt3Y4t4uTMQRvhED4JdUVTu82JbnQslNQ5ETsb4ibXRSJLDKfmCsrpGRE7FMDv3ja/85dHT56hy
+        +LDd5ob/6DFOjVFJFNEii11UIASX+u9wqs/P+XlUew+IqhpxZWCQU31UEjoDahFVYIbM7FdsrXWi1OpE
+        NpflVItKQodMZ/BFp0VGHDl9VohcGHoS50RLQUJjSlPkCIQ4McfLRFJW0h07z4mWgmT805Qc09DxHk7M
+        kf44IQclJKbPiIJkMvMZpeLmYHeUE3Ok0qNS0hk9w4mWgoQ2uUosWoXYg39h4N4D2a7evn5OtKgOnjaZ
+        RvJh/Bkn67OnqV1K3o+OcaJFJUm8GZGl73D6xB4scGrMxes3Ud7ggSvYyYk+KglBnwra5OpmP2bEHhjR
+        SwIxjRUNTWJopjnVRyMh6FNBbaP5pz14kXiN9PiEOOQPuHX3vmiRX1ZAgt2eNtTuPwRFUfhpLboS4urt
+        QdlrEtE/tZF+yxvu6YjICkhgsXtha++QnyU9DCVENpfD0OO4XLSw2B8aU5qidysOmSogAX2da3wH5TOr
+        WVNiFkXJS0GlqKi+LYjcqtYVRULkRAUkoIp2uVvxa2mJrxRRQpCIBOcu93Hyh6JKiJUVLFN0iR4bIAF+
+        A+4p2hO8TrBhAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
     <value>674, 43</value>
   </data>
@@ -759,6 +777,9 @@
   <data name="checkBox1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>705, 47</value>
   </data>
@@ -766,13 +787,13 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="checkBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 17</value>
+    <value>71, 17</value>
   </data>
   <data name="checkBox1.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
   </data>
   <data name="checkBox1.Text" xml:space="preserve">
-    <value>Mousemove</value>
+    <value>Нажатие</value>
   </data>
   <data name="&gt;&gt;checkBox1.Name" xml:space="preserve">
     <value>checkBox1</value>

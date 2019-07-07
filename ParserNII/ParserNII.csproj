@@ -173,6 +173,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\Debug\gzm040184_search.png" />
     <Content Include="Config.xml" />
     <Content Include="Content\images\layers-2x.png" />
     <Content Include="Content\images\layers.png" />
