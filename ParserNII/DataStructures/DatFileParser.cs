@@ -93,12 +93,12 @@ namespace ParserNII.DataStructures
                 // int
                 buffer = new[] { dataChunk[position++], dataChunk[position++], dataChunk[position++], dataChunk[position++] };
                 var Latitude = BitConverter.ToInt32(buffer, 0);
-                result.Data.Add("Широта", new DataElement { OriginalValue = Latitude, DisplayValue = ParseCoordinate(Latitude), ChartValue = Latitude, Display = true, DataParams = datFileParams["Широта"] });
+                result.Data.Add("Широта", new DataElement { OriginalValue = ParseCoordinate(Latitude), DisplayValue = ParseCoordinate(Latitude).ToString(), ChartValue = ParseCoordinate(Latitude), Display = true, DataParams = datFileParams["Широта"] });
 
                 // int
                 buffer = new[] { dataChunk[position++], dataChunk[position++], dataChunk[position++], dataChunk[position++] };
                 var Longitude = BitConverter.ToInt32(buffer, 0);
-                result.Data.Add("Долгота", new DataElement { OriginalValue = Longitude, DisplayValue = ParseCoordinate(Longitude), ChartValue = Longitude, Display = true, DataParams = datFileParams["Долгота"] });
+                result.Data.Add("Долгота", new DataElement { OriginalValue = ParseCoordinate(Longitude), DisplayValue = ParseCoordinate(Longitude).ToString(), ChartValue = ParseCoordinate(Longitude), Display = true, DataParams = datFileParams["Долгота"] });
 
 
                 // byte

@@ -46,10 +46,10 @@ namespace ParserNII.DataStructures
 
         }
 
-        protected string ParseCoordinate(int coordinate)
+        protected double ParseCoordinate(int coordinate)
         {
             double coordDouble = coordinate * 0.000001000;
-            return coordDouble.ToString();
+            return coordDouble;
         }
     }
 }

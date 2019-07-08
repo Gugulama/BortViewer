@@ -22,6 +22,7 @@ namespace ParserNII
         private Dictionary<string, Panel> panels;
         private Dictionary<string, TextBox> uidNames;
         private LineObj verticalLine;
+        public LineItem limiter;
         private Drawer drawer;
         private Dictionary<string, int> LineIndexes;
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(b => b.number);
@@ -165,10 +166,14 @@ namespace ParserNII
                             {
                                 try
                                 {
-                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexes[datFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                    var curve = zedGraphControl1.GraphPane.CurveList[LineIndexes[datFileParam.Value.name]];
+                                    if (curve.IsVisible != checkBox.Checked)
                                     {
-                                        zedGraphControl1.GraphPane.CurveList[LineIndexes[datFileParam.Value.name]].IsVisible = checkBox.Checked;
-
+                                        curve.IsVisible = checkBox.Checked;
+                                        if (limiter != null && curve.YAxisIndex == limiter.YAxisIndex)
+                                        {
+                                            limiter.IsVisible = curve.IsVisible;
+                                        }
                                         if (checkBox.Checked)
                                         {
                                             zedGraphControl1.AxisChange();
@@ -212,10 +217,14 @@ namespace ParserNII
                             {
                                 try
                                 {
-                                    if (zedGraphControl1.GraphPane.CurveList[LineIndexes[binFileParam.Value.name]].IsVisible != checkBox.Checked)
+                                    var curve = zedGraphControl1.GraphPane.CurveList[LineIndexes[binFileParam.Value.name]];
+                                    if (curve.IsVisible != checkBox.Checked)
                                     {
-                                        zedGraphControl1.GraphPane.CurveList[LineIndexes[binFileParam.Value.name]].IsVisible = checkBox.Checked;
-
+                                        curve.IsVisible = checkBox.Checked;
+                                        if (limiter != null && curve.YAxisIndex == limiter.YAxisIndex)
+                                        {
+                                            limiter.IsVisible = curve.IsVisible;
+                                        }
                                         if (checkBox.Checked)
                                         {
                                             zedGraphControl1.AxisChange();
@@ -322,7 +331,7 @@ namespace ParserNII
                     checkBox.Checked = false;
                     checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
                     {
-                        if (e.Button == MouseButtons.Right && !isRightBtnPressed)
+                        if (e.Button == MouseButtons.Right && !isRightBtnPressed && result != null)
                         {                            
                             isRightBtnPressed = true;
                             Form2 f = new Form2(datFileParam.Value.name);
@@ -345,9 +354,9 @@ namespace ParserNII
                                 catch (Exception ex)
                                 {
                                     MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
-                                    limit = 0;
+                                    limit = Double.NaN;
                                 }
-                                if (limit != 0)
+                                if (!Double.IsNaN(limit))
                                 {
                                     pointList.Add(new PointPair()
                                     {
@@ -359,7 +368,11 @@ namespace ParserNII
                                         X = xValues.Last(),
                                         Y = limit
                                     });
-                                    LineItem limiter = pane.AddCurve("limit", pointList, Color.Black, SymbolType.None);
+                                    if (limiter != null)
+                                    {
+                                        pane.CurveList.Remove(pane.CurveList["limit"]);
+                                    }
+                                    limiter = pane.AddCurve("limit", pointList, Color.Black, SymbolType.None);
                                     pane.LineType = LineType.Normal;
                                     limiter.YAxisIndex = curve.YAxisIndex;
                                     limiter.Line.Width = 1.0F;
@@ -367,12 +380,16 @@ namespace ParserNII
                                     isRightBtnPressed = false;
                                     drawer.Refresh();
                                 }
+                                else
+                                {
+                                    isRightBtnPressed = false;
+                                    drawer.Refresh();
+                                }
                             }
                             else
-                            {                                
+                            {
                                 isRightBtnPressed = false;
                             }
-                            
                         }
                     };
 
@@ -448,11 +465,12 @@ namespace ParserNII
                 checkBox.Checked = false;
                 checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
                 {
-                    if (e.Button == MouseButtons.Right && !isRightBtnPressed)
+                    if (e.Button == MouseButtons.Right && !isRightBtnPressed && result != null)
                     {
                         isRightBtnPressed = true;
                         Form2 f = new Form2(binFileParam.Value.name);
                         f.Owner = this;
+                        f.paramEdit.Text = Properties.Settings.Default.paramEdit;
                         f.StartPosition = FormStartPosition.Manual;
                         f.Location = new Point()
                         {
@@ -462,7 +480,45 @@ namespace ParserNII
 
                         if (f.ShowDialog() == DialogResult.OK)
                         {
-                            isRightBtnPressed = false;
+                            GraphPane pane = zedGraphControl1.GraphPane;
+                            PointPairList pointList = new PointPairList();
+                            CurveItem curve = pane.CurveList[binFileParam.Value.name];
+                            double limit;
+                            try { limit = double.Parse(f.paramEdit.Text); }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
+                                limit = Double.NaN;
+                            }
+                            if (!Double.IsNaN(limit))
+                            {
+                                pointList.Add(new PointPair()
+                                {
+                                    X = xValues.First(),
+                                    Y = limit
+                                });
+                                pointList.Add(new PointPair()
+                                {
+                                    X = xValues.Last(),
+                                    Y = limit
+                                });
+                                if (limiter != null)
+                                {
+                                    pane.CurveList.Remove(pane.CurveList["limit"]);
+                                } 
+                                limiter = pane.AddCurve("limit", pointList, Color.Black, SymbolType.None);
+                                pane.LineType = LineType.Normal;
+                                limiter.YAxisIndex = curve.YAxisIndex;
+                                limiter.Line.Width = 1.0F;
+                                limiter.Line.StepType = StepType.ForwardStep;
+                                isRightBtnPressed = false;
+                                drawer.Refresh();
+                            }
+                            else
+                            {
+                                isRightBtnPressed = false;
+                                drawer.Refresh();
+                            }
                         }
                         else
                         {

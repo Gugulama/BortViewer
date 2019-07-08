@@ -270,9 +270,9 @@
         private System.Windows.Forms.ToolStripMenuItem экпортироватьToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private ZedGraph.ZedGraphControl zedGraphControl1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.CheckBox checkBox1;
+        public ZedGraph.ZedGraphControl zedGraphControl1;
     }
 }
 
