@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace ParserNII
 {
@@ -18,6 +10,13 @@ namespace ParserNII
             InitializeComponent();
             Form1 mainForm = Owner as Form1;
             label2.Text = param;
+        }
+
+        private void Button1_Click(object sender, System.EventArgs e)
+        {
+            Properties.Settings.Default.paramEdit = paramEdit.Text;
+
+            Properties.Settings.Default.Save();
         }
     }
 }

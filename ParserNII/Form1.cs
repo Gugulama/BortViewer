@@ -326,6 +326,7 @@ namespace ParserNII
                         {                            
                             isRightBtnPressed = true;
                             Form2 f = new Form2(datFileParam.Value.name);
+                            f.paramEdit.Text = Properties.Settings.Default.paramEdit;
                             f.Owner = this;
                             f.StartPosition = FormStartPosition.Manual;
                             f.Location = new Point()
@@ -340,7 +341,7 @@ namespace ParserNII
                                 PointPairList pointList = new PointPairList();
                                 CurveItem curve = pane.CurveList[datFileParam.Value.name];
                                 double limit;
-                                try { limit = double.Parse(f.textBox1.Text); }
+                                try { limit = double.Parse(f.paramEdit.Text); }
                                 catch (Exception ex)
                                 {
                                     MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
@@ -358,7 +359,7 @@ namespace ParserNII
                                         X = xValues.Last(),
                                         Y = limit
                                     });
-                                    LineItem limiter = pane.AddCurve("limit", pointList, Color.Red, SymbolType.None);
+                                    LineItem limiter = pane.AddCurve("limit", pointList, Color.Black, SymbolType.None);
                                     pane.LineType = LineType.Normal;
                                     limiter.YAxisIndex = curve.YAxisIndex;
                                     limiter.Line.Width = 1.0F;
@@ -371,6 +372,7 @@ namespace ParserNII
                             {                                
                                 isRightBtnPressed = false;
                             }
+                            
                         }
                     };
 
