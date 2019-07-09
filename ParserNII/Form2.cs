@@ -22,7 +22,7 @@ namespace ParserNII
             if (mainForm != null)
             {
                 mainForm.zedGraphControl1.GraphPane.CurveList.Remove(mainForm.zedGraphControl1.GraphPane.CurveList["limit"]);
-                mainForm.zedGraphControl1.Refresh();
+                mainForm.drawer.Refresh();
                 Close();
             }
         }

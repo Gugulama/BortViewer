@@ -23,7 +23,7 @@ namespace ParserNII
         private Dictionary<string, TextBox> uidNames;
         private LineObj verticalLine;
         public LineItem limiter;
-        private Drawer drawer;
+        public Drawer drawer;
         private Dictionary<string, int> LineIndexes;
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(b => b.number);
         private readonly Dictionary<string, ConfigElement> datFileParams = Config.Instance.datFileParams.ToDictionary(d => d.name);
