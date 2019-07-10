@@ -12,7 +12,8 @@ namespace ParserNII
 
         private void Button1_Click(object sender, System.EventArgs e)
         {
-            Properties.Settings.Default.paramEdit = paramEdit.Text;
+            Properties.Settings.Default.paramEditMin = paramEditMin.Text;
+            Properties.Settings.Default.paramEditMax = paramEditMax.Text;
             Properties.Settings.Default.Save();
         }
 
@@ -21,7 +22,7 @@ namespace ParserNII
             Form1 mainForm = Owner as Form1;
             if (mainForm != null)
             {
-                mainForm.zedGraphControl1.GraphPane.CurveList.Remove(mainForm.zedGraphControl1.GraphPane.CurveList["limit"]);
+                //mainForm.zedGraphControl1.GraphPane.CurveList.Remove(mainForm.zedGraphControl1.GraphPane.CurveList["limit"]);
                 mainForm.drawer.Refresh();
                 Close();
             }

@@ -8,7 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ParserNII.Properties {      
+namespace ParserNII.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
@@ -24,12 +26,24 @@ namespace ParserNII.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string paramEdit {
+        public string paramEditMin {
             get {
-                return ((string)(this["paramEdit"]));
+                return ((string)(this["paramEditMin"]));
             }
             set {
-                this["paramEdit"] = value;
+                this["paramEditMin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string paramEditMax {
+            get {
+                return ((string)(this["paramEditMax"]));
+            }
+            set {
+                this["paramEditMax"] = value;
             }
         }
     }

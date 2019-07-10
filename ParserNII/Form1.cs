@@ -332,56 +332,40 @@ namespace ParserNII
                     checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
                     {
                         if (e.Button == MouseButtons.Right && !isRightBtnPressed && result != null)
-                        {                            
+                        {
                             isRightBtnPressed = true;
-                            Form2 f = new Form2(datFileParam.Value.name);
-                            f.paramEdit.Text = Properties.Settings.Default.paramEdit;
-                            f.Owner = this;
-                            f.StartPosition = FormStartPosition.Manual;
-                            f.Location = new Point()
+                            Form2 form2 = new Form2(datFileParam.Value.name);
+                            form2.Owner = this;
+                            form2.paramEditMin.Text = Properties.Settings.Default.paramEditMin;
+                            form2.paramEditMax.Text = Properties.Settings.Default.paramEditMax;
+                            form2.StartPosition = FormStartPosition.Manual;
+                            form2.Location = new Point()
                             {
                                 X = Location.X + Size.Width - groupBox2.Size.Width - 211,
                                 Y = Location.Y + Size.Height / 2 - 99
                             };
 
-                            if (f.ShowDialog() == DialogResult.OK)
+                            if (form2.ShowDialog() == DialogResult.OK)
                             {
                                 GraphPane pane = zedGraphControl1.GraphPane;
                                 PointPairList pointList = new PointPairList();
                                 CurveItem curve = pane.CurveList[datFileParam.Value.name];
-                                double limit;
-                                try { limit = double.Parse(f.paramEdit.Text); }
+
+                                try
+                                {
+                                    double max, min;
+                                    min = double.Parse(form2.paramEditMin.Text);
+                                    max = double.Parse(form2.paramEditMax.Text);
+                                    pane.YAxisList[curve.YAxisIndex].Scale.Min = min;
+                                    pane.YAxisList[curve.YAxisIndex].Scale.Max = max;
+                                    isRightBtnPressed = false;
+                                    drawer.Refresh();
+
+                                }
                                 catch (Exception ex)
                                 {
                                     MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
-                                    limit = Double.NaN;
-                                }
-                                if (!Double.IsNaN(limit))
-                                {
-                                    pointList.Add(new PointPair()
-                                    {
-                                        X = xValues.First(),
-                                        Y = limit
-                                    });
-                                    pointList.Add(new PointPair()
-                                    {
-                                        X = xValues.Last(),
-                                        Y = limit
-                                    });
-                                    if (limiter != null)
-                                    {
-                                        pane.CurveList.Remove(pane.CurveList["limit"]);
-                                    }
-                                    limiter = pane.AddCurve("limit", pointList, Color.Black, SymbolType.None);
-                                    pane.LineType = LineType.Normal;
-                                    limiter.YAxisIndex = curve.YAxisIndex;
-                                    limiter.Line.Width = 1.0F;
-                                    limiter.Line.StepType = StepType.ForwardStep;
-                                    isRightBtnPressed = false;
-                                    drawer.Refresh();
-                                }
-                                else
-                                {
+
                                     isRightBtnPressed = false;
                                     drawer.Refresh();
                                 }
@@ -468,54 +452,38 @@ namespace ParserNII
                     if (e.Button == MouseButtons.Right && !isRightBtnPressed && result != null)
                     {
                         isRightBtnPressed = true;
-                        Form2 f = new Form2(binFileParam.Value.name);
-                        f.Owner = this;
-                        f.paramEdit.Text = Properties.Settings.Default.paramEdit;
-                        f.StartPosition = FormStartPosition.Manual;
-                        f.Location = new Point()
+                        Form2 form2 = new Form2(binFileParam.Value.name);
+                        form2.Owner = this;
+                        form2.paramEditMin.Text = Properties.Settings.Default.paramEditMin;
+                        form2.paramEditMax.Text = Properties.Settings.Default.paramEditMax;
+                        form2.StartPosition = FormStartPosition.Manual;
+                        form2.Location = new Point()
                         {
                             X = Location.X + Size.Width - groupBox2.Size.Width -211,
                             Y = Location.Y + Size.Height / 2 - 99
                         };
 
-                        if (f.ShowDialog() == DialogResult.OK)
+                        if (form2.ShowDialog() == DialogResult.OK)
                         {
                             GraphPane pane = zedGraphControl1.GraphPane;
                             PointPairList pointList = new PointPairList();
                             CurveItem curve = pane.CurveList[binFileParam.Value.name];
-                            double limit;
-                            try { limit = double.Parse(f.paramEdit.Text); }
+                            
+                            try
+                            {
+                                double max, min;
+                                min = double.Parse(form2.paramEditMin.Text);
+                                max = double.Parse(form2.paramEditMax.Text);
+                                pane.YAxisList[curve.YAxisIndex].Scale.Min = min;
+                                pane.YAxisList[curve.YAxisIndex].Scale.Max = max;
+                                isRightBtnPressed = false;
+                                drawer.Refresh();
+
+                            }
                             catch (Exception ex)
                             {
                                 MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
-                                limit = Double.NaN;
-                            }
-                            if (!Double.IsNaN(limit))
-                            {
-                                pointList.Add(new PointPair()
-                                {
-                                    X = xValues.First(),
-                                    Y = limit
-                                });
-                                pointList.Add(new PointPair()
-                                {
-                                    X = xValues.Last(),
-                                    Y = limit
-                                });
-                                if (limiter != null)
-                                {
-                                    pane.CurveList.Remove(pane.CurveList["limit"]);
-                                } 
-                                limiter = pane.AddCurve("limit", pointList, Color.Black, SymbolType.None);
-                                pane.LineType = LineType.Normal;
-                                limiter.YAxisIndex = curve.YAxisIndex;
-                                limiter.Line.Width = 1.0F;
-                                limiter.Line.StepType = StepType.ForwardStep;
-                                isRightBtnPressed = false;
-                                drawer.Refresh();
-                            }
-                            else
-                            {
+
                                 isRightBtnPressed = false;
                                 drawer.Refresh();
                             }

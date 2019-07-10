@@ -1,4 +1,6 @@
-﻿namespace ParserNII
+﻿using System;
+
+namespace ParserNII
 {
     partial class Form2
     {
@@ -30,10 +32,13 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.paramEdit = new System.Windows.Forms.TextBox();
+            this.paramEditMin = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
+            this.paramEditMax = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -57,16 +62,16 @@
             this.button2.Text = "Отмена";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // paramEdit
+            // paramEditMin
             // 
-            this.paramEdit.Location = new System.Drawing.Point(19, 110);
-            this.paramEdit.Name = "paramEdit";
-            this.paramEdit.Size = new System.Drawing.Size(170, 20);
-            this.paramEdit.TabIndex = 2;
+            this.paramEditMin.Location = new System.Drawing.Point(19, 110);
+            this.paramEditMin.Name = "paramEditMin";
+            this.paramEditMin.Size = new System.Drawing.Size(75, 20);
+            this.paramEditMin.TabIndex = 2;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(16, 24);
+            this.label1.Location = new System.Drawing.Point(16, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(183, 28);
             this.label1.TabIndex = 3;
@@ -74,7 +79,7 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(16, 63);
+            this.label2.Location = new System.Drawing.Point(16, 45);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(173, 33);
             this.label2.TabIndex = 4;
@@ -90,6 +95,31 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
+            // paramEditMax
+            // 
+            this.paramEditMax.Location = new System.Drawing.Point(114, 110);
+            this.paramEditMax.Name = "paramEditMax";
+            this.paramEditMax.Size = new System.Drawing.Size(75, 20);
+            this.paramEditMax.TabIndex = 6;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 78);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(78, 26);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Минимальное\r\nзначение";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(111, 78);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(84, 26);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Максимальное\r\nзначение";
+            // 
             // Form2
             // 
             this.AcceptButton = this.button1;
@@ -97,10 +127,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button2;
             this.ClientSize = new System.Drawing.Size(211, 222);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.paramEditMax);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.paramEdit);
+            this.Controls.Add(this.paramEditMin);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -121,7 +154,10 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        public System.Windows.Forms.TextBox paramEdit;
+        public System.Windows.Forms.TextBox paramEditMin;
         private System.Windows.Forms.Button button3;
+        public System.Windows.Forms.TextBox paramEditMax;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }
