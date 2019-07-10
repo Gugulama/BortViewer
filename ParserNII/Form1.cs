@@ -22,7 +22,6 @@ namespace ParserNII
         private Dictionary<string, Panel> panels;
         private Dictionary<string, TextBox> uidNames;
         private LineObj verticalLine;
-        public LineItem limiter;
         public Drawer drawer;
         private Dictionary<string, int> LineIndexes;
         private readonly Dictionary<int, ConfigElement> binFileParams = Config.Instance.binFileParams.ToDictionary(b => b.number);
@@ -34,7 +33,6 @@ namespace ParserNII
         private bool isFirstOpen;
         private bool isDatFile;
         private bool isAllowMouseMove;
-        private bool isRightBtnPressed;
         private readonly string mapUrl = String.Format("file:///{0}/index.html?", Directory.GetCurrentDirectory());
         private string latitude = "";
         private string longitude = "";
@@ -65,7 +63,6 @@ namespace ParserNII
             browser.Dock = DockStyle.Fill;
             isAllowMouseMove = true;
             checkBox1.Checked = isAllowMouseMove;
-            isRightBtnPressed = false;
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -152,12 +149,26 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[datFileParam.Value.name];
                         var textBox = textBoxes[i];
+                        double min = datFileParam.Value.min;
+                        double max = datFileParam.Value.max;
+
                         if (arrayResult.Data.ContainsKey(datFileParam.Value.name))
                         {
-                            drawer.DrawGraph(xValues,
-                                arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
-                                datFileParam.Value.name,
-                                Drawer.GetColor(i));
+
+                            if (min == max || !ConfigToolStripMenuItem.Checked)
+                            {
+                                drawer.DrawGraph(xValues,
+                                    arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                                    datFileParam.Value.name,
+                                    Drawer.GetColor(i));
+                            }
+                            else
+                            {
+                                drawer.DrawGraph(xValues,
+                                   arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                                   datFileParam.Value.name,
+                                   Drawer.GetColor(i), min, max + 1);
+                            }
                             zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
                             LineIndexes.Add(datFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
@@ -170,10 +181,6 @@ namespace ParserNII
                                     if (curve.IsVisible != checkBox.Checked)
                                     {
                                         curve.IsVisible = checkBox.Checked;
-                                        if (limiter != null && curve.YAxisIndex == limiter.YAxisIndex)
-                                        {
-                                            limiter.IsVisible = curve.IsVisible;
-                                        }
                                         if (checkBox.Checked)
                                         {
                                             zedGraphControl1.AxisChange();
@@ -203,12 +210,24 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[binFileParam.Value.name];
                         var textBox = textBoxes[i];
+                        double min = binFileParam.Value.min;
+                        double max = binFileParam.Value.max + 1;
                         if (arrayResult.Data.ContainsKey(binFileParam.Value.name))
                         {
-                            drawer.DrawGraph(xValues,
-                                arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
-                                binFileParam.Value.name,
-                                Drawer.GetColor(i));
+                            if(min==max || !ConfigToolStripMenuItem.Checked)
+                            {
+                                drawer.DrawGraph(xValues,
+                                    arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                                    binFileParam.Value.name,
+                                    Drawer.GetColor(i));
+                            }
+                            else
+                            {
+                                drawer.DrawGraph(xValues,
+                                   arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                                   binFileParam.Value.name,
+                                   Drawer.GetColor(i), min, max);
+                            }
                             zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
                             LineIndexes.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
@@ -221,10 +240,6 @@ namespace ParserNII
                                     if (curve.IsVisible != checkBox.Checked)
                                     {
                                         curve.IsVisible = checkBox.Checked;
-                                        if (limiter != null && curve.YAxisIndex == limiter.YAxisIndex)
-                                        {
-                                            limiter.IsVisible = curve.IsVisible;
-                                        }
                                         if (checkBox.Checked)
                                         {
                                             zedGraphControl1.AxisChange();
@@ -328,54 +343,7 @@ namespace ParserNII
                     }
                     checkBox.UseVisualStyleBackColor = true;
                     checkBoxes.Add(datFileParam.Value.name, checkBox);
-                    checkBox.Checked = false;
-                    checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
-                    {
-                        if (e.Button == MouseButtons.Right && !isRightBtnPressed && result != null)
-                        {
-                            isRightBtnPressed = true;
-                            Form2 form2 = new Form2(datFileParam.Value.name);
-                            form2.Owner = this;
-                            form2.paramEditMin.Text = Properties.Settings.Default.paramEditMin;
-                            form2.paramEditMax.Text = Properties.Settings.Default.paramEditMax;
-                            form2.StartPosition = FormStartPosition.Manual;
-                            form2.Location = new Point()
-                            {
-                                X = Location.X + Size.Width - groupBox2.Size.Width - 211,
-                                Y = Location.Y + Size.Height / 2 - 99
-                            };
-
-                            if (form2.ShowDialog() == DialogResult.OK)
-                            {
-                                GraphPane pane = zedGraphControl1.GraphPane;
-                                PointPairList pointList = new PointPairList();
-                                CurveItem curve = pane.CurveList[datFileParam.Value.name];
-
-                                try
-                                {
-                                    double max, min;
-                                    min = double.Parse(form2.paramEditMin.Text);
-                                    max = double.Parse(form2.paramEditMax.Text);
-                                    pane.YAxisList[curve.YAxisIndex].Scale.Min = min;
-                                    pane.YAxisList[curve.YAxisIndex].Scale.Max = max;
-                                    isRightBtnPressed = false;
-                                    drawer.Refresh();
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
-
-                                    isRightBtnPressed = false;
-                                    drawer.Refresh();
-                                }
-                            }
-                            else
-                            {
-                                isRightBtnPressed = false;
-                            }
-                        }
-                    };
+                    checkBox.Checked = false;                    
 
                     var panel = new Panel();
                     panel3.Controls.Add(panel);
@@ -446,54 +414,7 @@ namespace ParserNII
                 }
                 checkBox.UseVisualStyleBackColor = true;
                 checkBoxes.Add(binFileParam.Value.name, checkBox);
-                checkBox.Checked = false;
-                checkBox.MouseDown += (object otherSender, MouseEventArgs e) =>
-                {
-                    if (e.Button == MouseButtons.Right && !isRightBtnPressed && result != null)
-                    {
-                        isRightBtnPressed = true;
-                        Form2 form2 = new Form2(binFileParam.Value.name);
-                        form2.Owner = this;
-                        form2.paramEditMin.Text = Properties.Settings.Default.paramEditMin;
-                        form2.paramEditMax.Text = Properties.Settings.Default.paramEditMax;
-                        form2.StartPosition = FormStartPosition.Manual;
-                        form2.Location = new Point()
-                        {
-                            X = Location.X + Size.Width - groupBox2.Size.Width -211,
-                            Y = Location.Y + Size.Height / 2 - 99
-                        };
-
-                        if (form2.ShowDialog() == DialogResult.OK)
-                        {
-                            GraphPane pane = zedGraphControl1.GraphPane;
-                            PointPairList pointList = new PointPairList();
-                            CurveItem curve = pane.CurveList[binFileParam.Value.name];
-                            
-                            try
-                            {
-                                double max, min;
-                                min = double.Parse(form2.paramEditMin.Text);
-                                max = double.Parse(form2.paramEditMax.Text);
-                                pane.YAxisList[curve.YAxisIndex].Scale.Min = min;
-                                pane.YAxisList[curve.YAxisIndex].Scale.Max = max;
-                                isRightBtnPressed = false;
-                                drawer.Refresh();
-
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Введите число", "Внимание", MessageBoxButtons.OK);
-
-                                isRightBtnPressed = false;
-                                drawer.Refresh();
-                            }
-                        }
-                        else
-                        {
-                            isRightBtnPressed = false;
-                        }
-                    }
-                };
+                checkBox.Checked = false;                
 
                 var panel = new Panel();
                 panel3.Controls.Add(panel);
@@ -542,13 +463,16 @@ namespace ParserNII
 
         private void button1_Click(object sender, EventArgs e)
         {
-            zedGraphControl1.GraphPane.CurveList.ForEach(c => c.IsVisible = false);
-
-            zedGraphControl1.Refresh();
-
-            foreach (var cb in checkBoxes)
+            if (result != null)
             {
-                cb.Value.Checked = false;
+                zedGraphControl1.GraphPane.CurveList.ForEach(c => c.IsVisible = false);
+
+                zedGraphControl1.Refresh();
+
+                foreach (var cb in checkBoxes)
+                {
+                    cb.Value.Checked = false;
+                }
             }
         }
 
@@ -777,10 +701,13 @@ namespace ParserNII
 
         private void button2_Click(object sender, EventArgs e)
         {
-            GraphPane pane = zedGraphControl1.GraphPane;
-            pane.XAxis.Scale.Min = drawer.xScaleMin;
-            pane.XAxis.Scale.Max = drawer.xScaleMax;
-            drawer.Refresh();
+            if (result != null)
+            {
+                GraphPane pane = zedGraphControl1.GraphPane;
+                pane.XAxis.Scale.Min = drawer.xScaleMin;
+                pane.XAxis.Scale.Max = drawer.xScaleMax;
+                drawer.Refresh();
+            }
         }
 
         private void zedGraphControl1_MouseClick(object sender, MouseEventArgs e)
@@ -797,6 +724,14 @@ namespace ParserNII
         {
             if(checkBox1.Checked != isAllowMouseMove)
                 checkBox1.Checked = isAllowMouseMove;
+        }
+
+        private void ConfigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ConfigToolStripMenuItem.Checked == false)
+                ConfigToolStripMenuItem.Checked = true;
+            else
+                ConfigToolStripMenuItem.Checked = false;
         }
     }
 }

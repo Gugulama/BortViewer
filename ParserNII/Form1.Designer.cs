@@ -54,6 +54,8 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -63,7 +65,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem});
+            this.файлToolStripMenuItem,
+            this.параметрыToolStripMenuItem});
             resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -221,6 +224,19 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // параметрыToolStripMenuItem
+            // 
+            this.параметрыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ConfigToolStripMenuItem});
+            this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
+            resources.ApplyResources(this.параметрыToolStripMenuItem, "параметрыToolStripMenuItem");
+            // 
+            // ConfigToolStripMenuItem
+            // 
+            this.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem";
+            resources.ApplyResources(this.ConfigToolStripMenuItem, "ConfigToolStripMenuItem");
+            this.ConfigToolStripMenuItem.Click += new System.EventHandler(this.ConfigToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
@@ -273,6 +289,8 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.CheckBox checkBox1;
         public ZedGraph.ZedGraphControl zedGraphControl1;
+        private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ConfigToolStripMenuItem;
     }
 }
 

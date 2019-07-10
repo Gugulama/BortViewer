@@ -129,6 +129,53 @@ namespace ParserNII
             pane.YAxisList[yAxis].Title.IsVisible = false;
         }
 
+        public void DrawGraph(List<XDate> x, List<double> y, string name, Color color, double min, double max)
+        {
+            GraphPane pane = control.GraphPane;
+            LineItem myCurve;
+            PointPairList pointList = new PointPairList();
+
+            for (int i = 0; i < x.Count; i++)
+            {
+                var point = new PointPair()
+                {
+                    X = x[i],
+                    Y = y[i]
+                };
+                pointList.Add(point);
+            }
+
+            try
+            {
+                FilteredPointList filteredList = new FilteredPointList(XDateListToDoubleArray(x), y.ToArray());
+                double filteredXMin = x.First();
+                double filteredXMax = x.Last();
+                int filteredCount = pointList.Count / 10;
+                filteredList.SetBounds(filteredXMin, filteredXMax, filteredCount);
+                myCurve = pane.AddCurve(name, filteredList, color, SymbolType.None);
+            }
+            catch (Exception e)
+            {
+                myCurve = pane.AddCurve(name, pointList, color, SymbolType.None);
+            }
+
+            int yAxis = pane.AddYAxis(name);
+            myCurve.YAxisIndex = yAxis;
+            myCurve.Line.Width = 1.0F;
+            myCurve.Line.StepType = StepType.ForwardStep;
+            if (x.First() < pane.XAxis.Scale.Min || x.Last() > pane.XAxis.Scale.Max)
+            {
+                pane.XAxis.Scale.Min = x.First() - 0.01;
+                pane.XAxis.Scale.Max = x.Last() + 0.01;
+                xScaleMax = pane.XAxis.Scale.Max;
+                xScaleMin = pane.XAxis.Scale.Min;
+            }
+            pane.YAxisList[yAxis].Scale.Min = min;
+            pane.YAxisList[yAxis].Scale.Max = max;
+            pane.YAxisList[yAxis].IsVisible = false;
+            pane.YAxisList[yAxis].Title.IsVisible = false;
+        }
+
         public void Refresh()
         {
             control.RestoreScale(control.GraphPane);
