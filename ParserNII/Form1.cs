@@ -83,7 +83,7 @@ namespace ParserNII
             }
 
             if (ofd.ShowDialog() == DialogResult.OK)
-            {                
+            {
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {
                     isDatFile = true;
@@ -119,7 +119,7 @@ namespace ParserNII
                 Размер.Text = (stream.Length / 1024).ToString() + " Кб";
                 var parser = (Path.GetExtension(ofd.FileName) == ".dat" || Path.GetExtension(ofd.FileName) == ".gzdat") ? (Parser)new DatFileParser() : new BinFileParser();
                 result = parser.Parse(fileBytes);
-                
+
                 if (Path.GetExtension(ofd.FileName) == ".gzdat" || Path.GetExtension(ofd.FileName) == ".dat")
                 {
                     xValues = result.Select(r => new XDate(DateTimeOffset.FromUnixTimeSeconds((uint)r.Data["Время в “UNIX” формате"].OriginalValue).AddHours(3).DateTime)).ToList();
@@ -149,26 +149,15 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[datFileParam.Value.name];
                         var textBox = textBoxes[i];
-                        double min = datFileParam.Value.min;
-                        double max = datFileParam.Value.max;
 
                         if (arrayResult.Data.ContainsKey(datFileParam.Value.name))
                         {
 
-                            if (min == max || !ConfigToolStripMenuItem.Checked)
-                            {
-                                drawer.DrawGraph(xValues,
-                                    arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
-                                    datFileParam.Value.name,
-                                    Drawer.GetColor(i));
-                            }
-                            else
-                            {
-                                drawer.DrawGraph(xValues,
-                                   arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
-                                   datFileParam.Value.name,
-                                   Drawer.GetColor(i), min, max + 1);
-                            }
+
+                            drawer.DrawGraph(xValues,
+                                arrayResult.Data[datFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                                datFileParam.Value.name,
+                                Drawer.GetColor(i));
                             zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
                             LineIndexes.Add(datFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
@@ -210,24 +199,13 @@ namespace ParserNII
                     {
                         var checkBox = checkBoxes[binFileParam.Value.name];
                         var textBox = textBoxes[i];
-                        double min = binFileParam.Value.min;
-                        double max = binFileParam.Value.max + 1;
                         if (arrayResult.Data.ContainsKey(binFileParam.Value.name))
                         {
-                            if(min==max || !ConfigToolStripMenuItem.Checked)
-                            {
-                                drawer.DrawGraph(xValues,
-                                    arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
-                                    binFileParam.Value.name,
-                                    Drawer.GetColor(i));
-                            }
-                            else
-                            {
-                                drawer.DrawGraph(xValues,
-                                   arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
-                                   binFileParam.Value.name,
-                                   Drawer.GetColor(i), min, max);
-                            }
+
+                            drawer.DrawGraph(xValues,
+                                arrayResult.Data[binFileParam.Value.name].Select(d => d.ChartValue).ToList(),
+                                binFileParam.Value.name,
+                                Drawer.GetColor(i));
                             zedGraphControl1.GraphPane.CurveList.Last().IsVisible = false;
 
                             LineIndexes.Add(binFileParam.Value.name, zedGraphControl1.GraphPane.CurveList.Count - 1);
@@ -298,7 +276,7 @@ namespace ParserNII
                         i++;
                     }
                 }
-                stream.Close();                
+                stream.Close();
             }
         }
 
@@ -323,7 +301,7 @@ namespace ParserNII
                     textBox.Name = $"textBox{i}";
                     textBox.ReadOnly = true;
                     textBox.Size = new Size(62, 20);
-                    textBox.TabIndex = 30 + i;                    
+                    textBox.TabIndex = 30 + i;
 
                     var checkBox = new CheckBox();
                     panel3.Controls.Add(checkBox);
@@ -343,7 +321,7 @@ namespace ParserNII
                     }
                     checkBox.UseVisualStyleBackColor = true;
                     checkBoxes.Add(datFileParam.Value.name, checkBox);
-                    checkBox.Checked = false;                    
+                    checkBox.Checked = false;
 
                     var panel = new Panel();
                     panel3.Controls.Add(panel);
@@ -414,7 +392,7 @@ namespace ParserNII
                 }
                 checkBox.UseVisualStyleBackColor = true;
                 checkBoxes.Add(binFileParam.Value.name, checkBox);
-                checkBox.Checked = false;                
+                checkBox.Checked = false;
 
                 var panel = new Panel();
                 panel3.Controls.Add(panel);
@@ -717,21 +695,105 @@ namespace ParserNII
                 if (isAllowMouseMove) isAllowMouseMove = false;
                 else isAllowMouseMove = true;
                 checkBox1.Checked = isAllowMouseMove;
-            }            
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if(checkBox1.Checked != isAllowMouseMove)
+            if (checkBox1.Checked != isAllowMouseMove)
                 checkBox1.Checked = isAllowMouseMove;
         }
 
         private void ConfigToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ConfigToolStripMenuItem.Checked == false)
-                ConfigToolStripMenuItem.Checked = true;
+            if (result != null)
+            {
+                if (ConfigToolStripMenuItem.Checked == false)
+                {
+                    ConfigToolStripMenuItem.Checked = true;
+                    SetDrawLimits();
+                    drawer.Refresh();
+                }
+                else
+                {
+                    ConfigToolStripMenuItem.Checked = false;
+                    ClearDrawLimits();
+                    drawer.Refresh();
+                }
+            }
+        }
+
+        private void SetDrawLimits()
+        {
+            GraphPane pane = zedGraphControl1.GraphPane;
+            if (isDatFile)
+            {
+                foreach (var datFileParam in datFileParams)
+                {
+                    double min = datFileParam.Value.min;
+                    double max = datFileParam.Value.max;
+                    try
+                    {
+                        if (min != max)
+                        {
+                            pane.YAxisList[datFileParam.Value.name].Scale.Min = min - 1;
+                            pane.YAxisList[datFileParam.Value.name].Scale.Max = max + 1;
+                        }
+                    }
+                    catch (Exception e)
+                    { }
+                }
+            }
             else
-                ConfigToolStripMenuItem.Checked = false;
+            {
+                foreach (var binFileParam in binFileParams)
+                {
+                    double min = binFileParam.Value.min;
+                    double max = binFileParam.Value.max;
+                    try
+                    {
+                        if (min != max)
+                        {
+                            pane.YAxisList[binFileParam.Value.name].Scale.Min = min - 1;
+                            pane.YAxisList[binFileParam.Value.name].Scale.Max = max + 1;
+                        }
+                    }
+                    catch (Exception e)
+                    {}
+                    
+                }
+            }
+        }
+
+        private void ClearDrawLimits()
+        {
+            GraphPane pane = zedGraphControl1.GraphPane;
+            if (isDatFile)
+            {
+                foreach (var datFileParam in datFileParams)
+                {
+                    try
+                    {
+                        pane.YAxisList[datFileParam.Value.name].Scale.MinAuto = true;
+                        pane.YAxisList[datFileParam.Value.name].Scale.MaxAuto = true;
+                    }
+                    catch (Exception e)
+                    { }
+                }
+            }
+            else
+            {
+                foreach (var binFileParam in binFileParams)
+                {
+                    try
+                    {
+                        pane.YAxisList[binFileParam.Value.name].Scale.MinAuto = true;
+                        pane.YAxisList[binFileParam.Value.name].Scale.MaxAuto = true;
+                    }
+                    catch (Exception e)
+                    { }                    
+                }
+            }
         }
     }
 }
