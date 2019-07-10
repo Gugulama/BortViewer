@@ -2,9 +2,8 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
-	
+
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-	
     <style type="text/css">
 
         html, body, #map {
@@ -18,17 +17,18 @@
     <div id="map"></div>
     <script>
         var map = L.map('map', { attributionControl: false });
-        map.setView([0, 0], 15);
-        var marker = L.marker([0, 0]);
+        map.setView([54.944916, 73.394667], 11);
+        var marker = L.marker([54.944916, 73.394667]);
         marker.addTo(map);
-        function setMarker(latitude, longitude) 
-		{
+        L.tileLayer('http://tiles.maps.sputnik.ru/{z}/{x}/{y}.png', {
+            minZoom: 10, maxZoom: 19
+        }).addTo(map);
+        function setMarker(latitude, longitude, _tempLatitude, _tempLongitude) {
+            alert(latitude, longitude);
+            alert(_tempLatitude, _tempLongitude);
             map.panTo([latitude, longitude]);
-            L.tileLayer('http://tiles.maps.sputnik.ru/{z}/{x}/{y}.png', {
-                minZoom: 3,
-                maxZoom: 16
-            }).addTo(map);
-            marker.setLatLng([latitude, longitude]);
+            marker.setLatLng([_tempLatitude, _tempLongitude]);
+            
         }
     </script>
 </body>
