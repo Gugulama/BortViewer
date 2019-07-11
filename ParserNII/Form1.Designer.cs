@@ -35,6 +35,8 @@
             this.открытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.экпортироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.zedGraphControl1 = new ZedGraph.ZedGraphControl();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -54,8 +56,6 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -97,6 +97,21 @@
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
             resources.ApplyResources(this.выходToolStripMenuItem, "выходToolStripMenuItem");
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
+            // 
+            // параметрыToolStripMenuItem
+            // 
+            this.параметрыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ConfigToolStripMenuItem});
+            this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
+            resources.ApplyResources(this.параметрыToolStripMenuItem, "параметрыToolStripMenuItem");
+            // 
+            // ConfigToolStripMenuItem
+            // 
+            this.ConfigToolStripMenuItem.Checked = true;
+            this.ConfigToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem";
+            resources.ApplyResources(this.ConfigToolStripMenuItem, "ConfigToolStripMenuItem");
+            this.ConfigToolStripMenuItem.Click += new System.EventHandler(this.ConfigToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
@@ -223,19 +238,6 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // параметрыToolStripMenuItem
-            // 
-            this.параметрыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ConfigToolStripMenuItem});
-            this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
-            resources.ApplyResources(this.параметрыToolStripMenuItem, "параметрыToolStripMenuItem");
-            // 
-            // ConfigToolStripMenuItem
-            // 
-            this.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem";
-            resources.ApplyResources(this.ConfigToolStripMenuItem, "ConfigToolStripMenuItem");
-            this.ConfigToolStripMenuItem.Click += new System.EventHandler(this.ConfigToolStripMenuItem_Click);
             // 
             // Form1
             // 

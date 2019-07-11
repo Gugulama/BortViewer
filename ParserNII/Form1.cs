@@ -242,7 +242,7 @@ namespace ParserNII
 
                         i++;
                     }
-
+                SetDrawLimits();
                 drawer.Refresh();
                 Enabled = true;
 
@@ -422,6 +422,7 @@ namespace ParserNII
                 i++;
             }
         }
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {

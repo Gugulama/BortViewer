@@ -126,13 +126,13 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="открытьToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>166, 22</value>
   </data>
   <data name="открытьToolStripMenuItem.Text" xml:space="preserve">
     <value>Открыть...</value>
   </data>
   <data name="экпортироватьToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>166, 22</value>
   </data>
   <data name="экпортироватьToolStripMenuItem.Text" xml:space="preserve">
     <value>Экпортировать...</value>
@@ -141,7 +141,7 @@
     <value>Alt + F4</value>
   </data>
   <data name="выходToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>166, 22</value>
   </data>
   <data name="выходToolStripMenuItem.Text" xml:space="preserve">
     <value>Выход</value>
@@ -2679,12 +2679,6 @@
   <data name="&gt;&gt;выходToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;backgroundWorker1.Name" xml:space="preserve">
-    <value>backgroundWorker1</value>
-  </data>
-  <data name="&gt;&gt;backgroundWorker1.Type" xml:space="preserve">
-    <value>System.ComponentModel.BackgroundWorker, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;параметрыToolStripMenuItem.Name" xml:space="preserve">
     <value>параметрыToolStripMenuItem</value>
   </data>
@@ -2696,6 +2690,12 @@
   </data>
   <data name="&gt;&gt;ConfigToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;backgroundWorker1.Name" xml:space="preserve">
+    <value>backgroundWorker1</value>
+  </data>
+  <data name="&gt;&gt;backgroundWorker1.Type" xml:space="preserve">
+    <value>System.ComponentModel.BackgroundWorker, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Form1</value>
