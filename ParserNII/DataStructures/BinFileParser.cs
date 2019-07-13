@@ -7,43 +7,41 @@ namespace ParserNII.DataStructures
 {
     public class BinFileParser : Parser
     {
-
         public override List<DataFile> Parse(byte[] fileBytes)
         {
             List<BinFile> result = new List<BinFile>();
             List<byte[]> dataChunks = Split(fileBytes);
-            double timeNowEpoch = Convert.ToInt64(DateTime.Now.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds);
+            //double timeNowEpoch = Convert.ToInt64(DateTime.Now.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds);
             for (int i = 0; i < dataChunks.Count; i++)
             {
                 long time = BitConverter.ToInt64(dataChunks[i], 0);
                 int uid = BitConverter.ToInt32(dataChunks[i], 8);
                 double value = BitConverter.ToDouble(dataChunks[i], 12);
-                
-                if ((time > (timeNowEpoch - 31556926000)) && (time < (timeNowEpoch + 86400000))) // Запас -1год +1 сутки
+
+                //if ((time > (timeNowEpoch - 31556926000)) && (time < (timeNowEpoch + 86400000))) // Запас -1год +1 сутки
+             
+                if ((time % 1000 == 0) && (time % 3 == 0)) // Отсекаем кривые метки путем выявления времени кратной 3 секундам
                 {
-                    if ((time % 1000 == 0) && (time % 3 == 0)) // Отсекаем кривые метки путем выявления времени кратной 3 секундам
+                    if (Math.Abs(value) > 0.001 || value == 0) // Отсекаем кривые метки путем выявления чисел в степени овермного/овермало
                     {
-                        if (Math.Abs(value) > 0.001 || value == 0) // Отсекаем кривые метки путем выявления чисел в степени овермного/овермало
+
+                        if ((uid == 2 || uid == 6 || uid == 9 || uid == 19
+                        || uid == 20 || uid == 50 || uid == 101
+                        || uid == 3101 || uid == 3102 || uid == 3104)
+                        && (value > 127))
                         {
-                            //Console.Write(time + " - "); Console.Write(uid + " - "); Console.WriteLine(value);
-
-                            if ((uid == 2 || uid == 6 || uid == 9 || uid == 19
-                           || uid == 20 || uid == 50 || uid == 101
-                           || uid == 3101 || uid == 3102 || uid == 3104)
-                           && (value > 127))
-                            {
-                                value -= 256;
-                            }
-
-                            result.Add(new BinFile
-                            {
-                                Date = time,
-                                Uid = uid,
-                                Value = value
-                            });
+                            value -= 256;
                         }
+
+                        result.Add(new BinFile
+                        {
+                            Date = time,
+                            Uid = uid,
+                            Value = value
+                        });
                     }
                 }
+                
             }
 
             return ToDataFile(result);
@@ -118,6 +116,7 @@ namespace ParserNII.DataStructures
                         }
                     }
                 }
+                
 
                 result.Add(resultElement);
 

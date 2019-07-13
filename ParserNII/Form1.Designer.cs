@@ -33,22 +33,29 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.экпортироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.zedGraphControl1 = new ZedGraph.ZedGraphControl();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.Секция = new System.Windows.Forms.Label();
-            this.Время = new System.Windows.Forms.Label();
+            this.section = new System.Windows.Forms.Label();
+            this.time = new System.Windows.Forms.Label();
             this.ВремяLabel = new System.Windows.Forms.Label();
-            this.Номер = new System.Windows.Forms.Label();
-            this.Тип = new System.Windows.Forms.Label();
+            this.number = new System.Windows.Forms.Label();
+            this.type = new System.Windows.Forms.Label();
             this.Размер = new System.Windows.Forms.Label();
             this.РазмерLabel = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.button2 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -58,48 +65,70 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.файлToolStripMenuItem,
+            this.параметрыToolStripMenuItem});
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(1175, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
             // 
             // файлToolStripMenuItem
             // 
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.открытьToolStripMenuItem});
+            this.открытьToolStripMenuItem,
+            this.экпортироватьToolStripMenuItem,
+            this.выходToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.файлToolStripMenuItem.Text = "Файл";
+            resources.ApplyResources(this.файлToolStripMenuItem, "файлToolStripMenuItem");
             // 
             // открытьToolStripMenuItem
             // 
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.открытьToolStripMenuItem.Text = "Открыть";
+            resources.ApplyResources(this.открытьToolStripMenuItem, "открытьToolStripMenuItem");
             this.открытьToolStripMenuItem.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
+            // 
+            // экпортироватьToolStripMenuItem
+            // 
+            this.экпортироватьToolStripMenuItem.Name = "экпортироватьToolStripMenuItem";
+            resources.ApplyResources(this.экпортироватьToolStripMenuItem, "экпортироватьToolStripMenuItem");
+            this.экпортироватьToolStripMenuItem.Click += new System.EventHandler(this.ЭкпортироватьToolStripMenuItem_Click);
+            // 
+            // выходToolStripMenuItem
+            // 
+            this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
+            resources.ApplyResources(this.выходToolStripMenuItem, "выходToolStripMenuItem");
+            this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
+            // 
+            // параметрыToolStripMenuItem
+            // 
+            this.параметрыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ConfigToolStripMenuItem});
+            this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
+            resources.ApplyResources(this.параметрыToolStripMenuItem, "параметрыToolStripMenuItem");
+            // 
+            // ConfigToolStripMenuItem
+            // 
+            this.ConfigToolStripMenuItem.Checked = true;
+            this.ConfigToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem";
+            resources.ApplyResources(this.ConfigToolStripMenuItem, "ConfigToolStripMenuItem");
+            this.ConfigToolStripMenuItem.Click += new System.EventHandler(this.ConfigToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.AutoSize = true;
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.zedGraphControl1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 80);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(774, 643);
-            this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "График";
             // 
             // zedGraphControl1
             // 
-            this.zedGraphControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zedGraphControl1.Location = new System.Drawing.Point(3, 16);
+            this.zedGraphControl1.BackColor = System.Drawing.SystemColors.Control;
+            resources.ApplyResources(this.zedGraphControl1, "zedGraphControl1");
+            this.zedGraphControl1.EditButtons = System.Windows.Forms.MouseButtons.None;
+            this.zedGraphControl1.IsAntiAlias = true;
+            this.zedGraphControl1.IsShowContextMenu = false;
             this.zedGraphControl1.Name = "zedGraphControl1";
+            this.zedGraphControl1.PanButtons = System.Windows.Forms.MouseButtons.None;
             this.zedGraphControl1.ScrollGrace = 0D;
             this.zedGraphControl1.ScrollMaxX = 0D;
             this.zedGraphControl1.ScrollMaxY = 0D;
@@ -107,152 +136,124 @@
             this.zedGraphControl1.ScrollMinX = 0D;
             this.zedGraphControl1.ScrollMinY = 0D;
             this.zedGraphControl1.ScrollMinY2 = 0D;
-            this.zedGraphControl1.Size = new System.Drawing.Size(768, 624);
-            this.zedGraphControl1.TabIndex = 0;
             this.zedGraphControl1.UseExtendedPrintDialog = true;
-            this.zedGraphControl1.Load += new System.EventHandler(this.zedGraphControl1_Load);
+            this.zedGraphControl1.ZoomButtons = System.Windows.Forms.MouseButtons.None;
+            this.zedGraphControl1.ZoomEvent += new ZedGraph.ZedGraphControl.ZoomEventHandler(this.zedGraphControl1_ZoomEvent);
+            this.zedGraphControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraphControl1_MouseClick);
+            this.zedGraphControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraphControl1_MouseMove);
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.Секция);
-            this.groupBox4.Controls.Add(this.Время);
+            this.groupBox4.Controls.Add(this.section);
+            this.groupBox4.Controls.Add(this.time);
             this.groupBox4.Controls.Add(this.ВремяLabel);
-            this.groupBox4.Controls.Add(this.Номер);
-            this.groupBox4.Controls.Add(this.Тип);
+            this.groupBox4.Controls.Add(this.number);
+            this.groupBox4.Controls.Add(this.type);
             this.groupBox4.Controls.Add(this.Размер);
             this.groupBox4.Controls.Add(this.РазмерLabel);
-            this.groupBox4.Location = new System.Drawing.Point(12, 27);
+            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(713, 41);
-            this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Информация";
             // 
-            // Секция
+            // section
             // 
-            this.Секция.AutoSize = true;
-            this.Секция.Location = new System.Drawing.Point(139, 20);
-            this.Секция.Name = "Секция";
-            this.Секция.Size = new System.Drawing.Size(44, 13);
-            this.Секция.TabIndex = 27;
-            this.Секция.Text = "Секция";
+            resources.ApplyResources(this.section, "section");
+            this.section.Name = "section";
             // 
-            // Время
+            // time
             // 
-            this.Время.AutoSize = true;
-            this.Время.Location = new System.Drawing.Point(308, 20);
-            this.Время.Name = "Время";
-            this.Время.Size = new System.Drawing.Size(0, 13);
-            this.Время.TabIndex = 25;
+            resources.ApplyResources(this.time, "time");
+            this.time.Name = "time";
             // 
             // ВремяLabel
             // 
-            this.ВремяLabel.AutoSize = true;
-            this.ВремяLabel.Location = new System.Drawing.Point(219, 20);
+            resources.ApplyResources(this.ВремяLabel, "ВремяLabel");
             this.ВремяLabel.Name = "ВремяLabel";
-            this.ВремяLabel.Size = new System.Drawing.Size(83, 13);
-            this.ВремяLabel.TabIndex = 24;
-            this.ВремяLabel.Text = "Время данных:";
             // 
-            // Номер
+            // number
             // 
-            this.Номер.AutoSize = true;
-            this.Номер.Location = new System.Drawing.Point(92, 20);
-            this.Номер.Name = "Номер";
-            this.Номер.Size = new System.Drawing.Size(41, 13);
-            this.Номер.TabIndex = 23;
-            this.Номер.Text = "Номер";
+            resources.ApplyResources(this.number, "number");
+            this.number.Name = "number";
             // 
-            // Тип
+            // type
             // 
-            this.Тип.AutoSize = true;
-            this.Тип.Location = new System.Drawing.Point(18, 20);
-            this.Тип.Name = "Тип";
-            this.Тип.Size = new System.Drawing.Size(68, 13);
-            this.Тип.TabIndex = 21;
-            this.Тип.Text = "Тип локо-ва";
+            resources.ApplyResources(this.type, "type");
+            this.type.Name = "type";
             // 
             // Размер
             // 
-            this.Размер.AutoSize = true;
-            this.Размер.Location = new System.Drawing.Point(617, 20);
+            resources.ApplyResources(this.Размер, "Размер");
             this.Размер.Name = "Размер";
-            this.Размер.Size = new System.Drawing.Size(0, 13);
-            this.Размер.TabIndex = 17;
             // 
             // РазмерLabel
             // 
-            this.РазмерLabel.AutoSize = true;
-            this.РазмерLabel.Location = new System.Drawing.Point(569, 20);
+            resources.ApplyResources(this.РазмерLabel, "РазмерLabel");
             this.РазмерLabel.Name = "РазмерLabel";
-            this.РазмерLabel.Size = new System.Drawing.Size(49, 13);
-            this.РазмерLabel.TabIndex = 16;
-            this.РазмерLabel.Text = "Размер:";
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 23);
-            this.label4.TabIndex = 0;
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 23);
-            this.label2.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(746, 43);
+            resources.ApplyResources(this.button1, "button1");
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(25, 25);
-            this.button1.TabIndex = 14;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.AutoSize = true;
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.panel3);
-            this.groupBox2.Location = new System.Drawing.Point(789, 27);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 696);
-            this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Список параметров";
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3.AutoScroll = true;
-            this.panel3.Location = new System.Drawing.Point(9, 16);
+            resources.ApplyResources(this.panel3, "panel3");
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(365, 668);
-            this.panel3.TabIndex = 6;
+            // 
+            // groupBox3
+            // 
+            resources.ApplyResources(this.groupBox3, "groupBox3");
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.TabStop = false;
+            // 
+            // button2
+            // 
+            resources.ApplyResources(this.button2, "button2");
+            this.button2.Name = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // checkBox1
+            // 
+            resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1175, 727);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(890, 766);
             this.Name = "Form1";
-            this.Text = "ParserKotoriySmog ver. 0.01";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -271,20 +272,27 @@
         private System.Windows.Forms.ToolStripMenuItem открытьToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox4;
-        private ZedGraph.ZedGraphControl zedGraphControl1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label РазмерLabel;
-        private System.Windows.Forms.Label Размер;
-        private System.Windows.Forms.Label Номер;
-        private System.Windows.Forms.Label Тип;
-        private System.Windows.Forms.Label Время;
+        private System.Windows.Forms.Label number;
+        private System.Windows.Forms.Label type;
+        private System.Windows.Forms.Label time;
         private System.Windows.Forms.Label ВремяLabel;
         private System.Windows.Forms.Button button1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.Label Секция;
+        private System.Windows.Forms.Label section;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
+        private System.Windows.Forms.Label Размер;
+        private System.Windows.Forms.Label РазмерLabel;
+        private System.Windows.Forms.ToolStripMenuItem экпортироватьToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox checkBox1;
+        public ZedGraph.ZedGraphControl zedGraphControl1;
+        private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ConfigToolStripMenuItem;
     }
 }
 

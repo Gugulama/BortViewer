@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace ParserNII
     public class Drawer
     {
         private readonly ZedGraphControl control;
+        public double xScaleMax;
+        public double xScaleMin;
+
 
         public static Color GetColor(int i)
         {
@@ -45,19 +49,29 @@ namespace ParserNII
         public Drawer(ZedGraphControl control)
         {
             this.control = control;
-            Clear();
 
             GraphPane pane = control.GraphPane;
+            pane.LineType = LineType.Normal;
             pane.XAxis.Type = AxisType.Date;
-            pane.XAxis.Scale.Format = "dd.MM.yyyy HH:mm:ss";
+            pane.XAxis.Scale.Format = "dd/MM HH:mm:ss";
+            pane.XAxis.Scale.FontSpec.Size = 11;
+            pane.XAxis.Scale.MinGrace = 0;
+            pane.XAxis.Scale.MaxGrace = 1;
 
-            pane.XAxis.Title.Text = "Дата";
-
+            pane.XAxis.Title.IsVisible = false;
+            pane.IsFontsScaled = false;
             pane.XAxis.MajorGrid.IsVisible = true;
             pane.XAxis.MajorGrid.DashOn = 10;
             pane.XAxis.MajorGrid.DashOff = 5;
             pane.XAxis.MajorGrid.Color = Color.LightGray;
             pane.XAxis.MajorGrid.IsZeroLine = true;
+            pane.YAxis.IsVisible = false;
+
+            pane.Margin.Left = -30;
+            pane.Margin.Top = 5;
+            pane.Margin.Bottom = 2;
+            pane.Margin.Right = -30;
+
             control.IsEnableVZoom = false;
             control.IsEnableVPan = false;
             control.IsEnableHPan = false;
@@ -65,13 +79,16 @@ namespace ParserNII
             control.IsAutoScrollRange = true;
             control.ScrollGrace = 0.01;
 
+            control.GraphPane.Title.IsVisible = false;
+            control.GraphPane.Legend.IsVisible = false;
+
         }
 
         public void DrawGraph(List<XDate> x, List<double> y, string name, Color color)
         {
             GraphPane pane = control.GraphPane;
-
-            PointPairList list1 = new PointPairList();
+            LineItem myCurve;
+            PointPairList pointList = new PointPairList();
 
             for (int i = 0; i < x.Count; i++)
             {
@@ -80,26 +97,38 @@ namespace ParserNII
                     X = x[i],
                     Y = y[i]
                 };
-                list1.Add(point);
+                pointList.Add(point);
+            }
+            
+            try
+            {
+                FilteredPointList filteredList = new FilteredPointList(XDateListToDoubleArray(x), y.ToArray());
+                double filteredXMin = x.First();
+                double filteredXMax = x.Last();
+                int filteredCount = pointList.Count;
+                if (filteredCount > 10000) filteredCount = pointList.Count / 2;
+
+                filteredList.SetBounds(filteredXMin, filteredXMax, filteredCount);
+                myCurve = pane.AddCurve(name, filteredList, color, SymbolType.None);
+            }
+            catch (Exception e)
+            {
+                myCurve = pane.AddCurve(name, pointList, color, SymbolType.None);
             }
 
-            int yAxis = pane.AddYAxis(name);
-            LineItem myCurve = pane.AddCurve(name, list1, color, SymbolType.None);
+            int yAxis = pane.AddYAxis(name);            
             myCurve.YAxisIndex = yAxis;
             myCurve.Line.Width = 1.0F;
             myCurve.Line.StepType = StepType.ForwardStep;
-
-            pane.XAxis.Scale.Min = x.First();
-            pane.XAxis.Scale.Max = x.Last();
-            pane.YAxisList[yAxis].Scale.Min = 0;
-            pane.YAxisList[yAxis].MajorGrid.IsVisible = true;
-            pane.YAxisList[yAxis].MajorGrid.DashOn = 10;
-            pane.YAxisList[yAxis].MajorGrid.DashOff = 5;
-            pane.YAxisList[yAxis].MajorGrid.Color = Color.LightGray;
-            pane.YAxisList[yAxis].MajorGrid.IsZeroLine = false;
+            if (x.First() < pane.XAxis.Scale.Min || x.Last() > pane.XAxis.Scale.Max)
+            {
+                pane.XAxis.Scale.Min = x.First() - 0.01;
+                pane.XAxis.Scale.Max = x.Last() + 0.01;
+                xScaleMax = pane.XAxis.Scale.Max;
+                xScaleMin = pane.XAxis.Scale.Min;
+            }             
             pane.YAxisList[yAxis].IsVisible = false;
-            control.GraphPane.Title.IsVisible = false;
-            control.GraphPane.Legend.IsVisible = false;
+            pane.YAxisList[yAxis].Title.IsVisible = false;
         }
 
         public void Refresh()
@@ -109,7 +138,7 @@ namespace ParserNII
             control.Invalidate();
         }
 
-        private void Clear()
+        public void Clear()
         {
             GraphPane pane = control.GraphPane;
 
@@ -119,6 +148,7 @@ namespace ParserNII
             pane.YAxis.Scale.Max = 1.05;
 
             pane.CurveList.Clear();
+            pane.GraphObjList.Clear();
             pane.YAxisList.Clear();
             control.Invalidate();
         }
@@ -134,6 +164,16 @@ namespace ParserNII
             threshHoldLine.Location.CoordinateFrame = CoordType.XScaleYChartFraction;
             control.GraphPane.GraphObjList.Add(threshHoldLine);
             return threshHoldLine;
+        }
+
+        public double[] XDateListToDoubleArray(List<XDate> xArr)
+        {
+            double[] arr = new double[xArr.Count];
+            for (int i = 0; i < xArr.Count; i++)
+            {
+                arr[i] = xArr[i]; 
+            }
+            return arr;
         }
     }
 }
