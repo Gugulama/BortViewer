@@ -60,7 +60,7 @@ namespace ParserNII.DataStructures
 
                 // byte
                 var CoolingCircuitTemperature = (sbyte)dataChunk[position++];
-                result.Data.Add("Температура контура охлаждения", new DataElement { OriginalValue = CoolingCircuitTemperature, DisplayValue = CoolingCircuitTemperature.ToString(), ChartValue = CoolingCircuitTemperature, Display = true, DataParams = datFileParams["Температура воды на выходе дизеля"] });
+                result.Data.Add("Температура воды на выходе дизеля", new DataElement { OriginalValue = CoolingCircuitTemperature, DisplayValue = CoolingCircuitTemperature.ToString(), ChartValue = CoolingCircuitTemperature, Display = true, DataParams = datFileParams["Температура воды на выходе дизеля"] });
 
                 // short
                 buffer = new[] { dataChunk[position++], dataChunk[position++] };
@@ -93,12 +93,12 @@ namespace ParserNII.DataStructures
                 // int
                 buffer = new[] { dataChunk[position++], dataChunk[position++], dataChunk[position++], dataChunk[position++] };
                 var Latitude = BitConverter.ToInt32(buffer, 0);
-                result.Data.Add("Широта", new DataElement { OriginalValue = Latitude, DisplayValue = ParseCoordinate(Latitude), ChartValue = Latitude, Display = true, DataParams = datFileParams["Широта"] });
+                result.Data.Add("Широта", new DataElement { OriginalValue = ParseCoordinate(Latitude), DisplayValue = ParseCoordinate(Latitude).ToString(), ChartValue = ParseCoordinate(Latitude), Display = true, DataParams = datFileParams["Широта"] });
 
                 // int
                 buffer = new[] { dataChunk[position++], dataChunk[position++], dataChunk[position++], dataChunk[position++] };
                 var Longitude = BitConverter.ToInt32(buffer, 0);
-                result.Data.Add("Долгота", new DataElement { OriginalValue = Longitude, DisplayValue = ParseCoordinate(Longitude), ChartValue = Longitude, Display = true, DataParams = datFileParams["Долгота"] });
+                result.Data.Add("Долгота", new DataElement { OriginalValue = ParseCoordinate(Longitude), DisplayValue = ParseCoordinate(Longitude).ToString(), ChartValue = ParseCoordinate(Longitude), Display = true, DataParams = datFileParams["Долгота"] });
 
 
                 // byte
@@ -107,7 +107,7 @@ namespace ParserNII.DataStructures
 
                 // byte
                 var FuelDensityCurrent = (short)((sbyte)dataChunk[position++] + 850);
-                result.Data.Add("Плотность топлива текущая", new DataElement { OriginalValue = FuelDensityCurrent, DisplayValue = FuelDensityCurrent.ToString(), ChartValue = FuelDensityCurrent, Display = true, DataParams = datFileParams["Плотность топлива"] });
+                result.Data.Add("Плотность топлива", new DataElement { OriginalValue = FuelDensityCurrent, DisplayValue = FuelDensityCurrent.ToString(), ChartValue = FuelDensityCurrent, Display = true, DataParams = datFileParams["Плотность топлива"] });
 
                 // byte
                 var FuelDensityStandard = (short)((sbyte)dataChunk[position++] + 850);
@@ -115,7 +115,7 @@ namespace ParserNII.DataStructures
 
                 // byte
                 var OilCircuitTemperature = (sbyte)dataChunk[position++];
-                result.Data.Add("Температура контура масла", new DataElement { OriginalValue = OilCircuitTemperature, DisplayValue = OilCircuitTemperature.ToString(), ChartValue = OilCircuitTemperature, Display = true, DataParams = datFileParams["Температура масла на выходе дизеля"] });
+                result.Data.Add("Температура масла на выходе дизеля", new DataElement { OriginalValue = OilCircuitTemperature, DisplayValue = OilCircuitTemperature.ToString(), ChartValue = OilCircuitTemperature, Display = true, DataParams = datFileParams["Температура масла на выходе дизеля"] });
 
                 // byte
                 var EnvironmentTemperature = (sbyte)dataChunk[position++];
@@ -170,14 +170,14 @@ namespace ParserNII.DataStructures
 
                 // byte
                 var dieselSpeed = (byte)dataChunk[position++];
-                result.Data.Add("Коэффициент по оборотам дизеля", new DataElement { OriginalValue = dieselSpeed, DisplayValue = dieselSpeed.ToString(), ChartValue = dieselSpeed, Display = true, DataParams = datFileParams["Коэффициент по оборотам"] });
+                result.Data.Add("Коэффициент по оборотам дизеля", new DataElement { OriginalValue = dieselSpeed, DisplayValue = dieselSpeed.ToString(), ChartValue = dieselSpeed, Display = true, DataParams = datFileParams["Коэффициент по оборотам дизеля"] });
 
                 // skip 2 bytes
                 position+=2;
 
                 // byte
                 var coldWaterCircuitTemperature = (sbyte)dataChunk[position++];
-                result.Data.Add("Температура воды холодного контура", new DataElement { OriginalValue = coldWaterCircuitTemperature, DisplayValue = coldWaterCircuitTemperature.ToString(), ChartValue = coldWaterCircuitTemperature, Display = true, DataParams = datFileParams["Температура воды на входе дизеля"] });
+                result.Data.Add("Температура воды на входе дизеля", new DataElement { OriginalValue = coldWaterCircuitTemperature, DisplayValue = coldWaterCircuitTemperature.ToString(), ChartValue = coldWaterCircuitTemperature, Display = true, DataParams = datFileParams["Температура воды на входе дизеля"] });
 
                 // int
                 buffer = new[] { dataChunk[position++], dataChunk[position++], dataChunk[position++], dataChunk[position++] };
@@ -239,12 +239,12 @@ namespace ParserNII.DataStructures
 
                     // short
                     buffer = new[] { dataChunk[position++], dataChunk[position++] };
-                    var speed = BitConverter.ToInt16(buffer, 0);
-                    secondsResult[i].Data.Add("Скорость", new DataElement { OriginalValue = speed, DisplayValue = speed.ToString(), ChartValue = speed, Display = true, DataParams = datFileParams["Скорость по GPS"] });
+                    var speed = (double)BitConverter.ToInt16(buffer, 0)/10;
+                    secondsResult[i].Data.Add("Скорость по GPS", new DataElement { OriginalValue = speed, DisplayValue = speed.ToString(), ChartValue = speed, Display = true, DataParams = datFileParams["Скорость по GPS"] });
 
                     // byte
-                    var boostPressure = dataChunk[position++];
-                    secondsResult[i].Data.Add("Давление наддува", new DataElement { OriginalValue = boostPressure, DisplayValue = boostPressure.ToString(), ChartValue = boostPressure, Display = true, DataParams = datFileParams["Давление наддувочного воздуха"] });
+                    var boostPressure = (double)dataChunk[position++]/100;
+                    secondsResult[i].Data.Add("Давление наддувочного воздуха", new DataElement { OriginalValue = boostPressure, DisplayValue = boostPressure.ToString(), ChartValue = boostPressure, Display = true, DataParams = datFileParams["Давление наддувочного воздуха"] });
 
                     // short
                     buffer = new[] { dataChunk[position++], dataChunk[position++] };
@@ -252,20 +252,20 @@ namespace ParserNII.DataStructures
                     secondsResult[i].Data.Add("Объем топлива секундный", new DataElement { OriginalValue = averageFuelVolume, DisplayValue = averageFuelVolume.ToString(), ChartValue = averageFuelVolume, Display = true, DataParams = datFileParams["Объем топлива секундный"] });
 
                     // byte
-                    var fuelPressure = dataChunk[position++];
-                    secondsResult[i].Data.Add("Давление топлива", new DataElement { OriginalValue = fuelPressure, DisplayValue = fuelPressure.ToString(), ChartValue = fuelPressure, Display = true, DataParams = datFileParams["Давление в топливной системе"] });
+                    var fuelPressure = (double)dataChunk[position++] / 10;
+                    secondsResult[i].Data.Add("Давление в топливной системе", new DataElement { OriginalValue = fuelPressure, DisplayValue = fuelPressure.ToString(), ChartValue = fuelPressure, Display = true, DataParams = datFileParams["Давление в топливной системе"] });
 
                     // byte
-                    var oilPressure = dataChunk[position++];
-                    secondsResult[i].Data.Add("Давление масла", new DataElement { OriginalValue = oilPressure, DisplayValue = oilPressure.ToString(), ChartValue = oilPressure, Display = true, DataParams = datFileParams["Давление в масляной системе"] });
+                    var oilPressure = (double)dataChunk[position++] / 10;
+                    secondsResult[i].Data.Add("Давление в масляной системе", new DataElement { OriginalValue = oilPressure, DisplayValue = oilPressure.ToString(), ChartValue = oilPressure, Display = true, DataParams = datFileParams["Давление в масляной системе"] });
 
                     // byte
                     var positionControllerDriver = dataChunk[position++];
                     secondsResult[i].Data.Add("Позиция контроллера машиниста", new DataElement { OriginalValue = positionControllerDriver, DisplayValue = positionControllerDriver.ToString(), ChartValue = positionControllerDriver, Display = true, DataParams = datFileParams["Позиция контроллера машиниста"] });
 
                     // byte
-                    var oilPressureWithFilter = dataChunk[position++];
-                    secondsResult[i].Data.Add("Давление масла с фильтром", new DataElement { OriginalValue = oilPressureWithFilter, DisplayValue = oilPressureWithFilter.ToString(), ChartValue = oilPressureWithFilter, Display = true, DataParams = datFileParams["Давление в масляной системе 2"] });
+                    var oilPressureWithFilter = (double)dataChunk[position++] / 100;
+                    secondsResult[i].Data.Add("Давление масла с фильтром", new DataElement { OriginalValue = oilPressureWithFilter, DisplayValue = oilPressureWithFilter.ToString(), ChartValue = oilPressureWithFilter, Display = true, DataParams = datFileParams["Давление масла с фильтром"] });
 
                     // skip byte
                     position++;
