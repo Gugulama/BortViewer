@@ -10,9 +10,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3452805B-C5D7-453C-B8CA-D10FBA56A676}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ParserNII</RootNamespace>
-    <AssemblyName>ParserNII</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>ChartViewer</RootNamespace>
+    <AssemblyName>ChartViewer</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -53,6 +53,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CircularProgressBar, Version=2.7.0.7, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
@@ -172,6 +175,7 @@
     <Content Include="Content\images\marker-icon.png" />
     <Content Include="Content\images\marker-shadow.png" />
     <Content Include="Content\leaflet.css" />
+    <Content Include="icon.ico" />
     <Content Include="index.html" />
     <Content Include="Content\leaflet-src.esm.js" />
     <Content Include="Content\leaflet-src.js" />
