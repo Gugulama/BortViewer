@@ -932,7 +932,8 @@
       "min": -30,
       "max": 128,
       "type": "byte",      
-      "display": false,      
+      "display": false,
+      "round": 0.01,
       "round": 0.01,
       "group": 0
     }
