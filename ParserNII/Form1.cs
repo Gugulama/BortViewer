@@ -423,7 +423,6 @@ namespace ParserNII
             }
         }
 
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -463,8 +462,40 @@ namespace ParserNII
 
             double diff = origialXScale / newXScale;
             bool isXLess = (bool)((diff) > 1500);
-            bool isXBigger = (bool)((diff) < 0.9);
-
+            bool isXBigger = (bool)((diff) < 0.95);
+            //сохранение границ при уменьшении
+            if (pane.XAxis.Scale.Min < drawer.xScaleMin)
+            {
+                var temp = drawer.xScaleMin - pane.XAxis.Scale.Min;
+                pane.XAxis.Scale.Min = drawer.xScaleMin;
+                pane.XAxis.Scale.Max = pane.XAxis.Scale.Max + temp;
+            }
+            else if (pane.XAxis.Scale.Max > drawer.xScaleMax)
+            {
+                var temp = pane.XAxis.Scale.Max - drawer.xScaleMax;
+                pane.XAxis.Scale.Max = drawer.xScaleMax;
+                pane.XAxis.Scale.Min = pane.XAxis.Scale.Min - temp;
+            }
+            //указатель остается 
+            if (!isAllowMouseMove)
+            {
+                if (verticalLine.Location.X < pane.XAxis.Scale.Min)
+                {
+                    pane.XAxis.Scale.Min = pane.XAxis.Scale.Min - 0.1 * newXScale;
+                }
+                else if (verticalLine.Location.X > pane.XAxis.Scale.Max)
+                {
+                    pane.XAxis.Scale.Max = pane.XAxis.Scale.Max + 0.1 * newXScale;
+                }
+            }
+            //фиксация указателя строго по центру
+            //if (!isAllowMouseMove)
+            //{
+            //    var shift = newXScale / 2;
+            //    pane.XAxis.Scale.Min = verticalLine.Location.X - shift;
+            //    pane.XAxis.Scale.Max = verticalLine.Location.X + shift;
+            //}            
+            //ограничение макс. и мин. масштаба
             if (isXLess || isXBigger) sender.ZoomOut(sender.GraphPane);
         }
 
@@ -693,6 +724,7 @@ namespace ParserNII
         {
             if (e.Button == MouseButtons.Left)
             {
+                zedGraphControl1.GraphPane.ReverseTransform(e.Location, out var x, out var y);
                 if (isAllowMouseMove) isAllowMouseMove = false;
                 else isAllowMouseMove = true;
                 checkBox1.Checked = isAllowMouseMove;

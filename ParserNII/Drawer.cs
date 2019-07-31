@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -81,7 +82,7 @@ namespace ParserNII
 
             control.GraphPane.Title.IsVisible = false;
             control.GraphPane.Legend.IsVisible = false;
-
+            pane.Chart.Border.IsVisible = false;
         }
 
         public void DrawGraph(List<XDate> x, List<double> y, string name, Color color)
